@@ -57,8 +57,8 @@ extern volatile uFLAG FLAG1;
 #define FG_10ms FLAG1.BIT.Bit7
 //************************************************
 
-extern u16 X_COUNT = 0;
-extern u16 X_ERR  = 0 ;//记录错误的个数
+extern u16 X_COUNT;
+extern u16 X_ERR;//记录错误的个数
 
 extern u8 SIO_cnt;
 extern u8 SIO_buff[16];

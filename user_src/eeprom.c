@@ -369,8 +369,6 @@ void ID_learn(void)
     if (FG_10ms)
     { //90==1√Î
         FG_10ms = 0;
-
-        //     if(time_3sec)--time_3sec;
         if (TIME_EMC)
             --TIME_EMC;
         if (TIME_auto_out)

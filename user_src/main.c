@@ -21,15 +21,14 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <iostm8l151g4.h> // CPU型号
-//#include "stm8l15x.h"
-#include "Pin_define.h" // 管脚定义
-#include "initial.h"    // 初始化  预定义
-#include "ram.h"        // RAM定义
-//#include "adf7021.h"    // 初始化ADF7021
-#include "Timer.h"      // 定时器
-#include "ID_Decode.h"
-#include "eeprom.h" // eeprom
-#include "uart.h"   // uart
+#include "Pin_define.h"   // 管脚定义
+#include "initial.h"      // 初始化  预定义
+#include "ram.h"          // RAM定义
+#include "ADF7030_1.h"    // 初始化ADF7021
+#include "Timer.h"        // 定时器
+#include "ID_Decode.h"    // ID_Decode处理
+#include "eeprom.h"       // eeprom
+#include "uart.h"         // uart
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -50,40 +49,38 @@
 
 void main(void)
 {
-    _DI();       // 关全局中断
-    RAM_clean(); // 清除RAM
-    WDT_init();
-    VHF_GPIO_INIT();
-    SysClock_Init();
-    InitialFlashReg();
-    eeprom_sys_load();
-    EXIT_init();
-    TIM4_Init();
-    UART1_INIT(); // UART1 for PC Software
-    _EI();        // 允许中断
-    beep_init();
-
-
+    _DI();             // 关全局中断
+    RAM_clean();       // 清除RAM
+    WDT_init();        //看门狗
+    VHF_GPIO_INIT();   //IO初始化
+    SysClock_Init();   //系统时钟初始化
+    InitialFlashReg(); //flash EEPROM
+    eeprom_sys_load(); //ID载入
+    TIM4_Init();       // 定时器
+    UART1_INIT();      // UART1 for PC Software
+    _EI();             // 允许中断
+    beep_init();       // 蜂鸣器
+    ClearWDT();        // Service the WDT
+    ADF7030Init();
     RF_test_mode();
-
     FLAG_APP_RX = 1;
-
     TIME_EMC = 10;
-    //dd_set_TX_mode();
     while (1)
     {
         ClearWDT(); // Service the WDT
-        ID_Decode_IDCheck();
+
         if (time_Login_exit_256 == 0)
             ID_Decode_OUT();
         Freq_Scanning();
         ID_learn();
-//        READ_RSSI_avg();
 
-//        if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
-//            Receiver_LED_RX = 1; //26   35
-//        else if ((RAM_rssi_AVG <= 59) && (FG_Receiver_LED_RX == 0))
-//            Receiver_LED_RX = 0; //25  34
+        SCAN_RECEIVE_PACKET(); //扫描接收数据
+        //        READ_RSSI_avg();
+
+        //        if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
+        //            Receiver_LED_RX = 1; //26   35
+        //        else if ((RAM_rssi_AVG <= 59) && (FG_Receiver_LED_RX == 0))
+        //            Receiver_LED_RX = 0; //25  34
     }
 }
 

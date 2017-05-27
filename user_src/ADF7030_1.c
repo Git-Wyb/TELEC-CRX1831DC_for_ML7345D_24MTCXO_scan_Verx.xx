@@ -49,7 +49,9 @@ void DELAY_XX(void)
 **/
 void ADF7030Init(void)
 {
-    SPI_conf();       //初始化spi
+    SPI_conf(); //初始化spi
+    ADF7030_GPIO_INIT();
+    CG2214M6_GPIO_Init();
     ADF7030_REST = 0; //ADF7030芯片初始化
     Delayus(50);
     ClearWDT();
@@ -528,6 +530,7 @@ void RX_ANALYSIS(void)
                                   (u32)SPI_RECEIVE_BUFF[i * 4 + 6] << 24;
     }
     FLAG_Receiver_IDCheck = 1;
+    ID_Decode_IDCheck();
     //Signal_DATA_Decode(0);
     //    ID_Decode_function();
 }
@@ -634,8 +637,6 @@ void TX_DataLoad(u32 IDCache, u8 CtrCmd, u8 *Packet)
 **/
 void TestCarrier(u8 KeyVel)
 {
-    u8 data, i, num;
-    char TextPlay;
     static u8 mode = 0;
     static u8 TestModeState = 0, SendIngFlag = 0;
     switch (KeyVel)
@@ -649,12 +650,10 @@ void TestCarrier(u8 KeyVel)
         case 0:
             RADIO_DIG_TX_CFG0_32bit_20000304 &= 0xFFFFFFFD;
             mode = 1;
-            TextPlay = ' ';
             break; //FSK
         case 1:
             RADIO_DIG_TX_CFG0_32bit_20000304 |= 2;
             mode = 0;
-            TextPlay = 'G';
             break; //GFSK
         default:
             break;
@@ -668,13 +667,6 @@ void TestCarrier(u8 KeyVel)
             TestModeState++;
         if (TestModeState == 8)
             TestModeState = 0;
-        num = TestModeState;
-        for (i = 0; i < 3; i++)
-        {
-            data = num % 10;
-            num = num / 10;
-            //lcd            display_map_xy(1 + (2 - i) * 9, 24, 7, 16, char_Medium + data * 14);
-        }
         ClearWDT(); // Service the WDT
     }
     break;
@@ -744,8 +736,6 @@ void ReceiveTestModesCFG(void)
 void ModeTrans(u8 KeyVavle)
 {
     static u8 ModeStatus = 0, SendIngFlag = 0;
-    u32 num;
-    u8 data, i;
     if ((ModeStatus != 0) && (KeyVavle == ModeStatus))
     {
         while (GET_STATUE_BYTE().CMD_READY != 1)
@@ -790,13 +780,8 @@ void ModeTrans(u8 KeyVavle)
 
     if (((ModeStatus == KEY_SW2_Down) || (ModeStatus == KEY_SW3_Down)) && (SendIngFlag == 0)) //转换到载波发送状态
     {
-        num = ((GENERIC_PKT_TEST_MODES0_32bit_20000548 >> 16) & 0x07);
-        for (i = 0; i < 2; i++)
-        {
-            data = num % 10;
-            num = num / 10;
-            //lcddisplay_map_xy(1 + (1 - i) * 9, 24, 7, 16, char_Medium + data * 14);
-        }
+        //num = ((GENERIC_PKT_TEST_MODES0_32bit_20000548 >> 16) & 0x07);
+
         ClearWDT(); // Service the WDT
         ADF7030_WRITING_PROFILE_FROM_POWERON();
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
@@ -825,22 +810,9 @@ void ModeTrans(u8 KeyVavle)
             ;
         DELAY_30U();
         ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(PROFILE_CCA_READBACK, 6);
-        num = (ADF7030_RESIGER_VALUE_READ & 0x07ff); //>>16;
-        if (num & 0x00000400)
-        {
-            num = ((~num) + 1) & 0x000003ff;
-            //lcddisplay_map_xy(0, 20, 5, 8, char_Small + ('-' - ' ') * 5);
-        }
-        //lcd else
-        //lcddisplay_map_xy(0, 20, 5, 8, char_Small + (' ' - ' ') * 5);
+        //num = (ADF7030_RESIGER_VALUE_READ & 0x07ff); //>>16;
+
         DELAY_30U();
-        num /= 4;
-        for (i = 0; i < 4; i++)
-        {
-            data = num % 10;
-            num /= 10;
-            //lcd display_map_xy(90 + (3 - i) * 9, 16, 7, 16, char_Medium + data * 14);
-        }
         TIMER300ms = 0;
     }
 }

@@ -9,7 +9,7 @@
 /*  Mark        :ver 1.0                                               */
 /***********************************************************************/
 
-void EXIT_init(void);
+//void EXIT_init(void);
 //void ID_Decode_function(void);
 void ID_Decode_IDCheck(void);
 void Signal_DATA_Decode(UINT8 NUM_Type);

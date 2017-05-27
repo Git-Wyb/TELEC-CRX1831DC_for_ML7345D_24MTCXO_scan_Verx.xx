@@ -55,71 +55,21 @@ void VHF_GPIO_INIT(void)
 CR1寄存器  输出 Output（1=推挽、0=OC）
            输入 Input（1=上拉、0=浮动）
 ***************end************************************/
-    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
-    HA_L_signal_CR1 = 1;
-
-    HA_ERR_signal_direc = Input; // Input   HA 异常信号  低电平有效
-    HA_ERR_signal_CR1 = 1;
-
-    HA_Sensor_signal_direc = Input; // Input   HA 传感器信号  低电平有效
-    HA_Sensor_signal_CR1 = 1;
-
-    Receiver_Login_direc = Input; // Input   受信机登录键   低电平有效
-    Receiver_Login_CR1 = 1;
-
-    //      Receiver_Buzzer_direc = Output;// Output   受信机蜂鸣器  高电平有效
-    //      Receiver_Buzzer_CR1=1;
-    //      Receiver_Buzzer=0;
     Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
     Receiver_vent_CR1 = 1;
 
     PIN_BEEP_direc = Output; // Output   蜂鸣器
     PIN_BEEP_CR1 = 1;
     PIN_BEEP = 0;
-
-    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
-    Receiver_LED_OUT_CR1 = 1;
-    Receiver_LED_OUT = 1;
-
-    Receiver_LED_TX_direc = Output; // Output   受信机送信指示  高电平有效
-    Receiver_LED_TX_CR1 = 1;
-    Receiver_LED_TX = 0;
-
-    Receiver_LED_RX_direc = Output; // Output   受信机受信指示  高电平有效
-    Receiver_LED_RX_CR1 = 1;
-    Receiver_LED_RX = 0;
-
+    LED_GPIO_Init();
     Inverters_OUT_direc = Input; // 输入   继电器输出信号反向   低电平有效
     Inverters_OUT_CR1 = 1;
-    if (Inverters_OUT == 1)
-    {
-        FG_allow_out = 1;
-        FG_NOT_allow_out = 0;
-    }
-    else
-    {
-        FG_allow_out = 0;
-        FG_NOT_allow_out = 1;
-    }
-
-    Receiver_OUT_OPEN_direc = Output; // Output   受信机继电器OPEN  高电平有效
-    Receiver_OUT_OPEN_CR1 = 1;
-    Receiver_OUT_OPEN = FG_NOT_allow_out;
-
-    Receiver_OUT_CLOSE_direc = Output; // Output   受信机继电器CLOSE  高电平有效
-    Receiver_OUT_CLOSE_CR1 = 1;
-    Receiver_OUT_CLOSE = FG_NOT_allow_out;
-
-    Receiver_OUT_STOP_direc = Output; // Output   受信机继电器STOP  高电平有效
-    Receiver_OUT_STOP_CR1 = 1;
-    Receiver_OUT_STOP = FG_NOT_allow_out;
-
+    Receiver_OUT_GPIO_Init();
     Receiver_OUT_VENT_direc = Output;
     Receiver_OUT_VENT_CR1 = 1;
     Receiver_OUT_VENT = FG_NOT_allow_out;
-
-    Receiver_test_direc = Input; // 输入     test脚
-    Receiver_test_CR1 = 1;
+    HA_GPIO_Init();
+    KEY_GPIO_Init(); // 输入     test脚
 }
 //============================================================================================
 void SysClock_Init(void)
@@ -180,7 +130,42 @@ void Delayus(unsigned char timer)
     for (x = 0; x < timer; x++)
         __asm("nop");
 }
+void HA_GPIO_Init(void)
+{
+    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
+    HA_L_signal_CR1 = 1;
 
+    HA_ERR_signal_direc = Input; // Input   HA 异常信号  低电平有效
+    HA_ERR_signal_CR1 = 1;
+
+    HA_Sensor_signal_direc = Input; // Input   HA 传感器信号  低电平有效
+    HA_Sensor_signal_CR1 = 1;
+}
+void Receiver_OUT_GPIO_Init(void)
+{
+    if (Inverters_OUT == 1)
+    {
+        FG_allow_out = 1;
+        FG_NOT_allow_out = 0;
+    }
+    else
+    {
+        FG_allow_out = 0;
+        FG_NOT_allow_out = 1;
+    }
+
+    Receiver_OUT_OPEN_direc = Output; // Output   受信机继电器OPEN  高电平有效
+    Receiver_OUT_OPEN_CR1 = 1;
+    Receiver_OUT_OPEN = FG_NOT_allow_out;
+
+    Receiver_OUT_CLOSE_direc = Output; // Output   受信机继电器CLOSE  高电平有效
+    Receiver_OUT_CLOSE_CR1 = 1;
+    Receiver_OUT_CLOSE = FG_NOT_allow_out;
+
+    Receiver_OUT_STOP_direc = Output; // Output   受信机继电器STOP  高电平有效
+    Receiver_OUT_STOP_CR1 = 1;
+    Receiver_OUT_STOP = FG_NOT_allow_out;
+}
 /**
 ****************************************************************************
 * @Function	: void LED_GPIO_Init(void)
@@ -192,16 +177,25 @@ void Delayus(unsigned char timer)
 **/
 void LED_GPIO_Init(void)
 {
-    LED_YELLOW_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
-    LED_YELLOW_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    LED_YELLOW_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
+    // LED_YELLOW_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
+    // LED_YELLOW_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
+    // LED_YELLOW_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
 
-    LED_RED_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
-    LED_RED_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    LED_RED_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
-    //  PC_DDR|=0x03;   /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
-    //  PC_CR1|=0x03;   /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    //  PC_CR2|=0x03;   /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
+    // LED_RED_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
+    // LED_RED_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
+    // LED_RED_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
+
+    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
+    Receiver_LED_OUT_CR1 = 1;
+    Receiver_LED_OUT = 1;
+
+    Receiver_LED_TX_direc = Output; // Output   受信机送信指示  高电平有效
+    Receiver_LED_TX_CR1 = 1;
+    Receiver_LED_TX = 0;
+
+    Receiver_LED_RX_direc = Output; // Output   受信机受信指示  高电平有效
+    Receiver_LED_RX_CR1 = 1;
+    Receiver_LED_RX = 0;
 }
 /**
  ****************************************************************************
@@ -214,73 +208,73 @@ void LED_GPIO_Init(void)
 **/
 void LEDCtr(void)
 {
-    //    switch (YellowStutue & 0x0f)
-    //    {
-    //    case LEDOFFFLAG:
-    //        YELLOWLED_OFF()
-    //        break;
-    //    case LEDONFLAG:
-    //        LED_YELLOW = LED_ON;
-    //        break;
-    //    case LEDFLASHASECONDFLAG:
-    //    {
-    //        if (YellowStutue & 0x80)
-    //        {
-    //            YELLOWLED_FLASH_SECOND();
-    //            YellowStutue &= 0x7F;
-    //        }
-    //        if (LedYELLOWTimer == 1)
-    //            YellowStutue = LEDOFFFLAG;
-    //    }
-    //    break;
-    //    case LEDFLASHFLAG:
-    //    {
-    //        if (YellowStutue & 0x80)
-    //        {
-    //            YELLOWLED_FLASH();
-    //            YellowStutue &= 0x7F;
-    //        }
-    //        else if (LedYELLOWTimer == 1)
-    //            YELLOWLED_FLASH();
-    //    }
-    //    break;
-    //    default:
-    //        break;
-    //    }
-    //
-    //    switch (RedStutue & 0x0f)
-    //    {
-    //    case LEDOFFFLAG:
-    //        REDLED_OFF()
-    //        break;
-    //    case LEDONFLAG:
-    //        LED_RED = LED_ON;
-    //        break;
-    //    case LEDFLASHASECONDFLAG:
-    //    {
-    //        if (RedStutue & 0x80)
-    //        {
-    //            REDLED_FLASH_SECOND();
-    //            RedStutue &= 0x7F;
-    //        }
-    //        if (LedREDTimer == 1)
-    //            RedStutue = LEDOFFFLAG;
-    //    }
-    //    break;
-    //    case LEDFLASHFLAG:
-    //    {
-    //        if (RedStutue & 0x80)
-    //        {
-    //            REDLED_FLASH();
-    //            RedStutue &= 0x7F;
-    //        }
-    //        else if (LedREDTimer == 1)
-    //            REDLED_FLASH();
-    //    }
-    //    break;
-    //    default:
-    //        break;
-    //    }
+    switch (YellowStutue & 0x0f)
+    {
+    case LEDOFFFLAG:
+        YELLOWLED_OFF();
+        break;
+    case LEDONFLAG:
+        LED_YELLOW = LED_ON;
+        break;
+    case LEDFLASHASECONDFLAG:
+    {
+        if (YellowStutue & 0x80)
+        {
+            YELLOWLED_FLASH_SECOND();
+            YellowStutue &= 0x7F;
+        }
+        if (LedYELLOWTimer == 1)
+            YellowStutue = LEDOFFFLAG;
+    }
+    break;
+    case LEDFLASHFLAG:
+    {
+        if (YellowStutue & 0x80)
+        {
+            YELLOWLED_FLASH();
+            YellowStutue &= 0x7F;
+        }
+        else if (LedYELLOWTimer == 1)
+            YELLOWLED_FLASH();
+    }
+    break;
+    default:
+        break;
+    }
+
+    switch (RedStutue & 0x0f)
+    {
+    case LEDOFFFLAG:
+        REDLED_OFF();
+        break;
+    case LEDONFLAG:
+        LED_RED = LED_ON;
+        break;
+    case LEDFLASHASECONDFLAG:
+    {
+        if (RedStutue & 0x80)
+        {
+            REDLED_FLASH_SECOND();
+            RedStutue &= 0x7F;
+        }
+        if (LedREDTimer == 1)
+            RedStutue = LEDOFFFLAG;
+    }
+    break;
+    case LEDFLASHFLAG:
+    {
+        if (RedStutue & 0x80)
+        {
+            REDLED_FLASH();
+            RedStutue &= 0x7F;
+        }
+        else if (LedREDTimer == 1)
+            REDLED_FLASH();
+    }
+    break;
+    default:
+        break;
+    }
 }
 /**
 ****************************************************************************
@@ -333,6 +327,39 @@ void ADF7030_GPIO_INIT(void)
 }
 /**
 ****************************************************************************
+* @Function	: void KEY_GPIO_Init(void)
+* @file		: Initial.c
+* @Author	: Xiaowine
+* @date		: 2017/4/10
+* @version	: V1.0
+* @brief
+**/
+void KEY_GPIO_Init(void)
+{
+    // KEY_SW2_DDR = Input; //输入
+    // KEY_SW2_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    // KEY_SW2_CR2 = 0;     //禁止中断
+
+    // KEY_SW3_DDR = Input; //输入
+    // KEY_SW3_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    // KEY_SW3_CR2 = 0;     //禁止中断
+
+    // KEY_SW4_DDR = Input; //输入
+    // KEY_SW4_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    // KEY_SW4_CR2 = 0;     //禁止中断
+
+    Receiver_Login_direc = Input;          // Input   受信机登录键   低电平有效
+    Receiver_Login_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    Receiver_Login_CR2 = InterruptDisable; //禁止中断
+    //   Receiver_test_direc = Input;
+    // Receiver_test_CR1 = 1;
+
+    WORK_TEST_DDR = Input;            // 输入     test脚
+    WORK_TEST_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    WORK_TEST_CR2 = InterruptDisable; //禁止中断
+}
+/**
+****************************************************************************
 * @Function : u8 KEY_SCAN(u8 mode)
 * @File     : Initial.c
 * @Program  : mode 1 连续按键 0 单次按键
@@ -373,9 +400,7 @@ u8 KEY_SCAN(u8 mode)
 void RF_BRE_Check(void)
 {
     static u8 ErrState = 0;
-    u8 CacheData[4] = {'0', '0', '0', '0'};
-    u8 i = 0, j;
-    u16 errTemp;
+    u8 j;
     ClearWDT(); // Service the WDT
 
     if (ErrStateTimeer == 1)
@@ -412,7 +437,6 @@ void RF_BRE_Check(void)
 
     if (X_COUNT >= 1000)
     {
-        errTemp = X_ERR;
         if (X_ERR >= 50)
         {
             YellowStutue = LEDOFFFLAG;
@@ -423,11 +447,6 @@ void RF_BRE_Check(void)
             ErrState = 0;
             ErrStateTimeer = 1200;
         }
-        do
-        {
-            CacheData[i++] = ((errTemp % 10) + 48);
-            errTemp /= 10;
-        } while (errTemp > 0);
         for (j = 0; j < 4; j++)
             //lcd    display_map_xy(70 + j * 6, 45, 5, 8, char_Small + (CacheData[3 - j] - ' ') * 5);
             //        display_map_58_6(70,45,4,CacheData);

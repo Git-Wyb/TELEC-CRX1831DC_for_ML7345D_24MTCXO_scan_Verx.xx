@@ -23,6 +23,14 @@
 #define LED_RED_CR1 PC_CR1_C11  //类型
 #define LED_RED_CR2 PC_CR2_C21  //输出频率
 
+#define Receiver_LED_TX PC_ODR_ODR1       // Output   受信机送信指示  高电平有效
+#define Receiver_LED_TX_direc PC_DDR_DDR1 // Output   受信机送信指示  高电平有效
+#define Receiver_LED_TX_CR1 PC_CR1_C11    // Output   受信机送信指示  高电平有效
+
+#define Receiver_LED_RX PC_ODR_ODR0       // Output   受信机受信指示  高电平有效
+#define Receiver_LED_RX_direc PC_DDR_DDR0 // Output   受信机受信指示  高电平有效
+#define Receiver_LED_RX_CR1 PC_CR1_C10    // Output   受信机受信指示  高电平有效
+
 #define YELLOWLED_FLASH_SECOND() \
     {                            \
         LED_YELLOW = LED_ON;     \
@@ -94,6 +102,15 @@
 //#define KEY_SW4_CR1 PA_CR1_C12
 //#define KEY_SW4_CR2 PA_CR2_C22
 
+// #define Receiver_Login PC_IDR_IDR6       // Input   受信机登录键   低电平有效
+// #define Receiver_Login_direc PC_DDR_DDR6 // Input   受信机登录键   低电平有效
+// #define Receiver_Login_CR1 PC_CR1_C16    // Input   受信机登录键   低电平有效
+
+#define Receiver_Login PA_IDR_IDR4       // Input   受信机登录键   低电平有效
+#define Receiver_Login_direc PA_DDR_DDR4 // Input   受信机登录键   低电平有效
+#define Receiver_Login_CR1 PA_CR1_C14    // Input   受信机登录键   低电平有效
+#define Receiver_Login_CR2 PA_CR2_C24    // Input   受信机登录键   低电平有效
+
 #define KEY_Empty 0
 #define KEY_SW2_Down 1
 #define KEY_SW3_Down 2
@@ -122,7 +139,7 @@
 
 #define CG2214M6_USE_T CG2214M6_VC2_USE
 #define CG2214M6_USE_R CG2214M6_VC1_USE
-/********************受信机使用的IO 寄存器 *****************************************/
+/********************受信机使用的IO HA 异常信号 寄存器 *****************************************/
 
 #define HA_L_signal PA_IDR_IDR4       // Input   HA 下限信号   低电平有效
 #define HA_L_signal_direc PA_DDR_DDR4 // Input   HA 下限信号   低电平有效
@@ -136,9 +153,6 @@
 #define HA_Sensor_signal_direc PA_DDR_DDR3 // Input   HA 传感器信号  低电平有效
 #define HA_Sensor_signal_CR1 PA_CR1_C13    // Input   HA 传感器信号  低电平有效
 
-#define Receiver_Login PC_IDR_IDR6       // Input   受信机登录键   低电平有效
-#define Receiver_Login_direc PC_DDR_DDR6 // Input   受信机登录键   低电平有效
-#define Receiver_Login_CR1 PC_CR1_C16    // Input   受信机登录键   低电平有效
 /******************以下是data寄存器************************************/
 //#define Receiver_Buzzer PC_ODR_ODR5       // Output   受信机蜂鸣器  高电平有效
 //#define Receiver_Buzzer_direc PC_DDR_DDR5 // Output   受信机蜂鸣器  高电平有效
@@ -155,14 +169,6 @@
 #define Receiver_LED_OUT PC_ODR_ODR4       // Output   受信机继电器动作输出  高电平有效
 #define Receiver_LED_OUT_direc PC_DDR_DDR4 // Output   受信机继电器动作输出  高电平有效
 #define Receiver_LED_OUT_CR1 PC_CR1_C14    // Output   受信机继电器动作输出  高电平有效
-
-#define Receiver_LED_TX PC_ODR_ODR1       // Output   受信机送信指示  高电平有效
-#define Receiver_LED_TX_direc PC_DDR_DDR1 // Output   受信机送信指示  高电平有效
-#define Receiver_LED_TX_CR1 PC_CR1_C11    // Output   受信机送信指示  高电平有效
-
-#define Receiver_LED_RX PC_ODR_ODR0       // Output   受信机受信指示  高电平有效
-#define Receiver_LED_RX_direc PC_DDR_DDR0 // Output   受信机受信指示  高电平有效
-#define Receiver_LED_RX_CR1 PC_CR1_C10    // Output   受信机受信指示  高电平有效
 
 #define Receiver_OUT_OPEN PD_ODR_ODR3       // Output   受信机继电器OPEN  高电平有效
 #define Receiver_OUT_OPEN_direc PD_DDR_DDR3 // Output   受信机继电器OPEN  高电平有效
@@ -183,9 +189,15 @@
 #define Inverters_OUT PA_IDR_IDR2       // 输入   继电器输出信号反向   低电平有效
 #define Inverters_OUT_direc PA_DDR_DDR2 // 输入   继电器输出信号反向   低电平有效
 #define Inverters_OUT_CR1 PA_CR1_C12    // 输入   继电器输出信号反向   低电平有效
+/********************WORK/TEST切换引脚寄存器*****************************************/
+#define WORK_TEST PB_IDR_IDR0     // Input 受信机测试脚  高电平有效
+#define WORK_TEST_DDR PB_DDR_DDR0 // Input 受信机测试脚  高电平有效
+#define WORK_TEST_CR1 PB_CR1_C10  // Input 受信机测试脚  高电平有效
+#define WORK_TEST_CR2 PB_CR2_C20  // Input 受信机测试脚  高电平有效
 
 #define Receiver_test PB_IDR_IDR0       // Input 受信机测试脚  高电平有效
 #define Receiver_test_direc PB_DDR_DDR0 // Input 受信机测试脚  高电平有效
 #define Receiver_test_CR1 PB_CR1_C10    // Input 受信机测试脚  高电平有效
+/*********************************************************************************/
 
 #endif

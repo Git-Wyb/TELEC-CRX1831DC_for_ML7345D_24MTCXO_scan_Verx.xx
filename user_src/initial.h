@@ -28,6 +28,13 @@
 // 方向控制寄存器1（1=输出／0=输入）
 #define Input 0
 #define Output 1
+//1: Input
+// pull-up 0: Floating input
+// pull-up 0: Floating input
+#define Pull_up 0
+#define Floating 1
+#define InterruptDisable 0
+#define InterruptEnable 1
 /*******************系统预定义  end**********************/
 
 typedef union { // ID No.
@@ -46,10 +53,13 @@ extern uFLAG YellowLedFlag, RedLedFalg;
 void LED_GPIO_Init(void);      //初始化LED
 void CG2214M6_GPIO_Init(void); //CG2214M6 IO
 void ADF7030_GPIO_INIT(void);  //ADF7030 IO(REST & GPIO3)
-u8 KEY_SCAN(u8 mode);          //按键扫描
-void RAM_clean(void);          // 清除RAM
-void VHF_GPIO_INIT(void);      // CPU端口设置
-void SysClock_Init(void);      // 系统时钟（外部时钟）
+void HA_GPIO_Init(void);
+void Receiver_OUT_GPIO_Init(void);
+void KEY_GPIO_Init(void);
+u8 KEY_SCAN(u8 mode);     //按键扫描
+void RAM_clean(void);     // 清除RAM
+void VHF_GPIO_INIT(void); // CPU端口设置
+void SysClock_Init(void); // 系统时钟（外部时钟）
 void beep_init(void);
 void Delayus(unsigned char timer);
 void RF_test_mode(void);
