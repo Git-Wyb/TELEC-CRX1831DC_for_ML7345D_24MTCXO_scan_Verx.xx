@@ -55,21 +55,19 @@ void VHF_GPIO_INIT(void)
 CR1寄存器  输出 Output（1=推挽、0=OC）
            输入 Input（1=上拉、0=浮动）
 ***************end************************************/
+    //    HA_GPIO_Init();
+    KEY_GPIO_Init();             // 输入 test脚 登录键
     Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
     Receiver_vent_CR1 = 1;
 
     PIN_BEEP_direc = Output; // Output   蜂鸣器
     PIN_BEEP_CR1 = 1;
     PIN_BEEP = 0;
+
     LED_GPIO_Init();
     Inverters_OUT_direc = Input; // 输入   继电器输出信号反向   低电平有效
     Inverters_OUT_CR1 = 1;
-    Receiver_OUT_GPIO_Init();
-    Receiver_OUT_VENT_direc = Output;
-    Receiver_OUT_VENT_CR1 = 1;
-    Receiver_OUT_VENT = FG_NOT_allow_out;
-    HA_GPIO_Init();
-    KEY_GPIO_Init(); // 输入     test脚
+    Receiver_OUT_GPIO_Init(); // Output   受信机继电器
 }
 //============================================================================================
 void SysClock_Init(void)
@@ -132,8 +130,8 @@ void Delayus(unsigned char timer)
 }
 void HA_GPIO_Init(void)
 {
-    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
-    HA_L_signal_CR1 = 1;
+    //    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
+    //    HA_L_signal_CR1 = 1;
 
     HA_ERR_signal_direc = Input; // Input   HA 异常信号  低电平有效
     HA_ERR_signal_CR1 = 1;
@@ -165,6 +163,10 @@ void Receiver_OUT_GPIO_Init(void)
     Receiver_OUT_STOP_direc = Output; // Output   受信机继电器STOP  高电平有效
     Receiver_OUT_STOP_CR1 = 1;
     Receiver_OUT_STOP = FG_NOT_allow_out;
+
+    Receiver_OUT_VENT_direc = Output;
+    Receiver_OUT_VENT_CR1 = 1;
+    Receiver_OUT_VENT = FG_NOT_allow_out;
 }
 /**
 ****************************************************************************
@@ -185,9 +187,9 @@ void LED_GPIO_Init(void)
     // LED_RED_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
     // LED_RED_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
 
-    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
-    Receiver_LED_OUT_CR1 = 1;
-    Receiver_LED_OUT = 1;
+    //    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
+    //    Receiver_LED_OUT_CR1 = 1;
+    //    Receiver_LED_OUT = 1;
 
     Receiver_LED_TX_direc = Output; // Output   受信机送信指示  高电平有效
     Receiver_LED_TX_CR1 = 1;
@@ -195,7 +197,7 @@ void LED_GPIO_Init(void)
 
     Receiver_LED_RX_direc = Output; // Output   受信机受信指示  高电平有效
     Receiver_LED_RX_CR1 = 1;
-    Receiver_LED_RX = 0;
+    Receiver_LED_RX = 1;
 }
 /**
  ****************************************************************************
@@ -315,15 +317,15 @@ void ADF7030_GPIO_INIT(void)
     ADF7030_GPIO3_CR1 = 1;     //1: Input with pull-up 0: Floating input
     ADF7030_GPIO3_CR2 = 0;     //禁止中断
 
-    ADF7030_GPIO4_DDR = Input; //输入
-    ADF7030_GPIO4_CR1 = 0;     //1: Input with pull-up 0: Floating input
-    ADF7030_GPIO4_CR2 = 1;     //使能中断
-    EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
-    EXTI_CR2 |= 0x02;
+    // ADF7030_GPIO4_DDR = Input; //输入
+    // ADF7030_GPIO4_CR1 = 0;     //1: Input with pull-up 0: Floating input
+    // ADF7030_GPIO4_CR2 = 1;     //使能中断
+    // EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
+    // EXTI_CR2 |= 0x02;
 
-    ADF7030_GPIO5_DDR = Input; //输入
-    ADF7030_GPIO5_CR1 = 1;     //1: Input with pull-up 0: Floating input
-    ADF7030_GPIO5_CR2 = 0;     //禁止中断
+    // ADF7030_GPIO5_DDR = Input; //输入
+    // ADF7030_GPIO5_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    // ADF7030_GPIO5_CR2 = 0;     //禁止中断
 }
 /**
 ****************************************************************************

@@ -31,6 +31,10 @@
 #define Receiver_LED_RX_direc PC_DDR_DDR0 // Output   受信机受信指示  高电平有效
 #define Receiver_LED_RX_CR1 PC_CR1_C10    // Output   受信机受信指示  高电平有效
 
+#define Receiver_LED_OUT PC_ODR_ODR4       // Output   受信机继电器动作输出  高电平有效
+#define Receiver_LED_OUT_direc PC_DDR_DDR4 // Output   受信机继电器动作输出  高电平有效
+#define Receiver_LED_OUT_CR1 PC_CR1_C14    // Output   受信机继电器动作输出  高电平有效
+
 #define YELLOWLED_FLASH_SECOND() \
     {                            \
         LED_YELLOW = LED_ON;     \
@@ -154,9 +158,6 @@
 #define HA_Sensor_signal_CR1 PA_CR1_C13    // Input   HA 传感器信号  低电平有效
 
 /******************以下是data寄存器************************************/
-//#define Receiver_Buzzer PC_ODR_ODR5       // Output   受信机蜂鸣器  高电平有效
-//#define Receiver_Buzzer_direc PC_DDR_DDR5 // Output   受信机蜂鸣器  高电平有效
-//#define Receiver_Buzzer_CR1 PC_CR1_C15    // Output   受信机蜂鸣器  高电平有效
 
 #define Receiver_vent PC_IDR_IDR5       // Input   受信机换气联动ON/OFF
 #define Receiver_vent_direc PC_DDR_DDR5 // Input   受信机换气联动ON/OFF
@@ -165,10 +166,6 @@
 #define PIN_BEEP PA_ODR_ODR0       // Output   蜂鸣器
 #define PIN_BEEP_direc PA_DDR_DDR0 // Output   蜂鸣器
 #define PIN_BEEP_CR1 PA_CR1_C10    // Output   蜂鸣器
-
-#define Receiver_LED_OUT PC_ODR_ODR4       // Output   受信机继电器动作输出  高电平有效
-#define Receiver_LED_OUT_direc PC_DDR_DDR4 // Output   受信机继电器动作输出  高电平有效
-#define Receiver_LED_OUT_CR1 PC_CR1_C14    // Output   受信机继电器动作输出  高电平有效
 
 #define Receiver_OUT_OPEN PD_ODR_ODR3       // Output   受信机继电器OPEN  高电平有效
 #define Receiver_OUT_OPEN_direc PD_DDR_DDR3 // Output   受信机继电器OPEN  高电平有效

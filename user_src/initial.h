@@ -31,8 +31,8 @@
 //1: Input
 // pull-up 0: Floating input
 // pull-up 0: Floating input
-#define Pull_up 0
-#define Floating 1
+#define Pull_up 1
+#define Floating 0
 #define InterruptDisable 0
 #define InterruptEnable 1
 /*******************系统预定义  end**********************/

@@ -58,23 +58,24 @@ void main(void)
     eeprom_sys_load(); //ID载入
     TIM4_Init();       // 定时器
     UART1_INIT();      // UART1 for PC Software
-    _EI();             // 允许中断
-    beep_init();       // 蜂鸣器
+//    beep_init();       // 蜂鸣器
     ClearWDT();        // Service the WDT
-    ADF7030Init();
-    RF_test_mode();
+//    ADF7030Init();
+    _EI();      // 允许中断
+    ClearWDT(); // Service the WDT
+//    RF_test_mode();
     FLAG_APP_RX = 1;
     TIME_EMC = 10;
     while (1)
     {
         ClearWDT(); // Service the WDT
 
-        if (time_Login_exit_256 == 0)
-            ID_Decode_OUT();
-        Freq_Scanning();
+//        if (time_Login_exit_256 == 0)
+//            ID_Decode_OUT();
+//        Freq_Scanning();
         ID_learn();
 
-        SCAN_RECEIVE_PACKET(); //扫描接收数据
+//        SCAN_RECEIVE_PACKET(); //扫描接收数据
         //        READ_RSSI_avg();
 
         //        if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
