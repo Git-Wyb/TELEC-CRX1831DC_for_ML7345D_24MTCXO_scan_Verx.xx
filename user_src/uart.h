@@ -1,3 +1,6 @@
+#ifndef __UART_H__
+#define __UART_H__
+
 /***********************************************************************/
 /*  FILE        :Uart.H                                                */
 /*  DATE        :Mar, 2014                                             */
@@ -12,3 +15,5 @@ void UART1_RX_RXNE(void);
 void Send_char(unsigned char ch);
 void UART1_end(void);
 void PC_PRG(void);
+
+#endif

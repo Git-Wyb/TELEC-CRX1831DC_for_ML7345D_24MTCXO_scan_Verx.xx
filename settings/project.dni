@@ -93,3 +93,5 @@ A13=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Sou
 A14=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\uart.c" ""
 Count=15
 SuppressDialog=0
+[DebuggerSettings]
+DisableInterruptsWhenStepping=0
