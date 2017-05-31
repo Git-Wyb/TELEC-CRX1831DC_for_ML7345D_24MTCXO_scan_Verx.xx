@@ -197,7 +197,7 @@ void LED_GPIO_Init(void)
 
     Receiver_LED_RX_direc = Output; // Output   受信机受信指示  高电平有效
     Receiver_LED_RX_CR1 = 1;
-    Receiver_LED_RX = 1;
+    Receiver_LED_RX = 0;
 }
 /**
  ****************************************************************************
@@ -226,7 +226,10 @@ void LEDCtr(void)
             YellowStutue &= 0x7F;
         }
         if (LedYELLOWTimer == 1)
-            YellowStutue = LEDOFFFLAG;
+        {
+            YellowStutue &= 0x3F;
+            YELLOWLED_OFF();
+        }
     }
     break;
     case LEDFLASHFLAG:
@@ -473,6 +476,7 @@ void RF_test_mode(void)
         {
             Delayus(250); //80us
             ClearWDT();   // Service the WDT
+           // Send_char(0x05);
         }
         Receiver_LED_OUT = !Receiver_LED_OUT;
     }

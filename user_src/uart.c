@@ -11,21 +11,34 @@
 #include "initial.h"	  // 初始化  预定义
 #include "ram.h"		  // RAM定义
 #include "eeprom.h"		  // eeprom
-
+#include "uart.h"
 #define TXD1_enable (USART1_CR2 = 0x08) // 允许发送
 #define RXD1_enable (USART1_CR2 = 0x24) // 允许接收及其中断
+
+u8 u1busyCache = 0;
+
+UINT8 UartStatus = 0;
+UINT8 UartLen = 0;
+UINT8 UartCount = 0;
+UINT8 UART_DATA_buffer[9] = {0};
+__Databits_t Databits_t;
+__U1Statues U1Statues;
+UINT8 ACKBack[3] = {0x02, 0x03, 0x00};
+unsigned int U1AckTimer = 0;
+
 //********************************************
 void UART1_INIT(void)
-{					//
-	USART1_CR1 = 0; // 1个起始位,8个数据位
-	USART1_CR3 = 0; // 1个停止位
+{
+	USART1_CR1 = 2;							// 1个起始位,8个数据位  奇校验
+	USART1_CR3 = 0;							// 1个停止位
 	USART1_CR4 = 0;
-	USART1_CR5 = 0x00;  //0x08;						// 半双工模式
-	USART1_BRR2 = 0x03; // 设置波特率9600
-	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
-						//16.00M/9600 = 0x683
-						//USART1_CR2 = 0x08;	// 允许发送
-	USART1_CR2 = 0x24;
+	USART1_CR5 = 0x00;//0x08;						// 半双工模式
+	USART1_BRR2 = 0x03;						// 设置波特率9600
+	USART1_BRR1 = 0x68;						// 3.6864M/9600 = 0x180
+	                                                                //16.00M/9600 = 0x683
+	//USART1_CR2 = 0x08;	// 允许发送
+        USART1_CR2 = 0x2C;
+	Send_char(0xa5);
 }
 void UART1_end(void)
 { //
@@ -44,20 +57,20 @@ void UART1_RX_RXNE(void)
 { // RXD中断服务程序
 	unsigned char dat;
 	dat = USART1_DR; // 接收数据
-
-	if (dat == '(')
-		SIO_cnt = 0;
-	SIO_buff[SIO_cnt] = dat;
-	SIO_cnt = (SIO_cnt + 1) & 0x1F;
-	if (dat == ')')
-	{
-		for (dat = 0; dat < SIO_cnt; dat++)
-		{
-			SIO_DATA[dat] = SIO_buff[dat];
-		}
-		BIT_SIO = 1; // 标志
-					 //SIO_TOT = 20;
-	}
+	ReceiveFrame(dat);
+	// if (dat == '(')
+	// 	SIO_cnt = 0;
+	// SIO_buff[SIO_cnt] = dat;
+	// SIO_cnt = (SIO_cnt + 1) & 0x1F;
+	// if (dat == ')')
+	// {
+	// 	for (dat = 0; dat < SIO_cnt; dat++)
+	// 	{
+	// 		SIO_DATA[dat] = SIO_buff[dat];
+	// 	}
+	// 	BIT_SIO = 1; // 标志
+	// 				 //SIO_TOT = 20;
+	// }
 }
 
 //--------------------------------------------
@@ -82,6 +95,21 @@ void Send_String(unsigned char *string)
 			;				   // 检查发送OK
 		USART1_DR = string[i]; // 发送
 		i++;
+	}
+	while (!USART1_SR_TC)
+		;		 // 等待完成发送
+	RXD1_enable; // 允许接收及其中断
+				 //	BIT_SIO = 0;							// 标志
+}
+void Send_Data(unsigned char *P_data, unsigned int length)
+{ // 发送字符串
+	unsigned char i = 0;
+	TXD1_enable; // 允许发送
+	for (i = 0; i < length; i++)
+	{
+		while (!USART1_SR_TXE)
+			;					   // 检查发送OK
+		USART1_DR = *(P_data + i); // 发送
 	}
 	while (!USART1_SR_TC)
 		;		 // 等待完成发送
@@ -220,5 +248,137 @@ void PC_PRG(void) // 串口命令
 		default:
 			break;
 		}
+	}
+}
+void ReceiveFrame(UINT8 Cache)
+{
+	switch (UartStatus)
+	{
+	case FrameHeadSataus:
+	{
+		UART_DATA_buffer[0] = UART_DATA_buffer[1];
+		UART_DATA_buffer[1] = UART_DATA_buffer[2];
+		UART_DATA_buffer[2] = Cache;
+		if ((UART_DATA_buffer[0] == FrameHead) &&
+			(UART_DATA_buffer[2] == FrameSingnalID))
+		{
+			U1Statues = ReceivingStatues;
+			UartStatus++;
+			UartLen = UART_DATA_buffer[1];
+		}
+	}
+	break;
+	case DataStatus:
+	{
+		UART_DATA_buffer[UartCount + 3] = Cache;
+		UartCount++;
+		if (UartCount >= (UartLen - 3))
+			UartStatus++;
+	}
+	break;
+	default:
+		UartStatus = 0;
+		U1Statues = IdelStatues;
+		break;
+	}
+	if (UartStatus == 0x02 /*FrameEndStatus*/) //接收完一帧处理数据
+	{
+		//add Opration function
+		OprationFrame();
+		UartStatus = 0;
+		UartCount = 0;
+		//        Receiver_LED_OUT_INV = !Receiver_LED_OUT_INV;
+		U1Statues = ReceiveDoneStatues;
+		U1AckTimer = U1AckDelayTime;
+		U1Busy_OUT = 1;
+	}
+}
+
+void OprationFrame(void)
+{
+	unsigned char i;
+	for (i = 0; i < 4; i++)
+		Databits_t.Data[i] = UART_DATA_buffer[3 + i];
+	if (Databits_t.ID_No == 0x92)
+	{
+		ACKBack[2] = 0;
+		switch (Databits_t.Mode)
+		{
+		case 0:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		case 7:
+			break;
+		case 8:
+			break;
+		default:
+			ACKBack[2] = 1;
+			return;
+			break;
+		}
+		switch (Databits_t.Statues)
+		{
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		case 5:
+			break;
+		case 6:
+			break;
+		default:
+			ACKBack[2] = 1;
+			return;
+			break;
+		}
+		switch (Databits_t.Abnormal)
+		{
+		case 0x00:
+			break;
+		case 0x04:
+			break;
+		case 0x06:
+			break;
+		case 0x45:
+			break;
+		case 0x46:
+			break;
+		case 0x47:
+			break;
+		case 0x48:
+			break;
+		default:
+			ACKBack[2] = 1;
+			return;
+			break;
+		}
+	}
+	else
+	{
+		ACKBack[2] = 1;
+		return;
+	}
+}
+void TranmissionACK(void)
+{
+
+	if ((U1Statues == ReceiveDoneStatues) && (U1AckTimer == 0))
+	{
+		U1Busy_OUT = 1;
+		U1Statues = ACKingStatues;
+		Send_Data(ACKBack, 3);
+		U1Statues = IdelStatues;
+		U1Busy_OUT = 1;
 	}
 }

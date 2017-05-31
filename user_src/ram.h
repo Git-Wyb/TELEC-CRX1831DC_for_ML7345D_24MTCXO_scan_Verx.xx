@@ -24,7 +24,7 @@ extern volatile uFLAG FLAG_test;
 //------------------------------------------------
 #define FLAG_Receiver_Scanning FLAG_test.BIT.Bit0
 #define FG_test_tx_1010 FLAG_test.BIT.Bit1
-#define X_HIS FLAG_test.BIT.Bit2 //å†å²è®°å½•   è¯¯ç ç‡æµ‹è¯•ç”¨
+#define X_HIS FLAG_test.BIT.Bit2 //å†å²è®°å½•   è¯?ç ç‡æµ‹è¯•ç”?
 #define FG_test_tx_on FLAG_test.BIT.Bit3
 #define FG_test_tx_off FLAG_test.BIT.Bit4
 #define FG_test_mode FLAG_test.BIT.Bit5
@@ -58,7 +58,7 @@ extern volatile uFLAG FLAG1;
 //************************************************
 
 extern u16 X_COUNT;
-extern u16 X_ERR;//¼ÇÂ¼´íÎóµÄ¸öÊı
+extern u16 X_ERR; //¼ÇÂ¼´íÎóµÄ¸öÊı
 
 extern u8 SIO_cnt;
 extern u8 SIO_buff[16];
@@ -73,11 +73,11 @@ extern u8 TIMER250ms_STOP;
 extern u16 TIME_auto_out;
 extern u16 TIME_auto_close;
 extern u16 time_3sec;
-extern u32 ID_Receiver_DATA[256]; //Ğ´ï¿½ï¿½EEPROM IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+extern u32 ID_Receiver_DATA[256]; //Ğ´ÈëEEPROM ID»º´æ
 extern u16 ID_DATA_PCS;
 extern u32 DATA_Packet_ID;
 extern u8 DATA_Packet_Control;
-extern u8 DATA_Packet_Contro_buf; //2015.3.24ä¿®æ­£
+extern u8 DATA_Packet_Contro_buf; //2015.3.24ä¿?æ­?
 extern u32 ID_Receiver_Login;
 extern u8 TIME_EMC;
 

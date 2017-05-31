@@ -56,32 +56,37 @@ void main(void)
     SysClock_Init();   //系统时钟初始化
     InitialFlashReg(); //flash EEPROM
     eeprom_sys_load(); //ID载入
-    TIM4_Init();       // 定时器
     UART1_INIT();      // UART1 for PC Software
-//    beep_init();       // 蜂鸣器
+    TIM4_Init();       // 定时器
+    beep_init();       // 蜂鸣器
     ClearWDT();        // Service the WDT
-//    ADF7030Init();
-    _EI();      // 允许中断
-    ClearWDT(); // Service the WDT
-//    RF_test_mode();
+    ADF7030Init();     //射频初始化
+    _EI();             // 允许中断
+    ClearWDT();        // Service the WDT
+    RF_test_mode();
     FLAG_APP_RX = 1;
     TIME_EMC = 10;
+
     while (1)
     {
         ClearWDT(); // Service the WDT
 
-//        if (time_Login_exit_256 == 0)
-//            ID_Decode_OUT();
-//        Freq_Scanning();
+        if (time_Login_exit_256 == 0)
+            ID_Decode_OUT();
+        Freq_Scanning();
         ID_learn();
-
-//        SCAN_RECEIVE_PACKET(); //扫描接收数据
+        //LEDCtr();
+        SCAN_RECEIVE_PACKET(); //扫描接收数据
+        TranmissionACK();
         //        READ_RSSI_avg();
-
-        //        if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
-        //            Receiver_LED_RX = 1; //26   35
-        //        else if ((RAM_rssi_AVG <= 59) && (FG_Receiver_LED_RX == 0))
-        //            Receiver_LED_RX = 0; //25  34
+        if (FG_Receiver_LED_RX == 1)
+            Receiver_LED_RX = 1;
+        else if (FG_Receiver_LED_RX == 0)
+            Receiver_LED_RX = 0;
+        // if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
+        //     Receiver_LED_RX = 1; //26   35
+        // else if ((RAM_rssi_AVG <= 59) && (FG_Receiver_LED_RX == 0))
+        //     Receiver_LED_RX = 0; //25  34
     }
 }
 

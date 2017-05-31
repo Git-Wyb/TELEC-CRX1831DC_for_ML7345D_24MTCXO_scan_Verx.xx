@@ -27,6 +27,11 @@ void TIM4_Init(void)
 
 void TIM4_UPD_OVF(void)
 { //725==1Ãë
+    if ((LedREDTimer > 1) && ((RedStutue & 0x0f) != LEDONFLAG))
+        LedREDTimer--;
+    if ((LedYELLOWTimer > 1) && ((YellowStutue & 0x0f) != LEDONFLAG))
+        LedYELLOWTimer--;
+
     if (TIMER1s)
         --TIMER1s;
     if (TIMER300ms)

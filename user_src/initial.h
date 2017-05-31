@@ -50,7 +50,8 @@ extern uFLAG YellowLedFlag, RedLedFalg;
 #define LEDFLASHASECONDFLAG 2
 #define LEDFLASHFLAG 3
 
-void LED_GPIO_Init(void);      //初始化LED
+void LED_GPIO_Init(void); //初始化LED
+void LEDCtr(void);
 void CG2214M6_GPIO_Init(void); //CG2214M6 IO
 void ADF7030_GPIO_INIT(void);  //ADF7030 IO(REST & GPIO3)
 void HA_GPIO_Init(void);

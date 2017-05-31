@@ -11,27 +11,28 @@
 #include "Timer.h"
 //以下是IO定义
 /********************LED寄存器*****************************************/
+extern u8 LED_Cache;
 #define LED_ON 1
 #define LED_OFF 0
-#define LED_YELLOW PC_ODR_ODR0     //黄灯
+#define LED_YELLOW LED_Cache       //黄灯
 #define LED_YELLOW_DDR PC_DDR_DDR0 //黄灯方向
 #define LED_YELLOW_CR1 PC_CR1_C10  //黄灯类型
 #define LED_YELLOW_CR2 PC_CR2_C20  //黄灯输出频率
 
-#define LED_RED PC_ODR_ODR1     //红灯
+#define LED_RED LED_Cache       //红灯
 #define LED_RED_DDR PC_DDR_DDR1 //方向
 #define LED_RED_CR1 PC_CR1_C11  //类型
 #define LED_RED_CR2 PC_CR2_C21  //输出频率
 
-#define Receiver_LED_TX PC_ODR_ODR1       // Output   受信机送信指示  高电平有效
+#define Receiver_LED_TX LED_Cache         //PC_ODR_ODR1       // Output   受信机送信指示  高电平有效
 #define Receiver_LED_TX_direc PC_DDR_DDR1 // Output   受信机送信指示  高电平有效
 #define Receiver_LED_TX_CR1 PC_CR1_C11    // Output   受信机送信指示  高电平有效
 
-#define Receiver_LED_RX PC_ODR_ODR0       // Output   受信机受信指示  高电平有效
+#define Receiver_LED_RX PC_ODR_ODR1       //PC_ODR_ODR0       // Output   受信机受信指示  高电平有效
 #define Receiver_LED_RX_direc PC_DDR_DDR0 // Output   受信机受信指示  高电平有效
 #define Receiver_LED_RX_CR1 PC_CR1_C10    // Output   受信机受信指示  高电平有效
 
-#define Receiver_LED_OUT PC_ODR_ODR4       // Output   受信机继电器动作输出  高电平有效
+#define Receiver_LED_OUT PC_ODR_ODR0       //PC_ODR_ODR4       // Output   受信机继电器动作输出  高电平有效
 #define Receiver_LED_OUT_direc PC_DDR_DDR4 // Output   受信机继电器动作输出  高电平有效
 #define Receiver_LED_OUT_CR1 PC_CR1_C14    // Output   受信机继电器动作输出  高电平有效
 

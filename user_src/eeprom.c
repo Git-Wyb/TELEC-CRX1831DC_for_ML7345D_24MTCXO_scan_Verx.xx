@@ -231,11 +231,11 @@ void ALL_ID_EEPROM_Erase(void)
     {
         m2 = 3 * i;
         UnlockFlash(UNLOCK_EEPROM_TYPE);
-        WriteByteToFLASH(addr_eeprom_sys + m2, xm[0]);
-        m2++;
-        WriteByteToFLASH(addr_eeprom_sys + m2, xm[1]);
-        m2++;
-        WriteByteToFLASH(addr_eeprom_sys + m2, xm[2]);
+	   WriteByteToFLASH( addr_eeprom_sys+m2, xm[0]);
+	   m2++;
+	   WriteByteToFLASH( addr_eeprom_sys+m2, xm[1]);
+	   m2++;
+	   WriteByteToFLASH( addr_eeprom_sys+m2, xm[2]);
         LockFlash(UNLOCK_EEPROM_TYPE);
         ClearWDT(); // Service the WDT
     }
@@ -260,11 +260,11 @@ void ID_EEPROM_write(void)
     for (i = 0; i < 260; i++)
     {
         j = 3 * i;
-        xm[0] = ReadByteEEPROM(addr_eeprom_sys + j);
-        j++;
-        xm[1] = ReadByteEEPROM(addr_eeprom_sys + j);
-        j++;
-        xm[2] = ReadByteEEPROM(addr_eeprom_sys + j);
+        xm[0] = ReadByteEEPROM( addr_eeprom_sys+j);
+	j++;
+        xm[1] = ReadByteEEPROM( addr_eeprom_sys+j);
+	j++;
+        xm[2] = ReadByteEEPROM( addr_eeprom_sys+j);
         xd.IDB[0] = 0;
         xd.IDB[1] = xm[0];
         xd.IDB[2] = xm[1];
@@ -279,11 +279,11 @@ void ID_EEPROM_write(void)
     xm[2] = xn.IDB[3];
     m1 = j - 2;
     UnlockFlash(UNLOCK_EEPROM_TYPE);
-    WriteByteToFLASH(addr_eeprom_sys + m1, xm[0]);
-    m1++;
-    WriteByteToFLASH(addr_eeprom_sys + m1, xm[1]);
-    m1++;
-    WriteByteToFLASH(addr_eeprom_sys + m1, xm[2]);
+	WriteByteToFLASH( addr_eeprom_sys+m1, xm[0]);
+	m1++;
+	WriteByteToFLASH( addr_eeprom_sys+m1, xm[1]);
+	m1++;
+	WriteByteToFLASH( addr_eeprom_sys+m1, xm[2]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 
     if (ID_DATA_PCS >= 256)
@@ -312,11 +312,11 @@ void ID_EEPROM_write_0x00(void)
     for (i = 0; i < 260; i++)
     {
         j = 3 * i;
-        xm[0] = ReadByteEEPROM(addr_eeprom_sys + j);
-        j++;
-        xm[1] = ReadByteEEPROM(addr_eeprom_sys + j);
-        j++;
-        xm[2] = ReadByteEEPROM(addr_eeprom_sys + j);
+        xm[0] = ReadByteEEPROM( addr_eeprom_sys+j);
+	j++;
+        xm[1] = ReadByteEEPROM( addr_eeprom_sys+j);
+	j++;
+        xm[2] = ReadByteEEPROM( addr_eeprom_sys+j);
         xd.IDB[0] = 0;
         xd.IDB[1] = xm[0];
         xd.IDB[2] = xm[1];
@@ -443,6 +443,8 @@ void ID_learn(void)
         }
         if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1))
         {
+            if ((YellowStutue & 0x0f) != LEDFLASHASECONDFLAG)
+                YellowStutue = LEDFLASHASECONDFLAG | 0x80;
             TIME_Receiver_Login_led++;
             if (TIME_Receiver_Login_led >= 46)
             {

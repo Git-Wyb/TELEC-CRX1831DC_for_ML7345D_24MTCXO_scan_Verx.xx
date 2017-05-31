@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-1158014001
+Checksum=977962657
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -59,8 +59,11 @@ ShowArgs=0
 MixedMode=1
 [struct_types]
 Fmt0=ADF70XX_REG_T-whole_reg	1	0
+Fmt1=uFLAG-BYTE	4	0
 [array_types]
-Fmt0=unsigned char[4]	1	0
+Fmt0=u32_t[6]	4	0
+Fmt1=unsigned char[4]	1	0
+Fmt2=unsigned char[9]	4	0
 [watch_formats]
 Fmt0={W}0:COUNT_Receiver_Login	3	0
 Fmt1={W}0:RAM_rssi_AVG	3	0
@@ -78,10 +81,9 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\user_src\eeprom.c}.424.13" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\user_src\Initial.c}.486.9" 0 0 0 0 "" 0 ""
-Bp2=_ "STD_CODE" "{$PROJ_DIR$\user_src\eeprom.c}.407.13" 1 0 0 0 "" 0 ""
-Count=3
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\user_src\ID_Decode.c}.428.17" 1 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{$PROJ_DIR$\user_src\uart.c}.60.2" 1 0 0 0 "" 0 ""
+Count=2
 [Aliases]
 A0=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\ID_Decode.c" ""
 A1=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\adf7021.c" ""

@@ -4,7 +4,15 @@
   <project>
     <path>$WS_DIR$\project.ewp</path>
   </project>
-  <batchBuild/>
+  <batchBuild>
+    <batchDefinition>
+      <name>useful</name>
+      <member>
+        <project>project</project>
+        <configuration>Release</configuration>
+      </member>
+    </batchDefinition>
+  </batchBuild>
 </workspace>
 
 

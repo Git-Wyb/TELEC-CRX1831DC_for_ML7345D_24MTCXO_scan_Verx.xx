@@ -379,7 +379,6 @@ void Receiver_BEEP(void)
                     FG_beep_off = 0;
                     BEEP_CSR2_BEEPEN = 1;
                 }
-                //Delayus(240);
                 Delayus(250); //80us
                 Delayus(250); //80us
                 Delayus(250); //80us
