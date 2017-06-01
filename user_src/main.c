@@ -56,11 +56,12 @@ void main(void)
     SysClock_Init();   //系统时钟初始化
     InitialFlashReg(); //flash EEPROM
     eeprom_sys_load(); //ID载入
-    UART1_INIT();      // UART1 for PC Software
+    //UART1_INIT();      // UART1 for PC Software
     TIM4_Init();       // 定时器
     beep_init();       // 蜂鸣器
     ClearWDT();        // Service the WDT
     ADF7030Init();     //射频初始化
+    UART1_INIT();      // UART1 for PC Software
     _EI();             // 允许中断
     ClearWDT();        // Service the WDT
     RF_test_mode();

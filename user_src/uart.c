@@ -29,20 +29,31 @@ unsigned int U1AckTimer = 0;
 //********************************************
 void UART1_INIT(void)
 {
-	USART1_CR1 = 2;							// 1个起始位,8个数据位  奇校验
-	USART1_CR3 = 0;							// 1个停止位
-	USART1_CR4 = 0;
-	USART1_CR5 = 0x00;//0x08;						// 半双工模式
-	USART1_BRR2 = 0x03;						// 设置波特率9600
-	USART1_BRR1 = 0x68;						// 3.6864M/9600 = 0x180
-	                                                                //16.00M/9600 = 0x683
-	//USART1_CR2 = 0x08;	// 允许发送
-        USART1_CR2 = 0x2C;
+	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
+	USART1_CR1_bit.M = 1;
+	USART1_CR1_bit.PCEN = 1;
+	USART1_CR1_bit.PS = 1;
+	USART1_CR2_bit.TIEN = 0;
+	USART1_CR2_bit.TCIEN = 0;
+	USART1_CR2_bit.RIEN = 1;
+	USART1_CR2_bit.ILIEN = 0;
+	USART1_CR2_bit.TEN = 1;
+	USART1_CR2_bit.REN = 1;
+
+//	USART1_CR3 = 0; // 1个停止位
+//	USART1_CR4 = 0;
+//	USART1_CR5 = 0x00;  //0x08;						// 半双工模式
+	USART1_BRR2 = 0x03; // 设置波特率9600
+	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
+						//16.00M/9600 = 0x683
+						//USART1_CR2 = 0x08;	// 允许发送
+	//USART1_CR2 = 0x24;
 	Send_char(0xa5);
 }
 void UART1_end(void)
 { //
-	//SYSCFG_RMPCR1_USART1TR_REMAP=0;
+	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
+
 	USART1_CR1 = 0; // 1个起始位,8个数据位
 	USART1_CR3 = 0; // 1个停止位
 	USART1_CR4 = 0;
@@ -57,6 +68,7 @@ void UART1_RX_RXNE(void)
 { // RXD中断服务程序
 	unsigned char dat;
 	dat = USART1_DR; // 接收数据
+					 //Send_char(dat);
 	ReceiveFrame(dat);
 	// if (dat == '(')
 	// 	SIO_cnt = 0;

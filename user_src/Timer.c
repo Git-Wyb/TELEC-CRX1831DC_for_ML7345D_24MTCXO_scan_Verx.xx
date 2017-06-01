@@ -10,7 +10,7 @@
 #include "Pin_define.h"   // 管脚定义
 #include "initial.h"      // 初始化  预定义
 #include "ram.h"          // RAM定义
-
+#include "uart.h"
 u16 LedREDTimer = 1;
 u16 LedYELLOWTimer = 1;
 u16 ErrStateTimeer = 1;
@@ -47,5 +47,6 @@ void TIM4_UPD_OVF(void)
         TIME_10ms = 10;
         FG_10ms = 1;
     }
+    if(U1AckTimer)U1AckTimer--;
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

@@ -589,7 +589,7 @@ void RF_test_mode(void)
                   //        }
                   //       if(ADF7021_DATA_CLK==0)FG_test1=0;
     }
-    UART1_end();
+  //  UART1_end();
     FG_test_rx = 0;
     TIMER1s = 0;
     Receiver_LED_TX = 0;

@@ -1,6 +1,6 @@
 #ifndef __UART_H__
 #define __UART_H__
-
+//#include "type_def.h"
 /***********************************************************************/
 /*  FILE        :Uart.H                                                */
 /*  DATE        :Mar, 2014                                             */
@@ -9,7 +9,7 @@
 /*  DESCRIPTION :                                                      */
 /*  Mark        :ver 1.0                                               */
 /***********************************************************************/
-
+#include "uart.h"
 extern u8 u1busyCache;
 #define U1Busy_OUT u1busyCache
 #define FrameHeadSataus 0x00 //֡ͷ
@@ -29,18 +29,18 @@ typedef union {
     unsigned char Data[4];
     struct
     {
-        unsigned ID_No : 8;
-        unsigned Statues : 4;
-        unsigned Mode : 4;
-        unsigned Abnormal : 8;
-        unsigned Standby : 8;
+        unsigned char ID_No : 8;
+        unsigned char Statues : 4;
+        unsigned char Mode : 4;
+        unsigned char Abnormal : 8;
+        unsigned char Standby : 8;
     };
     struct
     {
-        unsigned : 8;
-        unsigned SW_Info : 8;
-        unsigned AbnormalOut1 : 8;
-        unsigned AbnormalOut2 : 8;
+        unsigned char : 8;
+        unsigned char SW_Info : 8;
+        unsigned char AbnormalOut1 : 8;
+        unsigned char AbnormalOut2 : 8;
     };
 } __Databits_t;
 typedef enum {
