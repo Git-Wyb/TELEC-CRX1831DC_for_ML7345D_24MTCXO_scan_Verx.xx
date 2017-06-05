@@ -522,6 +522,8 @@ void ADF7030_ACC_FROM_POWEROFF(void)
 void RX_ANALYSIS(void)
 {
     u8 i;
+    TIMER300ms = 500;
+    FG_Receiver_LED_RX = 1;
     for (i = 0; i < 6; i++)
     {
         SPI_Receive_DataForC[i] = (u32)SPI_RECEIVE_BUFF[i * 4 + 3] |

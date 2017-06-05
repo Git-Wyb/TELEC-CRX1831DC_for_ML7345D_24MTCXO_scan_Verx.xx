@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=596772701
+Checksum=-534057260
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -59,16 +59,7 @@ ShowArgs=0
 MixedMode=1
 [struct_types]
 Fmt0=ADF70XX_REG_T-whole_reg	1	0
-Fmt1=struct <Unnamed 131>-Abnormal	4	0
-Fmt2=struct <Unnamed 131>-ID_No	4	0
-Fmt3=struct <Unnamed 131>-Mode	4	0
-Fmt4=struct <Unnamed 131>-Standby	4	0
-Fmt5=struct <Unnamed 131>-Statues	4	0
-Fmt6=struct <Unnamed 132>-	4	0
-Fmt7=struct <Unnamed 132>-AbnormalOut1	4	0
-Fmt8=struct <Unnamed 132>-AbnormalOut2	4	0
-Fmt9=struct <Unnamed 132>-SW_Info	4	0
-Fmt10=uFLAG-BYTE	4	0
+Fmt1=uFLAG-BYTE	4	0
 [array_types]
 Fmt0=u32_t[6]	4	0
 Fmt1=unsigned char[3]	4	0
@@ -83,8 +74,6 @@ Fmt3={W}0:test_RSSI	3	0
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
-[Breakpoints]
-Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -92,6 +81,9 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\user_src\ID_Decode.c}.190.21" 1 0 0 0 "" 0 ""
+Count=1
 [Aliases]
 A0=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\ID_Decode.c" ""
 A1=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\adf7021.c" ""
