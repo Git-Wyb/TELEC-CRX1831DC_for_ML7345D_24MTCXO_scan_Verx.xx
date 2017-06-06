@@ -5,6 +5,7 @@
 /*  CPU TYPE    :STM8L151G6     Crystal: 16M HSI                       */
 /*  Mark        :ver 1.0                                               */
 /***********************************************************************/
+#include <stdio.h>
 #include <iostm8l151g4.h>
 //#include        "stm8l15x.h"
 #include "Pin_define.h" // 管脚定义
@@ -49,13 +50,13 @@ void ClearWDT(void)
 //  GPIO_Mode_Out_PP_High_Slow = (uint8_t)0xD0    /*!< Output push-pull, high level, 2MHz */
 //===降低功耗说明：①I/O没用，必须置Input pull-up    ②I/O外围有IC，但没用，必须置Input floating=====
 
-void VHF_GPIO_INIT(void)
-{ // CPU端口设置
+void VHF_GPIO_INIT(void) // CPU端口设置
+{
     /****************端口设置说明***************************
-CR1寄存器  输出 Output（1=推挽、0=OC）
-           输入 Input（1=上拉、0=浮动）
-***************end************************************/
-    //    HA_GPIO_Init();
+    *CR1寄存器  输出 Output（1=推挽、0=OC）
+    *           输入 Input（1=上拉、0=浮动）
+    ***************end************************************/
+    HA_GPIO_Init();              // test mode按键
     KEY_GPIO_Init();             // 输入 test脚 登录键
     Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
     Receiver_vent_CR1 = 1;
@@ -65,8 +66,7 @@ CR1寄存器  输出 Output（1=推挽、0=OC）
     PIN_BEEP = 0;
 
     LED_GPIO_Init();
-    Inverters_OUT_direc = Input; // 输入   继电器输出信号反向   低电平有效
-    Inverters_OUT_CR1 = 1;
+    ADF7030_GPIO_INIT();
     Receiver_OUT_GPIO_Init(); // Output   受信机继电器
 }
 //============================================================================================
@@ -133,14 +133,21 @@ void HA_GPIO_Init(void)
     //    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
     //    HA_L_signal_CR1 = 1;
 
-    HA_ERR_signal_direc = Input; // Input   HA 异常信号  低电平有效
-    HA_ERR_signal_CR1 = 1;
+    HA_ERR_signal_direc = Input;          // Input   受信机登录键   低电平有效
+    HA_ERR_signal_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    HA_ERR_signal_CR2 = InterruptDisable; //禁止中断
+
+    HA_L_signal_direc = Input;          // Input   受信机登录键   低电平有效
+    HA_L_signal_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    HA_L_signal_CR2 = InterruptDisable; //禁止中断
 
     HA_Sensor_signal_direc = Input; // Input   HA 传感器信号  低电平有效
     HA_Sensor_signal_CR1 = 1;
 }
 void Receiver_OUT_GPIO_Init(void)
 {
+    Inverters_OUT_direc = Input; // 输入   继电器输出信号反向   低电平有效
+    Inverters_OUT_CR1 = 1;
     if (Inverters_OUT == 1)
     {
         FG_allow_out = 1;
@@ -316,19 +323,55 @@ void ADF7030_GPIO_INIT(void)
     ADF7030_REST_CR1 = 1;      //* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
     ADF7030_REST_CR2 = 1;      //* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
 
+    ADF7030_GPIO2_DDR = Input;            //输入
+    ADF7030_GPIO2_CR1 = Floating;          //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO2_CR2 = InterruptDisable; //禁止中断
+
     ADF7030_GPIO3_DDR = Input; //输入
     ADF7030_GPIO3_CR1 = 1;     //1: Input with pull-up 0: Floating input
     ADF7030_GPIO3_CR2 = 0;     //禁止中断
+    BerExtiInit();
+}
+/**
+ ****************************************************************************
+ * @Function : void BerExtiInit(void)
+ * @File     : Initial.c
+ * @Program  :
+ * @Created  : 2017/6/6 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+void BerExtiInit(void)
+{
+    ADF7030_GPIO4_DDR = Input; //输入
+    ADF7030_GPIO4_CR1 = 0;     //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO4_CR2 = 1;     //使能中断
+    EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
+    EXTI_CR2 |= 0x02;
 
-    // ADF7030_GPIO4_DDR = Input; //输入
-    // ADF7030_GPIO4_CR1 = 0;     //1: Input with pull-up 0: Floating input
-    // ADF7030_GPIO4_CR2 = 1;     //使能中断
-    // EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
-    // EXTI_CR2 |= 0x02;
+    ADF7030_GPIO5_DDR = Input; //输入
+    ADF7030_GPIO5_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO5_CR2 = 0;     //禁止中断
+}
+/**
+ ****************************************************************************
+ * @Function : void BerExtiInit(void)
+ * @File     : Initial.c
+ * @Program  :
+ * @Created  : 2017/6/6 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+void BerExtiUnInit(void)
+{
+    ADF7030_GPIO4_DDR = Input; //输入
+    ADF7030_GPIO4_CR1 = 0;     //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO4_CR2 = 0;     //禁止中断
+    EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
 
-    // ADF7030_GPIO5_DDR = Input; //输入
-    // ADF7030_GPIO5_CR1 = 1;     //1: Input with pull-up 0: Floating input
-    // ADF7030_GPIO5_CR2 = 0;     //禁止中断
+    ADF7030_GPIO5_DDR = Input; //输入
+    ADF7030_GPIO5_CR1 = 1;     //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO5_CR2 = 0;     //禁止中断
 }
 /**
 ****************************************************************************
@@ -404,23 +447,8 @@ u8 KEY_SCAN(u8 mode)
 **/
 void RF_BRE_Check(void)
 {
-    static u8 ErrState = 0;
-    u8 j;
+    char errbuff[10];
     ClearWDT(); // Service the WDT
-
-    if (ErrStateTimeer == 1)
-    {
-        ErrStateTimeer = 0;
-        ErrState = 1;
-    }
-    if (ErrState == 1)
-    {
-        if ((RedStutue & 0x7f) != LEDFLASHFLAG)
-            RedStutue = LEDFLASHFLAG | 0x80;
-    }
-    else
-        RedStutue = LEDONFLAG;
-
     if (ADF7030_GPIO3 == 1)
     {
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
@@ -439,36 +467,24 @@ void RF_BRE_Check(void)
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         ADF7030_RECEIVING_FROM_POWEROFF();
     }
-
     if (X_COUNT >= 1000)
     {
         if (X_ERR >= 50)
-        {
-            YellowStutue = LEDOFFFLAG;
-        }
+            Receiver_LED_RX = 1;
         else
-        {
-            YellowStutue = LEDONFLAG;
-            ErrState = 0;
-            ErrStateTimeer = 1200;
-        }
-        for (j = 0; j < 4; j++)
-            //lcd    display_map_xy(70 + j * 6, 45, 5, 8, char_Small + (CacheData[3 - j] - ' ') * 5);
-            //        display_map_58_6(70,45,4,CacheData);
-            X_ERR = 0;
+            Receiver_LED_RX = 0;
+        sprintf(errbuff, "%d\r\n", X_ERR);
+        Send_String((u8 *)errbuff);
+        //for (j = 0; j < 4; j++)
+        //lcd    display_map_xy(70 + j * 6, 45, 5, 8, char_Small + (CacheData[3 - j] - ' ') * 5);
+        //        display_map_58_6(70,45,4,CacheData);
+        X_ERR = 0;
         X_COUNT = 0;
     }
 }
 void RF_test_mode(void)
 {
-    UINT8 uart_data, Boot_i;
-    //    Receiver_LED_OUT=1;
-    //    for(time_3sec=0;time_3sec<9000;time_3sec++){
-    //      Delayus(250);   //80us
-    //      ClearWDT(); // Service the WDT
-    //    }
-    //    Receiver_LED_OUT=0;
-
+    UINT8 Boot_i;
     Receiver_LED_OUT = 1;
     for (Boot_i = 0; Boot_i < 2; Boot_i++)
     {
@@ -476,7 +492,7 @@ void RF_test_mode(void)
         {
             Delayus(250); //80us
             ClearWDT();   // Service the WDT
-           // Send_char(0x05);
+                          // Send_char(0x05);
         }
         Receiver_LED_OUT = !Receiver_LED_OUT;
     }
@@ -484,16 +500,15 @@ void RF_test_mode(void)
 
     while (Receiver_test == 0)
     {
-        ClearWDT(); // Service the WDT
-                    //if(HA_ERR_signal==0){      //test ADF7021 TX
-        if (HA_ERR_signal == 0)
+        ClearWDT();             // Service the WDT
+        if (HA_ERR_signal == 0) //test ADF7030 TX
         {
             if (HA_L_signal == 0)
                 Tx_Rx_mode = 0;
             else
                 Tx_Rx_mode = 1;
         }
-        else
+        else //test ADF7030 RX
         {
             if (HA_L_signal == 0)
                 Tx_Rx_mode = 2;
@@ -505,8 +520,7 @@ void RF_test_mode(void)
             FG_test_rx = 0;
             Receiver_LED_RX = 0;
             FG_test_tx_off = 0;
-            //if(HA_L_signal==0){    //发载波，无调制信号
-            if (Tx_Rx_mode == 0)
+            if (Tx_Rx_mode == 0) //发载波，无调制信号
             {
                 Receiver_LED_OUT = 1;
                 FG_test_mode = 0;
@@ -514,12 +528,13 @@ void RF_test_mode(void)
                 if (FG_test_tx_on == 0)
                 {
                     FG_test_tx_on = 1;
+                    ADF7030_TX(TestTXCarrier);
                     //7021_DATA_ ADF7021_DATA_direc = Input;
                     //ttset dd_set_TX_mode_carrier();
                 }
             }
-            else
-            { //发载波，有调制信号
+            else //发载波，有调制信号
+            {
                 if (TIMER1s == 0)
                 {
                     TIMER1s = 500;
@@ -530,6 +545,7 @@ void RF_test_mode(void)
                 if (FG_test_tx_1010 == 0)
                 {
                     FG_test_tx_1010 = 1;
+                    ADF7030_TX(TestTx_PreamblePattern);
                     //7021_DATA_ ADF7021_DATA_direc = Output;
                     //ttset dd_set_TX_mode_1010pattern();
                 }
@@ -546,50 +562,33 @@ void RF_test_mode(void)
             if (FG_test_tx_off == 0)
             {
                 FG_test_tx_off = 1;
+                ADF7030_RECEIVING_FROM_POWEROFF();
                 //ttset dd_set_RX_mode_test();
                 //7021_DATA_ ADF7021_DATA_direc = Input;
             }
-            //if(HA_L_signal==0){
-            if (Tx_Rx_mode == 2)
+            if (Tx_Rx_mode == 2) //packet usart out put RSSI
+            {
                 if (TIMER1s == 0)
                 {
                     TIMER1s = 500;
                     Receiver_LED_RX = !Receiver_LED_RX;
                 }
-            if (Tx_Rx_mode == 3)
+                SCAN_RECEIVE_PACKET(); //扫描接收数据
+            }
+            if (Tx_Rx_mode == 3) //packet usart out put BER
             {
-                if (X_COUNT >= 1200)
-                {
-                    X_COUNT = 0;
-                    if (X_ERR >= 60)
-                        Receiver_LED_RX = 0;
-                    else
-                        Receiver_LED_RX = 1;
-                    uart_data = (X_ERR / 1000) + 48; //48;//（X_ERR/1000) + 48;
-                    Send_char(uart_data);
-                    X_ERR = X_ERR % 1000;
-                    uart_data = (X_ERR / 100) + 48; //X_ERR/256;
-                    Send_char(uart_data);
-                    X_ERR = X_ERR % 100;
-                    uart_data = (X_ERR / 10) + 48;
-                    Send_char(uart_data);
-                    X_ERR = X_ERR % 10;
-                    uart_data = X_ERR + 48;
-                    Send_char(uart_data);
-                    uart_data = 13; //|字符
-                    Send_char(uart_data);
-                    X_ERR = 0;
-                }
+                RF_BRE_Check();
             }
         }
-        PC_PRG(); // PC控制
-                  //	if((ADF7021_DATA_CLK==1)&&(FG_test_mode==1)&&(FG_test1==0)){
-                  //           ADF7021_DATA_tx=!ADF7021_DATA_tx;
-                  //           FG_test1=1;
-                  //        }
-                  //       if(ADF7021_DATA_CLK==0)FG_test1=0;
+        //PC_PRG(); // PC控制
+        //	if((ADF7021_DATA_CLK==1)&&(FG_test_mode==1)&&(FG_test1==0)){
+        //           ADF7021_DATA_tx=!ADF7021_DATA_tx;
+        //           FG_test1=1;
+        //        }
+        //       if(ADF7021_DATA_CLK==0)FG_test1=0;
     }
-  //  UART1_end();
+    //  UART1_end();
+    BerExtiUnInit();
     FG_test_rx = 0;
     TIMER1s = 0;
     Receiver_LED_TX = 0;
@@ -599,6 +598,7 @@ void RF_test_mode(void)
 
     FLAG_APP_RX = 1;
     //ttset dd_set_RX_mode();
+    ADF7030Init();
     TIME_Fine_Calibration = 9000;
     TIME_EMC = 10;
 }

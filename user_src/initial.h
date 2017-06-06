@@ -67,5 +67,6 @@ void RF_test_mode(void);
 void WDT_init(void);
 void ClearWDT(void);
 void RF_BRE_Check(void);
-
+void BerExtiInit(void);
+void BerExtiUnInit(void);
 #endif

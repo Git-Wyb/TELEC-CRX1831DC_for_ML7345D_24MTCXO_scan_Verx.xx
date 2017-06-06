@@ -47,6 +47,10 @@ void TIM4_UPD_OVF(void)
         TIME_10ms = 10;
         FG_10ms = 1;
     }
-    if(U1AckTimer)U1AckTimer--;
+    if (U1AckTimer)
+        U1AckTimer--;
+    if (Flag_RSSI_Read_Timer)
+        Flag_RSSI_Read_Timer--;
+
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

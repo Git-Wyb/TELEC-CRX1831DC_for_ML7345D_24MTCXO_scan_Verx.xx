@@ -122,6 +122,8 @@ extern u16 PAYLOAD_SIZE;
 #define RX_PayLoadSizeNOLogin 13
 #define RX_PayLoadSizeLogin 26
 /***************************************************/
+/**ADF7030_REST**/ extern u8 ADF7030_REST_Cache;
+/**Receiver_vent**/ extern u8 Receiver_vent_Cache;
 extern u8 RX_COUNT;
 extern u8 SPI_RECEIVE_BUFF[SPI_REV_BUFF_LONG];
 extern u32 SPI_Receive_DataForC[6];
@@ -155,4 +157,6 @@ u8 Memory_Read_Block_Pointer_Short_Address(ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNT
 u8 Memory_Read_Block_Pointer_Long_Address(ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNTR_ID, u8 num);
 u8 Memory_Write_Block_Pointer_Short_Address(const u8 *x_data, ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNTR_ID, u8 num);
 void ADF7030ParameterInit(void);
+void ADF7030_TX(u8 mode);
+
 #endif

@@ -9,10 +9,12 @@
 #include "ADF7030_1.h"
 #include "ID_Decode.h"
 #include "type_def.h"
+#include "uart.h"
 u8 FilterChar[2][1] = {
     {' '},
     {'G'}};
-
+/**ADF7030_REST**/ u8 ADF7030_REST_Cache;
+/**Receiver_vent**/ u8 Receiver_vent_Cache;
 u8 SPI_SEND_BUFF[SPI_SEND_BUFF_LONG] = {0X55};
 u8 SPI_RECEIVE_BUFF[SPI_REV_BUFF_LONG] = {0};
 u32 SPI_Receive_DataForC[6]; //C部
@@ -56,7 +58,7 @@ void DELAY_XX(void)
 void ADF7030Init(void)
 {
     SPI_conf(); //初始化spi
-    ADF7030_GPIO_INIT();
+                //    ADF7030_GPIO_INIT();
     CG2214M6_GPIO_Init();
     ADF7030ParameterInit(); //参数初始化
     ADF7030_REST = 0;       //ADF7030芯片初始化
@@ -565,6 +567,8 @@ void RX_ANALYSIS(void)
 
 void SCAN_RECEIVE_PACKET(void)
 {
+    short Cache;
+    char AVGBuff[10];
     if (ADF7030_GPIO3 == 1)
     {
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
@@ -576,7 +580,6 @@ void SCAN_RECEIVE_PACKET(void)
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
         Memory_Read_Block_Pointer_Long_Address(PNTR_CUSTOM2_ADDR, PAYLOAD_SIZE);
-        //        ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(ADDR_RXPACKET_DATA,14);
         RedStutue = LEDFLASHASECONDFLAG | 0x80;
         RX_ANALYSIS(); //处理数据
         while (ADF7030_GPIO3 == 1)
@@ -586,6 +589,22 @@ void SCAN_RECEIVE_PACKET(void)
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         ADF7030_RECEIVING_FROM_POWEROFF();
+        RAM_RSSI_AVG = RAM_RSSI_SUM / RSSI_Read_Counter;
+        sprintf(AVGBuff, "%ddBm\r\n", RAM_RSSI_AVG/128);
+        Send_String((u8 *)AVGBuff);
+        RSSI_Read_Counter = 0;
+        RAM_RSSI_SUM = 0;
+    }
+    else if ((ADF7030_GPIO3 == 0) && (ADF7030_GPIO2 == 1))
+    {
+        if ((Flag_RSSI_Read_Timer == 0) && (RSSI_Read_Counter < 5))
+        {
+            Flag_RSSI_Read_Timer = 10;
+            ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(ADDR_GENERIC_PKT_LIVE_LINK_QUAL, 6);
+            Cache = (short)((ADF7030_RESIGER_VALUE_READ & 0x07ff0000) >> 11);
+            RAM_RSSI_SUM += Cache;
+            RSSI_Read_Counter++;
+        }
     }
 }
 /**
@@ -1018,4 +1037,36 @@ void TestFunV2(u8 KeyVel)
             SendFlag = 0;
         }
     }
+}
+/**
+ ****************************************************************************
+ * @Function : void ADF7030_TX(u8 mode)
+ * @File     : ADF7030_1.c
+ * @Program  :
+ * @Created  : 2017/6/6 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+void ADF7030_TX(u8 mode)
+{
+    GENERIC_PKT_TEST_MODES0_32bit_20000548 &= 0xfff8ffff;
+    GENERIC_PKT_TEST_MODES0_32bit_20000548 |= ((u32)mode << 16);
+    CG2214M6_USE_T;
+    ADF7030_WRITING_PROFILE_FROM_POWERON();
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
+    ADF7030_CHANGE_STATE(STATE_PHY_ON);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg, CFG_SIZE(), ADDR_CHANNEL_FERQUENCY, 8, 4);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR(ADDR_TXPACKET_DATA, CONST_TXPACKET_DATA_20000AF0, OPEN_LONG);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
+    ADF7030_CHANGE_STATE(STATE_PHY_TX);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
 }

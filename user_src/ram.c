@@ -55,8 +55,10 @@ u8 Display_key_SW3 = 0xff;
 /*******LCD**************/
 uFLAG FlagLCDUpdate = {0xff};
 ///**********RSSI*********************/
-u16 LCDRSSI = 0;
-u8 RAM_RSSI_AVG = 0;
+short RAM_RSSI_AVG = 0;
+long RAM_RSSI_SUM = 0;
+u8 RSSI_Read_Counter = 0;
+u8 Flag_RSSI_Read_Timer = 10;
 
 const u8 ADF7030Cfg[] = {
 #include "Settings_ADF7030-1.cfg"

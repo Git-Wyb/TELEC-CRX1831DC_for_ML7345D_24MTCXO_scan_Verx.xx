@@ -106,8 +106,10 @@ extern uFLAG FlagLCDUpdate;
 #define LCDUpdateRISSFlag FlagLCDUpdate.BIT.Bit1
 #define LCDFirstDisplayFlag FlagLCDUpdate.BIT.Bit2
 /**********RSSI*********************/
-extern u16 LCDRSSI;
-extern u8 RAM_RSSI_AVG;
+extern short RAM_RSSI_AVG;
+extern long RAM_RSSI_SUM;
+extern u8 RSSI_Read_Counter;
+extern u8 Flag_RSSI_Read_Timer;
 
 #define SPI_SEND_BUFF_LONG 300
 #define SPI_REV_BUFF_LONG 40
