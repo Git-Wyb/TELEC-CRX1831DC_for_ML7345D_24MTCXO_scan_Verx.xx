@@ -101,13 +101,27 @@ typedef enum {
 #define ADDR_TESTMODE0 0X20000548
 #define ADDR_GENERIC_FIELDS 0X200004FC
 #define ADDR_CHANNEL_FERQUENCY 0x200002EC
-#define RADIO_DIG_TX_CFG0 0x20000304
-#define PROFILE_RADIO_AFC_CFG2 0x20000320
-#define AFC_CONFIG 0x400041F8
-#define GENERIC_PKT_LIVE_LINK_QUAL 0x20000538
-#define PROFILE_CCA_READBACK 0x2000037C
-#define RADIO_AFC_CFG1 0x2000031C
-
+#define ADDR_RADIO_DIG_TX_CFG0 0x20000304
+#define ADDR_PROFILE_RADIO_AFC_CFG2 0x20000320
+#define ADDR_AFC_CONFIG 0x400041F8
+#define ADDR_GENERIC_PKT_LIVE_LINK_QUAL 0x20000538
+#define ADDR_PROFILE_CCA_READBACK 0x2000037C
+#define ADDR_RADIO_AFC_CFG1 0x2000031C
+#define ADDR_GENERIC_PKT_FRAME_CFG1 0x20000500
+/************Address: 0x20000500, Name: GENERIC_PKT_FRAME_CFG1***************************************/
+extern u8 TRX_IRQ1_TYPE;
+extern u8 TRX_IRQ0_TYPE;
+extern u8 GENERIC_PKT_FRAME_CFG1_13_15;
+extern u8 PREAMBLE_UNIT;
+extern u16 PAYLOAD_SIZE;
+#define GENERIC_PKT_FRAME_CFG1 (((u32)TRX_IRQ1_TYPE << 24) |                \
+                                ((u32)TRX_IRQ0_TYPE << 16) |                \
+                                ((u32)GENERIC_PKT_FRAME_CFG1_13_15 << 13) | \
+                                ((u32)PREAMBLE_UNIT << 12) |                \
+                                (u32)PAYLOAD_SIZE)
+#define RX_PayLoadSizeNOLogin 13
+#define RX_PayLoadSizeLogin 26
+/***************************************************/
 extern u8 RX_COUNT;
 extern u8 SPI_RECEIVE_BUFF[SPI_REV_BUFF_LONG];
 extern u32 SPI_Receive_DataForC[6];
@@ -140,5 +154,5 @@ u32 CONFIGURING_THE_POINTERS_FOR_POINTER_BASED_ACCESSES(void);
 u8 Memory_Read_Block_Pointer_Short_Address(ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNTR_ID, u8 num);
 u8 Memory_Read_Block_Pointer_Long_Address(ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNTR_ID, u8 num);
 u8 Memory_Write_Block_Pointer_Short_Address(const u8 *x_data, ADI_ADF7030_1_RADIO_SPI_PNTR_TYPE PNTR_ID, u8 num);
-
+void ADF7030ParameterInit(void);
 #endif

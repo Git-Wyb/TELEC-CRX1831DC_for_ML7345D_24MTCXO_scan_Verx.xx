@@ -157,6 +157,7 @@ void ID_Decode_function(void)
 */
 void ID_Decode_IDCheck(void)
 {
+
     if (FLAG_Receiver_IDCheck)
     {
         FLAG_Receiver_IDCheck = 0;
@@ -177,16 +178,28 @@ void ID_Decode_IDCheck(void)
                 FLAG_IDCheck_OK = 0;
                 if (DATA_Packet_ID == 0xFFFFFE)
                     DATA_Packet_Control = DATA_Packet_Contro_buf; //2015.3.24修正 Control缓存起 ID判断是否学习过后才能使用
-                                                                  //                if(Freq_Scanning_CH_bak==0){Freq_Scanning_CH_save=1;Freq_Scanning_CH_save_HA=0; }  //当前收到426M控制   但保存记录下收到信号的频率信道,0代表426M
-                                                                  //                else Freq_Scanning_CH_save_HA=1;  //                       1代表429M
-                                                                  //                DATA_Packet_Control_0=DATA_Packet_Control;
-                                                                  //             #if defined(__Product_PIC32MX2_Receiver__)
-                                                                  //                if(DATA_Packet_Control==0x08)DATA_Packet_Control_err=0x08;
-                                                                  //                if(DATA_Packet_Control==0x02){DATA_Packet_Control_err=0x02;FLAG_HA_ERR_bit=0;}
-                                                                  //             #endif
-                                                                  //                if(((DATA_Packet_Code[1]&0x0000FFFF)==0x5556)&&(Freq_Scanning_CH_bak==0)){
+                                                                  //                 if (Freq_Scanning_CH_bak == 0)
+                                                                  //                 {
+                                                                  //                     Freq_Scanning_CH_save = 1;
+                                                                  //                     Freq_Scanning_CH_save_HA = 0;
+                                                                  //                 } //当前收到426M控制   但保存记录下收到信号的频率信道,0代表426M
+                                                                  //                 else
+                                                                  //                     Freq_Scanning_CH_save_HA = 1; //                       1代表429M
+                                                                  //                 DATA_Packet_Control_0 = DATA_Packet_Control;
+                                                                  // #if defined(__Product_PIC32MX2_Receiver__)
+                                                                  //                 if (DATA_Packet_Control == 0x08)
+                                                                  //                     DATA_Packet_Control_err = 0x08;
+                                                                  //                 if (DATA_Packet_Control == 0x02)
+                                                                  //                 {
+                                                                  //                     DATA_Packet_Control_err = 0x02;
+                                                                  //                     FLAG_HA_ERR_bit = 0;
+                                                                  //                 }
+                                                                  // #endif
+                                                                  //                 if (((DATA_Packet_Code[1] & 0x0000FFFF) == 0x5556) && (Freq_Scanning_CH_bak == 0))
+                                                                  //                 {
                 if ((SPI_Receive_DataForC[1] & 0x0000FFFF) == 0x5556)
                 {
+                    PAYLOAD_SIZE = RX_PayLoadSizeLogin;
                     Signal_DATA_Decode(1);
                     if (FLAG_Signal_DATA_OK == 1)
                     {
@@ -215,6 +228,7 @@ void ID_Decode_IDCheck(void)
                 }
                 else
                 {
+                    PAYLOAD_SIZE = RX_PayLoadSizeNOLogin;
                     //#if defined(__Product_PIC32MX2_WIFI__)
                     //                    TIMER1s=500;//1000
                     //#endif
@@ -265,13 +279,6 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
     UINT16 data_out;
     UINT16 data_NRZ[3];
     UINT8 i, j;
-    for (i = 0; i < 6; i++)
-    {
-        SPI_Receive_DataForC[i] = (u32)SPI_RECEIVE_BUFF[i * 4 + 3] |
-                                  (u32)SPI_RECEIVE_BUFF[i * 4 + 4] << 8 |
-                                  (u32)SPI_RECEIVE_BUFF[i * 4 + 5] << 16 |
-                                  (u32)SPI_RECEIVE_BUFF[i * 4 + 6] << 24;
-    }
     for (i = 0; i < 3; i++)
     {
         if (NUM_Type == 0)

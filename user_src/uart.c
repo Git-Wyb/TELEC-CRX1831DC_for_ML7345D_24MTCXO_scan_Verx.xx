@@ -29,6 +29,7 @@ unsigned int U1AckTimer = 0;
 //********************************************
 void UART1_INIT(void)
 {
+unsigned int baud_div=0;
 	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
 	USART1_CR1_bit.M = 1;
 	USART1_CR1_bit.PCEN = 1;
@@ -43,8 +44,16 @@ void UART1_INIT(void)
 //	USART1_CR3 = 0; // 1个停止位
 //	USART1_CR4 = 0;
 //	USART1_CR5 = 0x00;  //0x08;						// 半双工模式
-	USART1_BRR2 = 0x03; // 设置波特率9600
-	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
+        /*设置波特率*/
+    baud_div =16000000/38400;  /*求出分频因子*/
+    USART1_BRR2 = baud_div & 0x0f;
+    USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
+    USART1_BRR1 = ((baud_div & 0x0ff0) >> 4);    /*先给BRR2赋值 最后再设置BRR1*/
+
+
+
+//	USART1_BRR2 = 0x03; // 设置波特率9600
+//	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
 						//16.00M/9600 = 0x683
 						//USART1_CR2 = 0x08;	// 允许发送
 	//USART1_CR2 = 0x24;
