@@ -12,6 +12,7 @@ volatile uFLAG FLAG_test;
 
 u16 X_COUNT = 0;
 u16 X_ERR = 0; //记录错误的个数
+u16 X_ERRTimer = 0;
 
 u8 SIO_cnt = 0;
 u8 SIO_buff[16] = {0};

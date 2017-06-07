@@ -6,14 +6,14 @@
 /*  DESCRIPTION :                                                      */
 /*  Mark        :ver 1.0                                               */
 /***********************************************************************/
-#include <iostm8l151g4.h> // CPUĞÍºÅ
-#include "Pin_define.h"   // ¹Ü½Å¶¨Òå
-#include "initial.h"	  // ³õÊ¼»¯  Ô¤¶¨Òå
-#include "ram.h"		  // RAM¶¨Òå
+#include <iostm8l151g4.h> // CPUå‹å·
+#include "Pin_define.h"   // ç®¡è„šå®šä¹‰
+#include "initial.h"	  // åˆå§‹åŒ–  é¢„å®šä¹‰
+#include "ram.h"		  // RAMå®šä¹‰
 #include "eeprom.h"		  // eeprom
 #include "uart.h"
-#define TXD1_enable (USART1_CR2 = 0x08) // ÔÊĞí·¢ËÍ
-#define RXD1_enable (USART1_CR2 = 0x24) // ÔÊĞí½ÓÊÕ¼°ÆäÖĞ¶Ï
+#define TXD1_enable (USART1_CR2 = 0x08) // å…è®¸å‘é€
+#define RXD1_enable (USART1_CR2 = 0x24) // å…è®¸æ¥æ”¶åŠå…¶ä¸­æ–­
 
 u8 u1busyCache = 0;
 
@@ -29,7 +29,7 @@ unsigned int U1AckTimer = 0;
 //********************************************
 void UART1_INIT(void)
 {
-unsigned int baud_div=0;
+	unsigned int baud_div = 0;
 	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
 	USART1_CR1_bit.M = 1;
 	USART1_CR1_bit.PCEN = 1;
@@ -41,21 +41,19 @@ unsigned int baud_div=0;
 	USART1_CR2_bit.TEN = 1;
 	USART1_CR2_bit.REN = 1;
 
-//	USART1_CR3 = 0; // 1¸öÍ£Ö¹Î»
-//	USART1_CR4 = 0;
-//	USART1_CR5 = 0x00;  //0x08;						// °ëË«¹¤Ä£Ê½
-        /*ÉèÖÃ²¨ÌØÂÊ*/
-    baud_div =16000000/38400;  /*Çó³ö·ÖÆµÒò×Ó*/
-    USART1_BRR2 = baud_div & 0x0f;
-    USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
-    USART1_BRR1 = ((baud_div & 0x0ff0) >> 4);    /*ÏÈ¸øBRR2¸³Öµ ×îºóÔÙÉèÖÃBRR1*/
+	//	USART1_CR3 = 0; // 1ä¸ªåœæ­¢ä½
+	//	USART1_CR4 = 0;
+	//	USART1_CR5 = 0x00;  //0x08;						// åŠåŒå·¥æ¨¡å¼
+	/*è®¾ç½®æ³¢ç‰¹ç‡*/
+	baud_div = 16000000 / 38400; /*æ±‚å‡ºåˆ†é¢‘å› å­*/
+	USART1_BRR2 = baud_div & 0x0f;
+	USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
+	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*å…ˆç»™BRR2èµ‹å€¼ æœ€åå†è®¾ç½®BRR1*/
 
-
-
-//	USART1_BRR2 = 0x03; // ÉèÖÃ²¨ÌØÂÊ9600
-//	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
-						//16.00M/9600 = 0x683
-						//USART1_CR2 = 0x08;	// ÔÊĞí·¢ËÍ
+	//	USART1_BRR2 = 0x03; // è®¾ç½®æ³¢ç‰¹ç‡9600
+	//	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
+	//16.00M/9600 = 0x683
+	//USART1_CR2 = 0x08;	// å…è®¸å‘é€
 	//USART1_CR2 = 0x24;
 	Send_char(0xa5);
 }
@@ -63,20 +61,20 @@ void UART1_end(void)
 { //
 	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
 
-	USART1_CR1 = 0; // 1¸öÆğÊ¼Î»,8¸öÊı¾İÎ»
-	USART1_CR3 = 0; // 1¸öÍ£Ö¹Î»
+	USART1_CR1 = 0; // 1ä¸ªèµ·å§‹ä½,8ä¸ªæ•°æ®ä½
+	USART1_CR3 = 0; // 1ä¸ªåœæ­¢ä½
 	USART1_CR4 = 0;
-	USART1_CR5 = 0x00;  // °ëË«¹¤Ä£Ê½
-	USART1_BRR2 = 0x00; // ÉèÖÃ²¨ÌØÂÊ9600
+	USART1_CR5 = 0x00;  // åŠåŒå·¥æ¨¡å¼
+	USART1_BRR2 = 0x00; // è®¾ç½®æ³¢ç‰¹ç‡9600
 	USART1_BRR1 = 0x00; // 3.6864M/9600 = 0x180
 						//16.00M/9600 = 0x683
-	USART1_CR2 = 0x00;  //½ûÖ¹´®¿Ú
+	USART1_CR2 = 0x00;  //ç¦æ­¢ä¸²å£
 }
 //--------------------------------------------
 void UART1_RX_RXNE(void)
-{ // RXDÖĞ¶Ï·şÎñ³ÌĞò
+{ // RXDä¸­æ–­æœåŠ¡ç¨‹åº
 	unsigned char dat;
-	dat = USART1_DR; // ½ÓÊÕÊı¾İ
+	dat = USART1_DR; // æ¥æ”¶æ•°æ®
 					 //Send_char(dat);
 	ReceiveFrame(dat);
 	// if (dat == '(')
@@ -89,53 +87,53 @@ void UART1_RX_RXNE(void)
 	// 	{
 	// 		SIO_DATA[dat] = SIO_buff[dat];
 	// 	}
-	// 	BIT_SIO = 1; // ±êÖ¾
+	// 	BIT_SIO = 1; // æ ‡å¿—
 	// 				 //SIO_TOT = 20;
 	// }
 }
 
 //--------------------------------------------
 void Send_char(unsigned char ch)
-{				 // ·¢ËÍ×Ö·û
-	TXD1_enable; // ÔÊĞí·¢ËÍ
+{				 // å‘é€å­—ç¬¦
+	TXD1_enable; // å…è®¸å‘é€
 	while (!USART1_SR_TXE)
 		;
-	USART1_DR = ch; // ·¢ËÍ
+	USART1_DR = ch; // å‘é€
 	while (!USART1_SR_TC)
-		;		 // µÈ´ıÍê³É·¢ËÍ
-	RXD1_enable; // ÔÊĞí½ÓÊÕ¼°ÆäÖĞ¶Ï
+		;		 // ç­‰å¾…å®Œæˆå‘é€
+	RXD1_enable; // å…è®¸æ¥æ”¶åŠå…¶ä¸­æ–­
 }
 //--------------------------------------------
 void Send_String(unsigned char *string)
-{ // ·¢ËÍ×Ö·û´®
+{ // å‘é€å­—ç¬¦ä¸²
 	unsigned char i = 0;
-	TXD1_enable; // ÔÊĞí·¢ËÍ
+	TXD1_enable; // å…è®¸å‘é€
 	while (string[i])
 	{
 		while (!USART1_SR_TXE)
-			;				   // ¼ì²é·¢ËÍOK
-		USART1_DR = string[i]; // ·¢ËÍ
+			;				   // æ£€æŸ¥å‘é€OK
+		USART1_DR = string[i]; // å‘é€
 		i++;
 	}
 	while (!USART1_SR_TC)
-		;		 // µÈ´ıÍê³É·¢ËÍ
-	RXD1_enable; // ÔÊĞí½ÓÊÕ¼°ÆäÖĞ¶Ï
-				 //	BIT_SIO = 0;							// ±êÖ¾
+		;		 // ç­‰å¾…å®Œæˆå‘é€
+	RXD1_enable; // å…è®¸æ¥æ”¶åŠå…¶ä¸­æ–­
+				 //	BIT_SIO = 0;							// æ ‡å¿—
 }
 void Send_Data(unsigned char *P_data, unsigned int length)
-{ // ·¢ËÍ×Ö·û´®
-	unsigned char i = 0;
-	TXD1_enable; // ÔÊĞí·¢ËÍ
+{ // å‘é€å­—ç¬¦ä¸²
+	unsigned int i = 0;
+	TXD1_enable; // å…è®¸å‘é€
 	for (i = 0; i < length; i++)
 	{
 		while (!USART1_SR_TXE)
-			;					   // ¼ì²é·¢ËÍOK
-		USART1_DR = *(P_data + i); // ·¢ËÍ
+			;					   // æ£€æŸ¥å‘é€OK
+		USART1_DR = *(P_data + i); // å‘é€
 	}
 	while (!USART1_SR_TC)
-		;		 // µÈ´ıÍê³É·¢ËÍ
-	RXD1_enable; // ÔÊĞí½ÓÊÕ¼°ÆäÖĞ¶Ï
-				 //	BIT_SIO = 0;							// ±êÖ¾
+		;		 // ç­‰å¾…å®Œæˆå‘é€
+	RXD1_enable; // å…è®¸æ¥æ”¶åŠå…¶ä¸­æ–­
+				 //	BIT_SIO = 0;							// æ ‡å¿—
 }
 
 /***********************************************************************/
@@ -168,7 +166,7 @@ unsigned char asc_hex_2(unsigned char asc1, unsigned char asc0)
 }
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-void PC_PRG(void) // ´®¿ÚÃüÁî
+void PC_PRG(void) // ä¸²å£å‘½ä»¤
 {
 	unsigned int i, j;
 	unsigned char d3, d2, d1, d0;
@@ -180,7 +178,7 @@ void PC_PRG(void) // ´®¿ÚÃüÁî
 		switch (SIO_DATA[1])
 		{
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//%                 Ğ´²Ù×÷               %
+		//%                 å†™æ“ä½œ               %
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		case 'W':
 			//==================================== ADF7012
@@ -200,7 +198,7 @@ void PC_PRG(void) // ´®¿ÚÃüÁî
 				//ttset dd_write_7021_reg(&ROM_adf7030_value[i].byte[0]);
 				Delayus(122); //delay 40us
 
-				//-------------------------------- ±£´æ
+				//-------------------------------- ä¿å­˜
 				if (i == 1)
 				{
 					j = 0x380 + i * 4;
@@ -213,7 +211,7 @@ void PC_PRG(void) // ´®¿ÚÃüÁî
 
 					ClearWDT(); // Service the WDT
 				}
-				//-------------------------------·µ»Ø  (WHx)
+				//-------------------------------è¿”å›  (WHx)
 				d1 = '(';
 				d2 = 'W';
 				Send_char(d1);
@@ -225,11 +223,11 @@ void PC_PRG(void) // ´®¿ÚÃüÁî
 				Send_char(SIO_buff[3]);
 			}
 
-			//==================================== ADF7012 TX/RXµ÷ÊÔ
+			//==================================== ADF7012 TX/RXè°ƒè¯•
 			if (SIO_DATA[2] == 'J') // (WJx)
 			{
 				Tx_Rx_mode = asc_hex_2(0x30, SIO_buff[3]);
-				//-------------------------------·µ»Ø  (WHx)
+				//-------------------------------è¿”å›  (WHx)
 				d1 = '(';
 				d2 = 'W';
 				Send_char(d1);
@@ -242,7 +240,7 @@ void PC_PRG(void) // ´®¿ÚÃüÁî
 			}
 			break;
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//%                 ¶Á²Ù×÷               %
+		//%                 è¯»æ“ä½œ               %
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		case 'R':
 			//==================================== ADF7012   //(RIx)
@@ -302,7 +300,7 @@ void ReceiveFrame(UINT8 Cache)
 		U1Statues = IdelStatues;
 		break;
 	}
-	if (UartStatus == 0x02 /*FrameEndStatus*/) //½ÓÊÕÍêÒ»Ö¡´¦ÀíÊı¾İ
+	if (UartStatus == 0x02 /*FrameEndStatus*/) //æ¥æ”¶å®Œä¸€å¸§å¤„ç†æ•°æ®
 	{
 		//add Opration function
 		OprationFrame();
@@ -384,6 +382,9 @@ void OprationFrame(void)
 			return;
 			break;
 		}
+	}
+	else if (Databits_t.ID_No == 0x98)
+	{
 	}
 	else
 	{

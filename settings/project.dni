@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=1536536622
+Checksum=-180021090
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -90,8 +90,7 @@ LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
 Bp0=_ "STD_CODE" "{$PROJ_DIR$\user_src\ID_Decode.c}.206.25" 1 0 0 0 "" 0 ""
-Bp1=_ "STD_CODE" "{$PROJ_DIR$\user_src\ADF7030_1.c}.604.13" 1 0 0 0 "" 0 ""
-Count=2
+Count=1
 [Aliases]
 A0=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\ID_Decode.c" ""
 A1=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\adf7021.c" ""

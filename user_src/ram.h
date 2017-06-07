@@ -59,6 +59,7 @@ extern volatile uFLAG FLAG1;
 
 extern u16 X_COUNT;
 extern u16 X_ERR; //记录错误的个数
+extern u16 X_ERRTimer;
 
 extern u8 SIO_cnt;
 extern u8 SIO_buff[16];

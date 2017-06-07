@@ -51,6 +51,7 @@ void TIM4_UPD_OVF(void)
         U1AckTimer--;
     if (Flag_RSSI_Read_Timer)
         Flag_RSSI_Read_Timer--;
+    if(X_ERRTimer)X_ERRTimer--;
 
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

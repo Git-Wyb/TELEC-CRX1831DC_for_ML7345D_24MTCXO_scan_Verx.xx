@@ -119,8 +119,8 @@ extern u16 PAYLOAD_SIZE;
                                 ((u32)GENERIC_PKT_FRAME_CFG1_13_15 << 13) | \
                                 ((u32)PREAMBLE_UNIT << 12) |                \
                                 (u32)PAYLOAD_SIZE)
-#define RX_PayLoadSizeNOLogin 13
-#define RX_PayLoadSizeLogin 26
+#define RX_PayLoadSizeNOLogin 12
+#define RX_PayLoadSizeLogin 24
 /***************************************************/
 /**ADF7030_REST**/ extern u8 ADF7030_REST_Cache;
 /**Receiver_vent**/ extern u8 Receiver_vent_Cache;

@@ -467,6 +467,7 @@ void RF_BRE_Check(void)
         WaitForADF7030_FIXED_DATA(); //µÈ´ýÐ¾Æ¬¿ÕÏÐ/¿É½ÓÊÜCMD×´Ì¬
         ADF7030_RECEIVING_FROM_POWEROFF();
     }
+
     if (X_COUNT >= 1000)
     {
         if (X_ERR >= 50)
@@ -480,7 +481,10 @@ void RF_BRE_Check(void)
         //        display_map_58_6(70,45,4,CacheData);
         X_ERR = 0;
         X_COUNT = 0;
+        X_ERRTimer = 1250;
     }
+    if(X_ERRTimer == 0)
+        Receiver_LED_RX = 1;
 }
 void RF_test_mode(void)
 {
