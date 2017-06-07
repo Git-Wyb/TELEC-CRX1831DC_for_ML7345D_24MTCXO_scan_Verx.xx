@@ -386,7 +386,34 @@ void ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(u32 x_ADDR, u32 x_data)
     SPI_SendString(9, SPI_SEND_BUFF, SPI_RECEIVE_BUFF);
     WAIT_SPI_IDEL();
 }
-
+/**
+ ****************************************************************************
+ * @Function : void ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(u32 xx_ADDR,u32 x_data)
+ * @File     : ADF7030_1.c
+ * @Program  :
+ * @Created  : 2017/5/2 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+void ADF7030_Clear_IRQ(void)
+{
+    SPI_SEND_BUFF[0] = 0X38;
+    SPI_SEND_BUFF[1] = (0x40003808 >> 24) & 0XFF;
+    SPI_SEND_BUFF[2] = (0x40003808 >> 16) & 0XFF;
+    SPI_SEND_BUFF[3] = (0x40003808 >> 8) & 0XFF;
+    SPI_SEND_BUFF[4] = (0x40003808)&0XFF;
+    SPI_SEND_BUFF[5] = 0XFF;
+    SPI_SEND_BUFF[6] = 0XFF;
+    SPI_SEND_BUFF[7] = 0XFF;
+    SPI_SEND_BUFF[8] = 0XFF;
+    SPI_SEND_BUFF[9] = 0XFF;
+    SPI_SEND_BUFF[10] = 0XFF;
+    SPI_SEND_BUFF[11] = 0XFF;
+    SPI_SEND_BUFF[12] = 0XFF;
+    WAIT_SPI_IDEL();
+    SPI_SendString(13, SPI_SEND_BUFF, SPI_RECEIVE_BUFF);
+    WAIT_SPI_IDEL();
+}
 //
 u32 ADF7030_GET_MISC_FW(void) //??MISC_FW?????
 {
@@ -576,10 +603,7 @@ void SCAN_RECEIVE_PACKET(void)
     {
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
-        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-        DELAY_30U();
-        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ1STATUS, 0xffffffff);
+        ADF7030_Clear_IRQ();
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
         Memory_Read_Block_Pointer_Long_Address(PNTR_CUSTOM2_ADDR, PAYLOAD_SIZE);
@@ -1075,4 +1099,23 @@ void ADF7030_TX(u8 mode)
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_TX);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+}
+/**
+ ****************************************************************************
+ * @Function : u32 ADF7030_Read_(u32 addr,u32 Para,u8 offset)
+ * @File     : ADF7030_1.c
+ * @Program  :
+ * @Created  : 2017/6/7 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
+{
+    u32 Cache;
+            while (GET_STATUE_BYTE().CMD_READY != 1)
+            ;
+    ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(addr, 6);
+    Cache = ADF7030_RESIGER_VALUE_READ;
+
+    return Cache & (Para << offset);
 }

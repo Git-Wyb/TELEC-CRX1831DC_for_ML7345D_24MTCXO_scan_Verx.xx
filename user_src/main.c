@@ -79,10 +79,12 @@ void main(void)
         SCAN_RECEIVE_PACKET(); //扫描接收数据
         TranmissionACK();
         //        READ_RSSI_avg();
+
         if (FG_Receiver_LED_RX == 1)
             Receiver_LED_RX = 1;
         else if (FG_Receiver_LED_RX == 0)
             Receiver_LED_RX = 0;
+
         // if ((RAM_rssi_AVG >= 60) || (FG_Receiver_LED_RX == 1))
         //     Receiver_LED_RX = 1; //26   35
         // else if ((RAM_rssi_AVG <= 59) && (FG_Receiver_LED_RX == 0))
