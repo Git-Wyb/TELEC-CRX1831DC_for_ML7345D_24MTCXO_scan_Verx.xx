@@ -324,13 +324,13 @@ void ADF7030_GPIO_INIT(void)
     ADF7030_REST_CR2 = 1;      //* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
 
     ADF7030_GPIO2_DDR = Input;            //输入
-    ADF7030_GPIO2_CR1 = Floating;          //1: Input with pull-up 0: Floating input
+    ADF7030_GPIO2_CR1 = Floating;         //1: Input with pull-up 0: Floating input
     ADF7030_GPIO2_CR2 = InterruptDisable; //禁止中断
 
     ADF7030_GPIO3_DDR = Input; //输入
     ADF7030_GPIO3_CR1 = 1;     //1: Input with pull-up 0: Floating input
     ADF7030_GPIO3_CR2 = 0;     //禁止中断
-    BerExtiInit();
+    //BerExtiInit();
 }
 /**
  ****************************************************************************
@@ -483,7 +483,7 @@ void RF_BRE_Check(void)
         X_COUNT = 0;
         X_ERRTimer = 1250;
     }
-    if(X_ERRTimer == 0)
+    if (X_ERRTimer == 0)
         Receiver_LED_RX = 1;
 }
 void RF_test_mode(void)
@@ -602,7 +602,6 @@ void RF_test_mode(void)
 
     FLAG_APP_RX = 1;
     //ttset dd_set_RX_mode();
-    ADF7030Init();
-    TIME_Fine_Calibration = 9000;
+    TIME_Fine_Calibration = 900;
     TIME_EMC = 10;
 }

@@ -127,7 +127,7 @@ extern u32 RADIO_DIG_TX_CFG0_32bit_20000304;
 #define AFCCONFIG_LONG 4
 extern const u8 CONST_AFC_Configuration_400041F8[4];
 extern u16 PA_POWER_OUT[2][18];
-
+extern u32 PROFILE_CH_FREQ_32bit_200002EC;
 void SPI_INIT(void);
 u32 ADF7030_GET_MISC_FW(void); //??MISC_FW?????
 void ADF7030_WRITING_PROFILE_FROM_POWERON(void);

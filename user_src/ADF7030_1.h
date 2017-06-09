@@ -136,12 +136,15 @@ extern UINT32 DATA_Packet_ID;
 extern UINT8 DATA_Packet_Control;
 extern UINT8 DATA_Packet_Contro_buf; //2015.3.24����
 
+extern u8 Flag_FREQ_Scan;
+
 void DELAY_30U(void);
 
 void ADF7030Init(void);
 
 void ADF7030_FIXED_DATA(void);
 void ADF7030_CHANGE_STATE(u8 x_state);
+u8 RadioChangeState(u8 STATE_CMD);
 u32 ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(u32 x_ADDR, u8 x_fnum);
 void WaitForADF7030_FIXED_DATA(void);
 void TX_DataLoad(u32 IDCache, u8 CtrCmd, u8 *Packet);

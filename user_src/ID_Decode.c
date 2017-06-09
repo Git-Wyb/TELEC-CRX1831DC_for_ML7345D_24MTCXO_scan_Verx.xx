@@ -625,16 +625,48 @@ void ID_Decode_OUT(void)
 
 void Freq_Scanning(void)
 {
+    if (TIMER18ms == 0)
+    {
+        if (Flag_FREQ_Scan == 0)
+        {
+            if (ADF7030_Read_RESIGER(0x4000380C, 1, 0) != 0)
+            {
+                Flag_FREQ_Scan = 1;
+                TIMER18ms = 80;
+                Receiver_LED_RX = !Receiver_LED_RX;
+                return;
+            }
+        }
+
+        if (PROFILE_CH_FREQ_32bit_200002EC == 426075000)
+            PROFILE_CH_FREQ_32bit_200002EC = 426175000;
+        else
+            PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+        while (GET_STATUE_BYTE().CMD_READY == 0)
+        ;
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_ON);
+        WaitForADF7030_FIXED_DATA(); //µÈ´ýÐ¾Æ¬¿ÕÏÐ/¿É½ÓÊÜCMD×´Ì¬
+        DELAY_30U();
+        GET_STATUE_BYTE();
+        ADF7030_RECEIVING_FROM_POWEROFF();
+        while (GET_STATUE_BYTE().FW_STATUS != 1)
+        ;
+        Receiver_LED_RX = !Receiver_LED_RX;
+        TIMER18ms = 23;
+        Flag_FREQ_Scan = 0;
+    }
+
     if (((FLAG_Receiver_Scanning == 1) || (TIME_EMC == 0) || (TIME_Fine_Calibration == 0)) && (FLAG_APP_RX == 1))
     {
         FLAG_Receiver_Scanning = 0;
         if (TIME_Fine_Calibration == 0)
         {
-            TIME_Fine_Calibration = 9000;
+            TIME_Fine_Calibration = 900;
+
             //ttset dd_set_ADF7021_Power_on();
             //ttset dd_set_RX_mode();
         }
         //ttset dd_set_ADF7021_Freq();
-        TIMER18ms = 36;
     }
 }

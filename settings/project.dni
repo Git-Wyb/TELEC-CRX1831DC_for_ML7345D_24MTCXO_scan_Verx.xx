@@ -1,5 +1,5 @@
 [DebugChecksum]
-Checksum=-2120568696
+Checksum=735595090
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -70,17 +70,21 @@ Fmt0={W}0:COUNT_Receiver_Login	3	0
 Fmt1={W}0:RAM_rssi_AVG	3	0
 Fmt2={W}0:test_AGC	2	0
 Fmt3={W}0:test_RSSI	3	0
-Fmt4={W}1:GENERIC_PKT_FRAME_CFG1_13_15	3	0
-Fmt5={W}1:PREAMBLE_UNIT	3	0
-Fmt6={W}1:TRX_IRQ0_TYPE	3	0
-Fmt7={W}1:TRX_IRQ1_TYPE	3	0
-Fmt8={W}42:ADF7030_RESIGER_VALUE_READ	4	0
-Fmt9={W}42:Tx_Rx_mode	4	0
-Fmt10={W}42:cache	4	0
+Fmt4={W}1:ADF7030_RESIGER_VALUE_READ	4	0
+Fmt5={W}1:ADF7030_Read_OneByte	4	0
+Fmt6={W}1:GENERIC_PKT_FRAME_CFG1_13_15	3	0
+Fmt7={W}1:PREAMBLE_UNIT	3	0
+Fmt8={W}1:TRX_IRQ0_TYPE	3	0
+Fmt9={W}1:TRX_IRQ1_TYPE	3	0
+Fmt10={W}42:ADF7030_RESIGER_VALUE_READ	4	0
+Fmt11={W}42:Tx_Rx_mode	4	0
+Fmt12={W}42:cache	4	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
 ShowTimeLog=1
+[Breakpoints]
+Count=0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -88,26 +92,15 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
-[Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\user_src\ID_Decode.c}.206.25" 1 0 0 0 "" 0 ""
-Count=1
 [Aliases]
-A0=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\ID_Decode.c" ""
-A1=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\adf7021.c" ""
-A2=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\main.c" ""
-A3=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\ID_Decode.c" ""
-A4=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\adf7021.c" ""
-A5=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\main.c" ""
-A6=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.18 G4U6\user_src\ID_Decode.c" ""
-A7=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\ID_Decode.c" ""
-A8=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\Initial.c" ""
-A9=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\Timer.c" ""
-A10=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\adf7021.c" ""
-A11=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\eeprom.c" ""
-A12=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\main.c" ""
-A13=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\stm8l15x_it.c" ""
-A14=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver3.0\user_src\uart.c" ""
-Count=15
+A0=_ "" ""
+A1=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\ID_Decode.c" ""
+A2=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\adf7021.c" ""
+A3=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.10.1\user_src\main.c" ""
+A4=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\ID_Decode.c" ""
+A5=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\adf7021.c" ""
+A6=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX Source\Bunka STM8L151G6 RX Source Ver1.17_  RSSI test G4U6\user_src\main.c" ""
+Count=7
 SuppressDialog=0
 [DebuggerSettings]
 DisableInterruptsWhenStepping=0

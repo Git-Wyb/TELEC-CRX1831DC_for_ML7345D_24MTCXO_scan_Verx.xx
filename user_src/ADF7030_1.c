@@ -29,8 +29,9 @@ u8 TRX_IRQ1_TYPE = 0x80;
 u8 TRX_IRQ0_TYPE = 0x04;
 u8 GENERIC_PKT_FRAME_CFG1_13_15 = 0;
 u8 PREAMBLE_UNIT = 1;
-u16 PAYLOAD_SIZE = 0x0D;
+u16 PAYLOAD_SIZE = 0x0C;
 /***************************************************/
+u8 Flag_FREQ_Scan = 0;
 u8 BREState = 0;
 void DELAY_30U(void)
 {
@@ -76,6 +77,7 @@ void ADF7030Init(void)
     ClearWDT(); // Service the WDT
     if (WORK_TEST == 1)
         ADF7030_RECEIVING_FROM_POWEROFF();
+    ClearWDT(); // Service the WDT
     CONFIGURING_THE_POINTERS_FOR_POINTER_BASED_ACCESSES();
     ClearWDT(); // Service the WDT
     YELLOWLED_OFF();
@@ -401,7 +403,7 @@ void ADF7030_Clear_IRQ(void)
     SPI_SEND_BUFF[1] = (0x40003808 >> 24) & 0XFF;
     SPI_SEND_BUFF[2] = (0x40003808 >> 16) & 0XFF;
     SPI_SEND_BUFF[3] = (0x40003808 >> 8) & 0XFF;
-    SPI_SEND_BUFF[4] = (0x40003808)&0XFF;
+    SPI_SEND_BUFF[4] = (0x40003808) & 0XFF;
     SPI_SEND_BUFF[5] = 0XFF;
     SPI_SEND_BUFF[6] = 0XFF;
     SPI_SEND_BUFF[7] = 0XFF;
@@ -529,9 +531,9 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_GENERIC_PKT_FRAME_CFG1, GENERIC_PKT_FRAME_CFG1); //
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg, CFG_SIZE(), ADDR_CHANNEL_FERQUENCY, 8, 4);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_GENERIC_PKT_FRAME_CFG1, GENERIC_PKT_FRAME_CFG1);    //
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
+    WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
@@ -579,7 +581,7 @@ void RX_ANALYSIS(void)
     u8 i;
     TIMER300ms = 500;
     FG_Receiver_LED_RX = 1;
-    if (WORK_TEST == 1)
+    if (WORK_TEST == 0)
         Send_Data(&SPI_RECEIVE_BUFF[3], PAYLOAD_SIZE);
 
     for (i = 0; i < 6; i++)
@@ -598,6 +600,7 @@ void RX_ANALYSIS(void)
 void SCAN_RECEIVE_PACKET(void)
 {
     short Cache;
+    static u8 flag = 0;
     char AVGBuff[10];
     if (ADF7030_GPIO3 == 1)
     {
@@ -624,9 +627,17 @@ void SCAN_RECEIVE_PACKET(void)
         }
         RSSI_Read_Counter = 0;
         RAM_RSSI_SUM = 0;
+        TIMER18ms = 25;
+        Flag_FREQ_Scan = 0;
+        Receiver_LED_RX = !Receiver_LED_RX;
     }
     else if ((ADF7030_GPIO3 == 0) && (ADF7030_GPIO2 == 1))
     {
+        if (RSSI_Read_Counter == 0)
+        {
+            TIMER18ms = PAYLOAD_SIZE * 7;
+            Receiver_LED_RX = !Receiver_LED_RX;
+        }
         if ((Flag_RSSI_Read_Timer == 0) && (RSSI_Read_Counter < 5))
         {
             Flag_RSSI_Read_Timer = 10;
@@ -648,12 +659,12 @@ void SCAN_RECEIVE_PACKET(void)
 **/
 void WaitForADF7030_FIXED_DATA(void)
 {
-    while (((ADF7030_Read_OneByte & 0x20) != 0x20) || ((ADF7030_Read_OneByte & 0x06) != 0x04))
+    do
     {
         DELAY_30U();
         ADF7030_FIXED_DATA();
         ClearWDT();
-    }
+    } while (((ADF7030_Read_OneByte & 0x20) != 0x20) || ((ADF7030_Read_OneByte & 0x06) != 0x04));
 }
 /**
 ****************************************************************************
@@ -669,7 +680,8 @@ ADF7030_1_STATUS_TYPE GET_STATUE_BYTE(void)
     ADF7030_1_STATUS_TYPE StatusCache;
     DELAY_30U();
     ADF7030_FIXED_DATA();
-    ClearWDT();
+    DELAY_30U();
+    ADF7030_FIXED_DATA();
     StatusCache.VALUE = ADF7030_Read_OneByte;
     return StatusCache;
 }
@@ -1112,8 +1124,8 @@ void ADF7030_TX(u8 mode)
 u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 {
     u32 Cache;
-            while (GET_STATUE_BYTE().CMD_READY != 1)
-            ;
+    while (GET_STATUE_BYTE().CMD_READY != 1)
+        ;
     ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(addr, 6);
     Cache = ADF7030_RESIGER_VALUE_READ;
 
