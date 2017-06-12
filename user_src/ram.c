@@ -2,7 +2,7 @@
 #include <stdlib.h>
 //#include <stdint.h>
 #include <stdbool.h> /* For true/false definition                      */
-//#include "initial.h"		// ï¿½ï¿½Ê¼ï¿½ï¿½  Ô¤ï¿½ï¿½ï¿½ï¿½
+//#include "initial.h"		// ?????  ?????
 #include "type_def.h"
 
 uFLAG FLAG_test1;
@@ -11,7 +11,7 @@ volatile uFLAG FLAG1;
 volatile uFLAG FLAG_test;
 
 u16 X_COUNT = 0;
-u16 X_ERR = 0; //è®°å½•é”™è¯¯çš„ä¸ªæ•°
+u16 X_ERR = 0; //¼ÇÂ¼´íÎóµÄ¸öÊı
 u16 X_ERRTimer = 0;
 
 u8 SIO_cnt = 0;
@@ -27,13 +27,13 @@ u8 TIMER250ms_STOP = 0;
 u16 TIME_auto_out = 0;
 u16 TIME_auto_close = 0;
 u16 time_3sec = 0;
-u32 ID_Receiver_DATA[256] = {0}; //å†™å…¥EEPROM IDç¼“å­˜
+u32 ID_Receiver_DATA[256] = {0}; //Ğ´ÈëEEPROM ID»º´æ
 u16 ID_DATA_PCS = 0;
 u32 DATA_Packet_ID = 0;
 u8 DATA_Packet_Control = 0;
-u8 DATA_Packet_Contro_buf = 0; //2015.3.24ä¿®æ­£
+u8 DATA_Packet_Contro_buf = 0; //2015.3.24ĞŞÕı
 u32 ID_Receiver_Login = 0;
-u8 TIME_EMC = 0; //é™ç”µæµ‹è¯•
+u8 TIME_EMC = 0; //¾²µç²âÊÔ
 u8 LED_Cache = 0;
 
 u16 INquiry = 0;
@@ -48,7 +48,7 @@ u16 TIME_Receiver_LED_OUT = 0;
 u16 TIME_Login_EXIT_Button = 0;
 u16 Manual_override_TIMER = 0;
 u16 time_Login_exit_256 = 0;
-u16 TIME_Fine_Calibration = 0; //çª„å¸¦ä¸‹ä¸­é¢‘æ»¤æ³¢å™¨100KHzç²¾æ ¡
+u16 TIME_Fine_Calibration = 0; //Õ­´øÏÂÖĞÆµÂË²¨Æ÷100KHz¾«Ğ£
 
 u8 Count_key_SW3 = 0;
 u8 Display_key_SW3 = 0xff;
@@ -83,7 +83,7 @@ u8 CONST_TXPACKET_DATA_20000AF0[12] = {
 	0X95, 0X55, 0X56, 0X55};
 u32 GENERIC_PKT_TEST_MODES0_32bit_20000548 = 0x00000000;
 const u8 TEST_MODES0_para[5] = {0, 1, 2, 4, 6};
-u32 RADIO_DIG_TX_CFG0_32bit_20000304 = 0x8838287e;
+u32 RADIO_DIG_TX_CFG0_32bit_20000304 = 0xC838287e;
 u16 PA_POWER_OUT[2][18] = {
 	{0x0382, 0x02a3, 0x02f3, 0x0353, 0x02d4,
 	 0x0295, 0x02e5, 0x02b6, 0x0316, 0x0376,

@@ -300,7 +300,7 @@ void ReceiveFrame(UINT8 Cache)
 		U1Statues = IdelStatues;
 		break;
 	}
-	if (UartStatus == 0x02 /*FrameEndStatus*/) //接收完一帧处理数据
+	if (UartStatus == FrameEndStatus) //接收完一帧处理数据
 	{
 		//add Opration function
 		OprationFrame();

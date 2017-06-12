@@ -581,9 +581,8 @@ void RX_ANALYSIS(void)
     u8 i;
     TIMER300ms = 500;
     FG_Receiver_LED_RX = 1;
-    if (WORK_TEST == 0)
-        Send_Data(&SPI_RECEIVE_BUFF[3], PAYLOAD_SIZE);
-
+    // if (WORK_TEST == 0)
+    //     Send_Data(&SPI_RECEIVE_BUFF[3], PAYLOAD_SIZE);
     for (i = 0; i < 6; i++)
     {
         SPI_Receive_DataForC[i] = (u32)SPI_RECEIVE_BUFF[i * 4 + 3] |
@@ -593,8 +592,6 @@ void RX_ANALYSIS(void)
     }
     FLAG_Receiver_IDCheck = 1;
     ID_Decode_IDCheck();
-    //Signal_DATA_Decode(0);
-    //    ID_Decode_function();
 }
 
 void SCAN_RECEIVE_PACKET(void)

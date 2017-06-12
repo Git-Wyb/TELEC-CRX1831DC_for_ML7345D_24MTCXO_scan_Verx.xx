@@ -51,7 +51,7 @@ void main(void)
 {
     _DI();             // 关全局中断
     RAM_clean();       // 清除RAM
-    //WDT_init();        //看门狗
+    WDT_init();        //看门狗
     VHF_GPIO_INIT();   //IO初始化
     SysClock_Init();   //系统时钟初始化
     InitialFlashReg(); //flash EEPROM
