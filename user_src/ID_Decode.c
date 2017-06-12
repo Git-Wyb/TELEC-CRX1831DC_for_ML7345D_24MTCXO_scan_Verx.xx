@@ -637,13 +637,27 @@ void Freq_Scanning(void)
                 return;
             }
         }
-
-        if (PROFILE_CH_FREQ_32bit_200002EC == 426075000)
-            PROFILE_CH_FREQ_32bit_200002EC = 426175000;
-        else
+        switch (PROFILE_CH_FREQ_32bit_200002EC)
+        {
+        case 426062500:
             PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+            break;
+        case 426075000:
+            PROFILE_CH_FREQ_32bit_200002EC = 426087500;
+            break;
+        case 426087500:
+            PROFILE_CH_FREQ_32bit_200002EC = 426062500;
+            break;
+        default:
+            PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+            break;
+        }
+        //        if (PROFILE_CH_FREQ_32bit_200002EC == 426075000)
+        //            PROFILE_CH_FREQ_32bit_200002EC = 426062500;
+        //        else
+        //            PROFILE_CH_FREQ_32bit_200002EC = 426075000;
         while (GET_STATUE_BYTE().CMD_READY == 0)
-        ;
+            ;
         DELAY_30U();
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
         WaitForADF7030_FIXED_DATA(); //µÈ´ýÐ¾Æ¬¿ÕÏÐ/¿É½ÓÊÜCMD×´Ì¬
@@ -651,7 +665,7 @@ void Freq_Scanning(void)
         GET_STATUE_BYTE();
         ADF7030_RECEIVING_FROM_POWEROFF();
         while (GET_STATUE_BYTE().FW_STATUS != 1)
-        ;
+            ;
         Receiver_LED_RX = !Receiver_LED_RX;
         TIMER18ms = 23;
         Flag_FREQ_Scan = 0;
