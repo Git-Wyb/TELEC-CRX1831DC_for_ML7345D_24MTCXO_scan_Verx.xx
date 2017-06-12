@@ -646,7 +646,21 @@ void Freq_Scanning(void)
         GET_STATUE_BYTE();
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
-        ADF7030_RECEIVING_FROM_POWEROFF();
+        ADF7030_CHANGE_STATE(STATE_PHY_ON);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_GENERIC_PKT_FRAME_CFG1, GENERIC_PKT_FRAME_CFG1);    //
+        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
+        WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_Clear_IRQ();
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_RX);
+        while (GET_STATUE_BYTE().FW_STATUS == 0)
+            ;
+        DELAY_30U();
+        //ADF7030_RECEIVING_FROM_POWEROFF();
         while (GET_STATUE_BYTE().FW_STATUS != 1)
             ;
         Receiver_LED_RX = !Receiver_LED_RX;

@@ -457,10 +457,7 @@ void RF_BRE_Check(void)
     {
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
-        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-        DELAY_30U();
-        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ1STATUS, 0xffffffff);
+        ADF7030_Clear_IRQ();
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
         while (ADF7030_GPIO3 == 1)

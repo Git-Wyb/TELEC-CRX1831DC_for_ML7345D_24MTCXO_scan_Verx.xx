@@ -600,7 +600,6 @@ void RX_ANALYSIS(void)
 void SCAN_RECEIVE_PACKET(void)
 {
     short Cache;
-    char AVGBuff[10];
     if (ADF7030_GPIO3 == 1)
     {
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
@@ -619,14 +618,9 @@ void SCAN_RECEIVE_PACKET(void)
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         ADF7030_RECEIVING_FROM_POWEROFF();
         RAM_RSSI_AVG = RAM_RSSI_SUM / RSSI_Read_Counter;
-        if (WORK_TEST == 0)
-        {
-            sprintf(AVGBuff, "%ddBm\r\n", RAM_RSSI_AVG / 128);
-            Send_String((u8 *)AVGBuff);
-        }
         RSSI_Read_Counter = 0;
         RAM_RSSI_SUM = 0;
-        TIMER18ms = 25;
+        TIMER18ms = 28;
         Flag_FREQ_Scan = 0;
         Receiver_LED_RX = !Receiver_LED_RX;
     }
@@ -1153,20 +1147,48 @@ void ADF7030_Change_Channel(void)
         PROFILE_CH_FREQ_32bit_200002EC = 429175000;
         PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005B;
         ClearWDT(); // Service the WDT
-        ADF7030_WRITING_PROFILE_FROM_POWERON();
+        ADF7030_CHANGE_STATE(STATE_PHY_ON);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_OFF);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_PROFILE_RADIO_AFC_CFG1, PROFILE_RADIO_AFC_CFG1_32bit_2000031C);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_CFG_DEV);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_OFF);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
         ClearWDT(); // Service the WDT
         break;
     case 429175000:
-        PROFILE_CH_FREQ_32bit_200002EC = 429200000;
-        break;
+        PROFILE_CH_FREQ_32bit_200002EC = 429225000;
+        break; /*
     case 429200000:
         PROFILE_CH_FREQ_32bit_200002EC = 429225000;
-        break;
+        break;*/
     case 429225000:
         PROFILE_CH_FREQ_32bit_200002EC = 426062500;
         PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;
         ClearWDT(); // Service the WDT
-        ADF7030_WRITING_PROFILE_FROM_POWERON();
+        ADF7030_CHANGE_STATE(STATE_PHY_ON);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_OFF);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_PROFILE_RADIO_AFC_CFG1, PROFILE_RADIO_AFC_CFG1_32bit_2000031C);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_CFG_DEV);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
+        ADF7030_CHANGE_STATE(STATE_PHY_OFF);
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        DELAY_30U();
         ClearWDT(); // Service the WDT
         break;
     default:
