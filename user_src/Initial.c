@@ -405,6 +405,10 @@ void KEY_GPIO_Init(void)
     WORK_TEST_DDR = Input;            //  ‰»Î     testΩ≈
     WORK_TEST_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
     WORK_TEST_CR2 = InterruptDisable; //Ω˚÷π÷–∂œ
+
+    ChannelTimerTest_DDR = Output; // ‰»Î     testΩ≈
+    ChannelTimerTest_CR1 = 1;      //Push - pull,
+    ChannelTimerTest_CR2 = 1;      //Output speed up to 10 MHz
 }
 /**
 ****************************************************************************

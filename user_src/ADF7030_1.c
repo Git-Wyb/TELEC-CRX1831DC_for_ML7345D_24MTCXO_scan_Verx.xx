@@ -470,6 +470,9 @@ void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
     }
+    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_PROFILE_RADIO_AFC_CFG1, PROFILE_RADIO_AFC_CFG1_32bit_2000031C);
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_CFG_DEV);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
@@ -597,7 +600,6 @@ void RX_ANALYSIS(void)
 void SCAN_RECEIVE_PACKET(void)
 {
     short Cache;
-    static u8 flag = 0;
     char AVGBuff[10];
     if (ADF7030_GPIO3 == 1)
     {
@@ -1127,4 +1129,48 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
     Cache = ADF7030_RESIGER_VALUE_READ;
 
     return Cache & (Para << offset);
+}
+/**
+ ****************************************************************************
+ * @Function : void 0adf7030_Change_Channel(void)
+ * @File     : ADF7030_1.c
+ * @Program  :
+ * @Created  : 2017/6/12 by Xiaowine
+ * @Brief    :
+ * @Version  : V1.0
+**/
+void ADF7030_Change_Channel(void)
+{
+    switch (PROFILE_CH_FREQ_32bit_200002EC)
+    {
+    case 426062500:
+        PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+        break;
+    case 426075000:
+        PROFILE_CH_FREQ_32bit_200002EC = 426087500;
+        break;
+    case 426087500:
+        PROFILE_CH_FREQ_32bit_200002EC = 429175000;
+        PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005B;
+        ClearWDT(); // Service the WDT
+        ADF7030_WRITING_PROFILE_FROM_POWERON();
+        ClearWDT(); // Service the WDT
+        break;
+    case 429175000:
+        PROFILE_CH_FREQ_32bit_200002EC = 429200000;
+        break;
+    case 429200000:
+        PROFILE_CH_FREQ_32bit_200002EC = 429225000;
+        break;
+    case 429225000:
+        PROFILE_CH_FREQ_32bit_200002EC = 426062500;
+        PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;
+        ClearWDT(); // Service the WDT
+        ADF7030_WRITING_PROFILE_FROM_POWERON();
+        ClearWDT(); // Service the WDT
+        break;
+    default:
+        PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+        break;
+    }
 }

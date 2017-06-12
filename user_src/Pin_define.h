@@ -152,6 +152,11 @@ extern u8 LED_Cache;
 #define Receiver_test_direc PB_DDR_DDR0 // Input 受信机测试脚  高电平有效
 #define Receiver_test_CR1 PB_CR1_C10    // Input 受信机测试脚  高电平有效
 
+#define ChannelTimerTest PB_ODR_ODR1     // Input 受信机测试脚  高电平有效
+#define ChannelTimerTest_DDR PB_DDR_DDR1 // Input 受信机测试脚  高电平有效
+#define ChannelTimerTest_CR1 PB_CR1_C11  // Input 受信机测试脚  高电平有效
+#define ChannelTimerTest_CR2 PB_CR2_C21  // Input 受信机测试脚  高电平有效
+
 /********************天线切换 CG2214M6控制引脚寄存器*****************************************/
 #define CG2214M6_VC1 PB_ODR_ODR2     //VC1
 #define CG2214M6_VC1_DDR PB_DDR_DDR2 //方向

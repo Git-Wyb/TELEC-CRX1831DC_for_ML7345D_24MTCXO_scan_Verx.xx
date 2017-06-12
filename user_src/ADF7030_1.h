@@ -108,6 +108,7 @@ typedef enum {
 #define ADDR_PROFILE_CCA_READBACK 0x2000037C
 #define ADDR_RADIO_AFC_CFG1 0x2000031C
 #define ADDR_GENERIC_PKT_FRAME_CFG1 0x20000500
+#define ADDR_PROFILE_RADIO_AFC_CFG1 0x2000031C
 /************Address: 0x20000500, Name: GENERIC_PKT_FRAME_CFG1***************************************/
 extern u8 TRX_IRQ1_TYPE;
 extern u8 TRX_IRQ0_TYPE;
@@ -164,4 +165,5 @@ void ADF7030ParameterInit(void);
 void ADF7030_TX(u8 mode);
 u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset);
 void ADF7030_Clear_IRQ(void);
+void ADF7030_Change_Channel(void);
 #endif
