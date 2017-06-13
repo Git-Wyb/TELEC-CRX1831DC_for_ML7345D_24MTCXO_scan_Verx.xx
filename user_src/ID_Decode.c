@@ -663,9 +663,11 @@ void Freq_Scanning(void)
         //ADF7030_RECEIVING_FROM_POWEROFF();
         while (GET_STATUE_BYTE().FW_STATUS != 1)
             ;
+        while (ADF7030_GPIO3 == 1)
+            ;
         Receiver_LED_RX = !Receiver_LED_RX;
         ChannelTimerTest = !ChannelTimerTest;
-        TIMER18ms = 14;
+        TIMER18ms = 15;
         Flag_FREQ_Scan = 0;
     }
 

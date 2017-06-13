@@ -445,10 +445,7 @@ void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_CFGFILE_MSB(ADF7030Cfg, CFG_SIZE());
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-    DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ1STATUS, 0xffffffff);
+    ADF7030_Clear_IRQ();
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     if (WORK_TEST == 0)
@@ -479,6 +476,8 @@ void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
+    while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高
+        ;
 }
 
 void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
@@ -511,10 +510,7 @@ void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
     DELAY_30U();
     }*/
     DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-    DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ1STATUS, 0xffffffff);
+    ADF7030_Clear_IRQ();
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
@@ -538,12 +534,11 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
     WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
     DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ0STATUS, 0xffffffff);
+    ADF7030_Clear_IRQ();
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
-    ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_IRQ1STATUS, 0xffffffff);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-    DELAY_30U();
+    while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高 等待回位
+        ;
     ADF7030_CHANGE_STATE(STATE_PHY_RX);
     while (GET_STATUE_BYTE().FW_STATUS == 0)
         ;
@@ -724,7 +719,6 @@ void ReceiveTestModesCFG(void)
     // ADF7030_WRITING_PROFILE_FROM_POWERON();
     ADF7030_ACC_FROM_POWEROFF();
 }
-
 
 /**
  ****************************************************************************
@@ -964,13 +958,7 @@ void ADF7030_Change_Channel(void)
 {
     switch (PROFILE_CH_FREQ_32bit_200002EC)
     {
-    case 426062500:
-        PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-        break;
     case 426075000:
-        PROFILE_CH_FREQ_32bit_200002EC = 426087500;
-        break;
-    case 426087500:
         PROFILE_CH_FREQ_32bit_200002EC = 429175000;
         PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005B;
         ClearWDT(); // Service the WDT
@@ -992,13 +980,13 @@ void ADF7030_Change_Channel(void)
         ClearWDT(); // Service the WDT
         break;
     case 429175000:
-        PROFILE_CH_FREQ_32bit_200002EC = 429225000;
-        break; /*
+        PROFILE_CH_FREQ_32bit_200002EC = 429200000;
+        break;
     case 429200000:
         PROFILE_CH_FREQ_32bit_200002EC = 429225000;
-        break;*/
+        break;
     case 429225000:
-        PROFILE_CH_FREQ_32bit_200002EC = 426062500;
+        PROFILE_CH_FREQ_32bit_200002EC = 426075000;
         PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;
         ClearWDT(); // Service the WDT
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
