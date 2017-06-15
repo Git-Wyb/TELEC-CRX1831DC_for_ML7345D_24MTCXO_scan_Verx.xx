@@ -56,7 +56,6 @@ void VHF_GPIO_INIT(void) // CPU端口设置
     *CR1寄存器  输出 Output（1=推挽、0=OC）
     *           输入 Input（1=上拉、0=浮动）
     ***************end************************************/
-    HA_GPIO_Init();              // test mode按键
     KEY_GPIO_Init();             // 输入 test脚 登录键
     Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
     Receiver_vent_CR1 = 1;
@@ -128,22 +127,6 @@ void Delayus(unsigned char timer)
     for (x = 0; x < timer; x++)
         __asm("nop");
 }
-void HA_GPIO_Init(void)
-{
-    //    HA_L_signal_direc = Input; // Input   HA 下限信号   低电平有效
-    //    HA_L_signal_CR1 = 1;
-
-    HA_ERR_signal_direc = Input;          // Input   受信机登录键   低电平有效
-    HA_ERR_signal_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
-    HA_ERR_signal_CR2 = InterruptDisable; //禁止中断
-
-    HA_L_signal_direc = Input;          // Input   受信机登录键   低电平有效
-    HA_L_signal_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
-    HA_L_signal_CR2 = InterruptDisable; //禁止中断
-
-    HA_Sensor_signal_direc = Input; // Input   HA 传感器信号  低电平有效
-    HA_Sensor_signal_CR1 = 1;
-}
 void Receiver_OUT_GPIO_Init(void)
 {
     Inverters_OUT_direc = Input; // 输入   继电器输出信号反向   低电平有效
@@ -186,17 +169,9 @@ void Receiver_OUT_GPIO_Init(void)
 **/
 void LED_GPIO_Init(void)
 {
-    // LED_YELLOW_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
-    // LED_YELLOW_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    // LED_YELLOW_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
-
-    // LED_RED_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.pdf P87 */
-    // LED_RED_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    // LED_RED_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
-
-    //    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
-    //    Receiver_LED_OUT_CR1 = 1;
-    //    Receiver_LED_OUT = 1;
+    Receiver_LED_OUT_direc = Output; // Output   受信机继电器动作输出  高电平有效
+    Receiver_LED_OUT_CR1 = 1;
+    Receiver_LED_OUT = 0;
 
     Receiver_LED_TX_direc = Output; // Output   受信机送信指示  高电平有效
     Receiver_LED_TX_CR1 = 1;
@@ -206,108 +181,6 @@ void LED_GPIO_Init(void)
     Receiver_LED_RX_CR1 = 1;
     Receiver_LED_RX = 0;
 }
-/**
- ****************************************************************************
- * @Function : void LEDCtr(void)
- * @File     : Initial.c
- * @Program  :
- * @Created  : 2017/5/8 by Xiaowine
- * @Brief    :
- * @Version  : V1.0
-**/
-void LEDCtr(void)
-{
-    switch (YellowStutue & 0x0f)
-    {
-    case LEDOFFFLAG:
-        YELLOWLED_OFF();
-        break;
-    case LEDONFLAG:
-        LED_YELLOW = LED_ON;
-        break;
-    case LEDFLASHASECONDFLAG:
-    {
-        if (YellowStutue & 0x80)
-        {
-            YELLOWLED_FLASH_SECOND();
-            YellowStutue &= 0x7F;
-        }
-        if (LedYELLOWTimer == 1)
-        {
-            YellowStutue &= 0x3F;
-            YELLOWLED_OFF();
-        }
-    }
-    break;
-    case LEDFLASHFLAG:
-    {
-        if (YellowStutue & 0x80)
-        {
-            YELLOWLED_FLASH();
-            YellowStutue &= 0x7F;
-        }
-        else if (LedYELLOWTimer == 1)
-            YELLOWLED_FLASH();
-    }
-    break;
-    default:
-        break;
-    }
-
-    switch (RedStutue & 0x0f)
-    {
-    case LEDOFFFLAG:
-        REDLED_OFF();
-        break;
-    case LEDONFLAG:
-        LED_RED = LED_ON;
-        break;
-    case LEDFLASHASECONDFLAG:
-    {
-        if (RedStutue & 0x80)
-        {
-            REDLED_FLASH_SECOND();
-            RedStutue &= 0x7F;
-        }
-        if (LedREDTimer == 1)
-            RedStutue = LEDOFFFLAG;
-    }
-    break;
-    case LEDFLASHFLAG:
-    {
-        if (RedStutue & 0x80)
-        {
-            REDLED_FLASH();
-            RedStutue &= 0x7F;
-        }
-        else if (LedREDTimer == 1)
-            REDLED_FLASH();
-    }
-    break;
-    default:
-        break;
-    }
-}
-/**
-****************************************************************************
-* @Function	: void CG2214M6_GPIO_Init(void)
-* @file		: Initial.c
-* @Author	: Xiaowine
-* @date		: 2017/4/11
-* @version	: V1.0
-* @brief	:
-**/
-void CG2214M6_GPIO_Init(void)
-{
-    CG2214M6_VC1_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器RM0031.pdf 10.9 */
-    CG2214M6_VC1_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    CG2214M6_VC1_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
-
-    CG2214M6_VC2_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.RM0031.pdf 10.9 */
-    CG2214M6_VC2_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
-    CG2214M6_VC2_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
-}
-
 /**
 ****************************************************************************
 * @Function : void ADF7030_GPIO_INIT(void)
@@ -397,18 +270,22 @@ void KEY_GPIO_Init(void)
     // KEY_SW4_CR2 = 0;     //禁止中断
 
     Receiver_Login_direc = Input;          // Input   受信机登录键   低电平有效
-    Receiver_Login_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    Receiver_Login_CR1 = Floating;         //1: Input with pull-up 0: Floating input
     Receiver_Login_CR2 = InterruptDisable; //禁止中断
     //   Receiver_test_direc = Input;
     // Receiver_test_CR1 = 1;
 
     WORK_TEST_DDR = Input;            // 输入     test脚
-    WORK_TEST_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    WORK_TEST_CR1 = Floating;         //1: Input with pull-up 0: Floating input
     WORK_TEST_CR2 = InterruptDisable; //禁止中断
 
-    ChannelTimerTest_DDR = Output; //输入     test脚
-    ChannelTimerTest_CR1 = 1;      //Push - pull,
-    ChannelTimerTest_CR2 = 1;      //Output speed up to 10 MHz
+    TP3_DDR = Input;            // 输入     test脚
+    TP3_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    TP3_CR2 = InterruptDisable; //禁止中断
+
+    TP4_DDR = Input;            // 输入     test脚
+    TP4_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
+    TP4_CR2 = InterruptDisable; //禁止中断
 }
 /**
 ****************************************************************************
@@ -505,17 +382,17 @@ void RF_test_mode(void)
 
     while (Receiver_test == 0)
     {
-        ClearWDT();             // Service the WDT
-        if (HA_ERR_signal == 0) //test ADF7030 TX
+        ClearWDT();   // Service the WDT
+        if (TP4 == 0) //test ADF7030 TX
         {
-            if (HA_L_signal == 0)
+            if (TP3 == 0)
                 Tx_Rx_mode = 0;
             else
                 Tx_Rx_mode = 1;
         }
         else //test ADF7030 RX
         {
-            if (HA_L_signal == 0)
+            if (TP3 == 0)
                 Tx_Rx_mode = 2;
             else
                 Tx_Rx_mode = 3;
@@ -527,7 +404,7 @@ void RF_test_mode(void)
             FG_test_tx_off = 0;
             if (Tx_Rx_mode == 0) //发载波，无调制信号
             {
-                Receiver_LED_OUT = 1;
+                Receiver_LED_TX = 1;
                 FG_test_mode = 0;
                 FG_test_tx_1010 = 0;
                 if (FG_test_tx_on == 0)
@@ -543,14 +420,15 @@ void RF_test_mode(void)
                 if (TIMER1s == 0)
                 {
                     TIMER1s = 500;
-                    Receiver_LED_OUT = !Receiver_LED_OUT;
+                    Receiver_LED_TX = !Receiver_LED_TX;
                 }
                 FG_test_mode = 1;
                 FG_test_tx_on = 0;
                 if (FG_test_tx_1010 == 0)
                 {
-                    FG_test_tx_1010 = 1;
                     ADF7030_TX(TestTx_PreamblePattern);
+                    FG_test_tx_1010 = 1;
+
                     //7021_DATA_ ADF7021_DATA_direc = Output;
                     //ttset dd_set_TX_mode_1010pattern();
                 }

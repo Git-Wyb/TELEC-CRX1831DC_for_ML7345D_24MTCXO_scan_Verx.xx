@@ -298,7 +298,6 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
     }
     if (data_NRZ[2] == ((data_NRZ[0] + data_NRZ[1]) & 0xFFFF))
     {
-        YellowStutue = LEDFLASHASECONDFLAG | 0x80;
         FLAG_Signal_DATA_OK = 1;
         LCDUpdateIDFlag = 1;
         DATA_Packet_ID = (data_NRZ[1] & 0x00FF) * 65536 + data_NRZ[0];
@@ -633,11 +632,9 @@ void Freq_Scanning(void)
             {
                 Flag_FREQ_Scan = 1;
                 TIMER18ms = 80;
-                Receiver_LED_RX = !Receiver_LED_RX;
                 return;
             }
         }
-        ChannelTimerTest = !ChannelTimerTest;
         while (GET_STATUE_BYTE().CMD_READY == 0)
             ;
         DELAY_30U();
@@ -665,8 +662,6 @@ void Freq_Scanning(void)
             ;
         while (ADF7030_GPIO3 == 1)
             ;
-        Receiver_LED_RX = !Receiver_LED_RX;
-        ChannelTimerTest = !ChannelTimerTest;
         TIMER18ms = 15;
         Flag_FREQ_Scan = 0;
     }

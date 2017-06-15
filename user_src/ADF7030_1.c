@@ -58,15 +58,13 @@ void DELAY_XX(void)
 **/
 void ADF7030Init(void)
 {
-    SPI_conf(); //初始化spi
-                //    ADF7030_GPIO_INIT();
-    CG2214M6_GPIO_Init();
+    SPI_conf();             //初始化spi
+                            //    ADF7030_GPIO_INIT();
     ADF7030ParameterInit(); //参数初始化
     ADF7030_REST = 0;       //ADF7030芯片初始化
     Delayus(50);
     ClearWDT();
     ADF7030_REST = 1; //ADF7030芯片初始化完成
-    CG2214M6_USE_R;
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
@@ -80,7 +78,6 @@ void ADF7030Init(void)
     ClearWDT(); // Service the WDT
     CONFIGURING_THE_POINTERS_FOR_POINTER_BASED_ACCESSES();
     ClearWDT(); // Service the WDT
-    YELLOWLED_OFF();
 }
 /**
  ****************************************************************************
@@ -482,7 +479,6 @@ void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
 
 void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
 {
-    CG2214M6_USE_T;
     while (GET_STATUE_BYTE().CMD_READY == 0)
         ;
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
@@ -520,7 +516,6 @@ void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
 /*RECEIVE A SINGLE PACKET FROM POWER OFF*/
 void ADF7030_RECEIVING_FROM_POWEROFF(void)
 {
-    CG2214M6_USE_R;
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     //    ADF7030_CHANGE_STATE(STATE_PHY_OFF);
@@ -603,7 +598,6 @@ void SCAN_RECEIVE_PACKET(void)
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
         Memory_Read_Block_Pointer_Long_Address(PNTR_CUSTOM2_ADDR, PAYLOAD_SIZE);
-        RedStutue = LEDFLASHASECONDFLAG | 0x80;
         RX_ANALYSIS(); //处理数据
         while (ADF7030_GPIO3 == 1)
             ;
@@ -617,14 +611,12 @@ void SCAN_RECEIVE_PACKET(void)
         RAM_RSSI_SUM = 0;
         TIMER18ms = 28;
         Flag_FREQ_Scan = 0;
-        Receiver_LED_RX = !Receiver_LED_RX;
     }
     else if ((ADF7030_GPIO3 == 0) && (ADF7030_GPIO2 == 1))
     {
         if (RSSI_Read_Counter == 0)
         {
             TIMER18ms = PAYLOAD_SIZE * 7;
-            Receiver_LED_RX = !Receiver_LED_RX;
         }
         if ((Flag_RSSI_Read_Timer == 0) && (RSSI_Read_Counter < 5))
         {
@@ -830,7 +822,6 @@ void TestFunV2(u8 KeyVel)
             {
                 if (TestState != 0)
                 {
-                    CG2214M6_USE_T;
                     ADF7030_WRITING_PROFILE_FROM_POWERON();
                     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
                     DELAY_30U();
@@ -857,7 +848,6 @@ void TestFunV2(u8 KeyVel)
                         ADF7030_RECEIVING_FROM_POWEROFF();
                         if (BREState == 1)
                         {
-                            RedStutue = LEDFLASHFLAG | 0x80;
                         }
                     }
                     else
@@ -907,7 +897,6 @@ void ADF7030_TX(u8 mode)
 {
     GENERIC_PKT_TEST_MODES0_32bit_20000548 &= 0xfff8ffff;
     GENERIC_PKT_TEST_MODES0_32bit_20000548 |= ((u32)mode << 16);
-    CG2214M6_USE_T;
     ADF7030_WRITING_PROFILE_FROM_POWERON();
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
@@ -924,7 +913,10 @@ void ADF7030_TX(u8 mode)
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_TX);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+
+    while (GET_STATUE_BYTE().FW_STATUS != 1)
+        ;
+    // WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
 }
 /**
  ****************************************************************************

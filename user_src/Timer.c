@@ -11,8 +11,6 @@
 #include "initial.h"      // 初始化  预定义
 #include "ram.h"          // RAM定义
 #include "uart.h"
-u16 LedREDTimer = 1;
-u16 LedYELLOWTimer = 1;
 u16 ErrStateTimeer = 1;
 u16 StateReadTimer = 500;
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Timer 4 start   1ms
@@ -27,11 +25,6 @@ void TIM4_Init(void)
 
 void TIM4_UPD_OVF(void)
 { //725==1秒
-    if ((LedREDTimer > 1) && ((RedStutue & 0x0f) != LEDONFLAG))
-        LedREDTimer--;
-    if ((LedYELLOWTimer > 1) && ((YellowStutue & 0x0f) != LEDONFLAG))
-        LedYELLOWTimer--;
-
     if (TIMER1s)
         --TIMER1s;
     if (TIMER300ms)
@@ -51,7 +44,8 @@ void TIM4_UPD_OVF(void)
         U1AckTimer--;
     if (Flag_RSSI_Read_Timer)
         Flag_RSSI_Read_Timer--;
-    if(X_ERRTimer)X_ERRTimer--;
+    if (X_ERRTimer)
+        X_ERRTimer--;
 
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

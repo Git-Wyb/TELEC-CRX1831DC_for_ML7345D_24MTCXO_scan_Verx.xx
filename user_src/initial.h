@@ -42,19 +42,8 @@ typedef union { // ID No.
     UINT8 IDB[4];
 } uni_rom_id;
 
-extern uFLAG YellowLedFlag, RedLedFalg;
-#define YellowStutue YellowLedFlag.BYTE
-#define RedStutue RedLedFalg.BYTE
-#define LEDOFFFLAG 0
-#define LEDONFLAG 1
-#define LEDFLASHASECONDFLAG 2
-#define LEDFLASHFLAG 3
-
-void LED_GPIO_Init(void); //初始化LED
-void LEDCtr(void);
-void CG2214M6_GPIO_Init(void); //CG2214M6 IO
-void ADF7030_GPIO_INIT(void);  //ADF7030 IO(REST & GPIO3)
-void HA_GPIO_Init(void);
+void LED_GPIO_Init(void);     //初始化LED
+void ADF7030_GPIO_INIT(void); //ADF7030 IO(REST & GPIO3)
 void Receiver_OUT_GPIO_Init(void);
 void KEY_GPIO_Init(void);
 u8 KEY_SCAN(u8 mode);     //按键扫描

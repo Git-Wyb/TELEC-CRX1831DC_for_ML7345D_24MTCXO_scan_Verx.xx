@@ -11,8 +11,6 @@
 /***********************************************************************/
 
 extern u16 ErrStateTimeer;
-extern u16 LedREDTimer;
-extern u16 LedYELLOWTimer;
 extern u16 StateReadTimer;
 //============================================ Timer 4
 void TIM4_Init(void);
