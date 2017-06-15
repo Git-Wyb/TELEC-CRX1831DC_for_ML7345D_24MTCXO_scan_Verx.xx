@@ -73,7 +73,7 @@ void main(void)
 
         if (time_Login_exit_256 == 0)
             ID_Decode_OUT();
-        Freq_Scanning();
+        //Freq_Scanning();
         ID_learn();
         //LEDCtr();
         SCAN_RECEIVE_PACKET(); //扫描接收数据
