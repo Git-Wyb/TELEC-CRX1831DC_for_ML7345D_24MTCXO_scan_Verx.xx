@@ -45,7 +45,7 @@ void UART1_INIT(void)
 	//	USART1_CR4 = 0;
 	//	USART1_CR5 = 0x00;  //0x08;						// 半双工模式
 	/*设置波特率*/
-	baud_div = 16000000 / 38400; /*求出分频因子*/
+	baud_div = 16000000 / 9600; /*求出分频因子*/
 	USART1_BRR2 = baud_div & 0x0f;
 	USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
 	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*先给BRR2赋值 最后再设置BRR1*/

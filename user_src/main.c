@@ -65,12 +65,12 @@ void main(void)
     ClearWDT();        // Service the WDT
     RF_test_mode();
     FLAG_APP_RX = 1;
+    FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
 
     while (1)
     {
         ClearWDT(); // Service the WDT
-
         if (time_Login_exit_256 == 0)
             ID_Decode_OUT();
         //Freq_Scanning();

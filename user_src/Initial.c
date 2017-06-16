@@ -203,7 +203,7 @@ void ADF7030_GPIO_INIT(void)
     ADF7030_GPIO3_DDR = Input; // ‰»Î
     ADF7030_GPIO3_CR1 = 1;     //1: Input with pull-up 0: Floating input
     ADF7030_GPIO3_CR2 = 0;     //Ω˚÷π÷–∂œ
-    //BerExtiInit();
+    BerExtiInit();
 }
 /**
  ****************************************************************************
@@ -276,7 +276,7 @@ void KEY_GPIO_Init(void)
     // Receiver_test_CR1 = 1;
 
     WORK_TEST_DDR = Input;            //  ‰»Î     testΩ≈
-    WORK_TEST_CR1 = Floating;         //1: Input with pull-up 0: Floating input
+    WORK_TEST_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
     WORK_TEST_CR2 = InterruptDisable; //Ω˚÷π÷–∂œ
 
     TP3_DDR = Input;            //  ‰»Î     testΩ≈
@@ -353,7 +353,7 @@ void RF_BRE_Check(void)
         else
             Receiver_LED_RX = 0;
         sprintf(errbuff, "%d\r\n", X_ERR);
-        Send_String((u8 *)errbuff);
+        //s((u8 *)errbuff);
         //for (j = 0; j < 4; j++)
         //lcd    display_map_xy(70 + j * 6, 45, 5, 8, char_Small + (CacheData[3 - j] - ' ') * 5);
         //        display_map_58_6(70,45,4,CacheData);
@@ -438,16 +438,14 @@ void RF_test_mode(void)
         if ((Tx_Rx_mode == 2) || (Tx_Rx_mode == 3))
         {
             FG_test_rx = 1;
-            Receiver_LED_OUT = 0;
+            Receiver_LED_TX = 0;
             FG_test_mode = 0;
             FG_test_tx_on = 0;
             FG_test_tx_1010 = 0;
             if (FG_test_tx_off == 0)
             {
-                FG_test_tx_off = 1;
                 ADF7030_RECEIVING_FROM_POWEROFF();
-                //ttset dd_set_RX_mode_test();
-                //7021_DATA_ ADF7021_DATA_direc = Input;
+                FG_test_tx_off = 1;
             }
             if (Tx_Rx_mode == 2) //packet usart out put RSSI
             {

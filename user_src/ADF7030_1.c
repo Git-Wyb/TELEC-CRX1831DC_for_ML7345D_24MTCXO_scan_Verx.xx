@@ -447,7 +447,6 @@ void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
     DELAY_30U();
     if (WORK_TEST == 0)
     {
-
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_TESTMODE0, GENERIC_PKT_TEST_MODES0_32bit_20000548);
         WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
         DELAY_30U();
@@ -516,11 +515,8 @@ void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
 /*RECEIVE A SINGLE PACKET FROM POWER OFF*/
 void ADF7030_RECEIVING_FROM_POWEROFF(void)
 {
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
-    DELAY_30U();
-    //    ADF7030_CHANGE_STATE(STATE_PHY_OFF);
-    //    WaitForADF7030_FIXED_DATA();  //等待芯片空闲/可接受CMD状态
-    //    DELAY_30U();
+    while (GET_STATUE_BYTE().CMD_READY == 0)
+        ;
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
@@ -530,12 +526,14 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
     WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_Clear_IRQ();
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    GET_STATUE_BYTE();
     DELAY_30U();
     while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高 等待回位
         ;
     ADF7030_CHANGE_STATE(STATE_PHY_RX);
     while (GET_STATUE_BYTE().FW_STATUS == 0)
+        ;
+    while (GET_STATUE_BYTE().FW_STATUS != 1)
         ;
     DELAY_30U();
 }
@@ -913,7 +911,8 @@ void ADF7030_TX(u8 mode)
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_TX);
-
+    while (GET_STATUE_BYTE().FW_STATUS == 0)
+        ;
     while (GET_STATUE_BYTE().FW_STATUS != 1)
         ;
     // WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
