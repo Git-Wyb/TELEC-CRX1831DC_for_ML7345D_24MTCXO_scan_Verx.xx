@@ -349,9 +349,9 @@ void RF_BRE_Check(void)
     if (X_COUNT >= 1000)
     {
         if (X_ERR >= 50)
-            Receiver_LED_RX = 1;
-        else
             Receiver_LED_RX = 0;
+        else
+            Receiver_LED_RX = 1;
         sprintf(errbuff, "%d\r\n", X_ERR);
         //s((u8 *)errbuff);
         //for (j = 0; j < 4; j++)
@@ -362,7 +362,7 @@ void RF_BRE_Check(void)
         X_ERRTimer = 1250;
     }
     if (X_ERRTimer == 0)
-        Receiver_LED_RX = 1;
+        Receiver_LED_RX = 0;
 }
 void RF_test_mode(void)
 {
