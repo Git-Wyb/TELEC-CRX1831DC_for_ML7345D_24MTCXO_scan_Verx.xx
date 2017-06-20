@@ -335,11 +335,9 @@ void eeprom_IDcheck(void)
 void BEEP_and_LED(void)
 {
     UINT16 i;
-    // #if defined(__Product_PIC32MX2_Receiver__)
     Receiver_LED_OUT = 1;
     for (i = 0; i < 4160; i++)
     {
-        //Receiver_Buzzer=!Receiver_Buzzer;   //·äÃùÆ÷ÆµÂÊ2.08KHZ
         if (FG_beep_on == 0)
         {
             FG_beep_on = 1;
@@ -352,20 +350,10 @@ void BEEP_and_LED(void)
         Delayus(250); //80us
         ClearWDT();   // Service the WDT
     }
-    //Receiver_Buzzer=0;
     FG_beep_on = 0;
     BEEP_CSR2_BEEPEN = 0;
-    //Receiver_LED_OUT=0;
     TIME_Receiver_LED_OUT = 185;
-    //#endif
-    //#if defined(__Product_PIC32MX2_WIFI__)
-    //     WIFI_LED_RX=1;
-    //     for(i=0;i<8000;i++){
-    //         Delayus(190);       //2.08KHZ
-    //         ClearWDT(); // Service the WDT
-    //     }
-    //     WIFI_LED_RX=0;
-    //#endif
+
 }
 
 void Receiver_BEEP(void)
@@ -385,9 +373,10 @@ void Receiver_BEEP(void)
                     FG_beep_off = 0;
                     BEEP_CSR2_BEEPEN = 1;
                 }
-                Delayus(250); //80us
-                Delayus(250); //80us
-                Delayus(250); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
                 ClearWDT();   // Service the WDT
             }
             for (i = 0; i < 1800; i++)
@@ -400,9 +389,10 @@ void Receiver_BEEP(void)
                     BEEP_CSR2_BEEPEN = 0;
                 }
                 //Delayus(240);
-                Delayus(250); //80us
-                Delayus(250); //80us
-                Delayus(250); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
+                Delayus(80); //80us
                 ClearWDT();   // Service the WDT
             }
         }

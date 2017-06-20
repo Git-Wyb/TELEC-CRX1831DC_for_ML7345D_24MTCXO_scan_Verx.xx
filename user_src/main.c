@@ -67,7 +67,6 @@ void main(void)
     FLAG_APP_RX = 1;
     FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
-
     while (1)
     {
         ClearWDT(); // Service the WDT
