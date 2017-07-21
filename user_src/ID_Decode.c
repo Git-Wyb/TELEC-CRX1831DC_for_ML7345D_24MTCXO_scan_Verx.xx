@@ -373,10 +373,9 @@ void Receiver_BEEP(void)
                     FG_beep_off = 0;
                     BEEP_CSR2_BEEPEN = 1;
                 }
-                Delayus(80); //80us
-                Delayus(80); //80us
-                Delayus(80); //80us
-                Delayus(80); //80us
+                Delayus(250); //80us
+                Delayus(250); //80us
+                Delayus(250); //80us
                 ClearWDT();   // Service the WDT
             }
             for (i = 0; i < 1800; i++)
@@ -389,10 +388,9 @@ void Receiver_BEEP(void)
                     BEEP_CSR2_BEEPEN = 0;
                 }
                 //Delayus(240);
-                Delayus(80); //80us
-                Delayus(80); //80us
-                Delayus(80); //80us
-                Delayus(80); //80us
+                Delayus(250); //80us
+                Delayus(250); //80us
+                Delayus(250); //80us
                 ClearWDT();   // Service the WDT
             }
         }
