@@ -66,6 +66,7 @@ void VHF_GPIO_INIT(void) // CPU端口设置
 
     LED_GPIO_Init();
     ADF7030_GPIO_INIT();
+    CG2214M6_GPIO_Init();
     Receiver_OUT_GPIO_Init(); // Output   受信机继电器
 }
 //============================================================================================
@@ -183,6 +184,25 @@ void LED_GPIO_Init(void)
 }
 /**
 ****************************************************************************
+* @Function	: void CG2214M6_GPIO_Init(void)
+* @file		: Initial.c
+* @Author	: Xiaowine
+* @date		: 2017/4/11
+* @version	: V1.0
+* @brief	:
+**/
+void CG2214M6_GPIO_Init(void)
+{
+    CG2214M6_VC1_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器RM0031.pdf 10.9 */
+    CG2214M6_VC1_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
+    CG2214M6_VC1_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
+
+    CG2214M6_VC2_DDR = Output; /* 设置数据方向寄存器 1为输出，0为输入--查看STM8寄存器.RM0031.pdf 10.9 */
+    CG2214M6_VC2_CR1 = 1;      /* 设置推挽输出--查看STM8寄存器RM0031.pdf 10.9*/
+    CG2214M6_VC2_CR2 = 1;      /* 设置输出频率 1为10M，0为2M--查看STM8寄存器.pdf P89 */
+}
+/**
+****************************************************************************
 * @Function : void ADF7030_GPIO_INIT(void)
 * @File     : Initial.c
 * @Program  :
@@ -287,36 +307,7 @@ void KEY_GPIO_Init(void)
     TP4_CR1 = Pull_up;          //1: Input with pull-up 0: Floating input
     TP4_CR2 = InterruptDisable; //禁止中断
 }
-/**
-****************************************************************************
-* @Function : u8 KEY_SCAN(u8 mode)
-* @File     : Initial.c
-* @Program  : mode 1 连续按键 0 单次按键
-* @Created  : 2017/4/13 by Xiaowine
-* @Brief    : 按键扫描
-* @Version  : V1.0
-**/
-u8 KEY_SCAN(u8 mode)
-{
-    //    static u8 key_up = 1;
-    //    if (mode)
-    //        key_up = 1;
-    //    if ((key_up) && ((KEY_SW2 == 0) || (KEY_SW3 == 0) || (KEY_SW4 == 0)))
-    //    {
-    //        DELAY_30U();
-    //        key_up = 0;
-    //        if (KEY_SW2 == 0)
-    //            return KEY_SW2_Down;
-    //        else if (KEY_SW3 == 0)
-    //            return KEY_SW3_Down;
-    //        else if (KEY_SW4 == 0)
-    //            return KEY_SW4_Down;
-    //    }
-    //    else if ((KEY_SW2 == 1) && (KEY_SW3 == 1) && (KEY_SW4 == 1))
-    //        key_up = 1;
-    //    return KEY_Empty;
-    return 0;
-}
+
 /**
  ****************************************************************************
  * @Function : void RF_BRE_Check(void)
@@ -399,6 +390,7 @@ void RF_test_mode(void)
         }
         if ((Tx_Rx_mode == 0) || (Tx_Rx_mode == 1))
         {
+            CG2214M6_USE_T;
             FG_test_rx = 0;
             Receiver_LED_RX = 0;
             FG_test_tx_off = 0;
@@ -437,6 +429,7 @@ void RF_test_mode(void)
         //else  {           //test ADF7021 RX
         if ((Tx_Rx_mode == 2) || (Tx_Rx_mode == 3))
         {
+            CG2214M6_USE_R;
             FG_test_rx = 1;
             Receiver_LED_TX = 0;
             FG_test_mode = 0;
@@ -468,7 +461,6 @@ void RF_test_mode(void)
         //        }
         //       if(ADF7021_DATA_CLK==0)FG_test1=0;
     }
-    //  UART1_end();
     BerExtiUnInit();
     FG_test_rx = 0;
     TIMER1s = 0;
@@ -478,7 +470,6 @@ void RF_test_mode(void)
     Receiver_LED_OUT = 0;
 
     FLAG_APP_RX = 1;
-    //ttset dd_set_RX_mode();
     TIME_Fine_Calibration = 900;
     TIME_EMC = 10;
 }

@@ -12,4 +12,8 @@
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "files.autoGuessEncoding": true,
+    "files.associations": {
+        "adf7030_1.h": "c",
+        "pin_define.h": "c"
+    },
 }

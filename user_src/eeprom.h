@@ -9,12 +9,12 @@
 /*  Mark        :0x4000~0x47FF                  */
 /************************************************/
 void InitialFlashReg(void);
-void UnlockFlash(unsigned char Type); // ½âËøflash
-void LockFlash(unsigned char Type);   // Ëø¶¨´æ´¢Æ÷
+void UnlockFlash(unsigned char Type); // Â½Ã¢Ã‹Ã¸flash
+void LockFlash(unsigned char Type);   // Ã‹Ã¸Â¶Â¨Â´Ã¦Â´Â¢Ã†Ã·
 
-unsigned char ReadByteEEPROM(unsigned long Addr);             // ¶ÁÈ¡1×Ö½Ú
-void WriteByteToFLASH(unsigned long Addr, unsigned char Dat); // Ğ´ÈëÒ»×Ö½Ú
-void EraseByteFLASH(unsigned int Addr);                       // ²Á³ıeeprom
+unsigned char ReadByteEEPROM(unsigned long Addr);             // Â¶ÃÃˆÂ¡1Ã—Ã–Â½Ãš
+void WriteByteToFLASH(unsigned long Addr, unsigned char Dat); // ÃÂ´ÃˆÃ«Ã’Â»Ã—Ã–Â½Ãš
+void EraseByteFLASH(unsigned int Addr);                       // Â²ÃÂ³Ã½eeprom
 
 void eeprom_save(void);
 void eeprom_sys_load(void);

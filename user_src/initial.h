@@ -43,10 +43,10 @@ typedef union { // ID No.
 } uni_rom_id;
 
 void LED_GPIO_Init(void);     //初始化LED
+void CG2214M6_GPIO_Init(void);
 void ADF7030_GPIO_INIT(void); //ADF7030 IO(REST & GPIO3)
 void Receiver_OUT_GPIO_Init(void);
 void KEY_GPIO_Init(void);
-u8 KEY_SCAN(u8 mode);     //按键扫描
 void RAM_clean(void);     // 清除RAM
 void VHF_GPIO_INIT(void); // CPU端口设置
 void SysClock_Init(void); // 系统时钟（外部时钟）
