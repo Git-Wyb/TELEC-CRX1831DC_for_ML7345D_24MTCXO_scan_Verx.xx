@@ -643,12 +643,13 @@ void SCAN_RECEIVE_PACKET(void)
 **/
 void WaitForADF7030_FIXED_DATA(void)
 {
+    u8 count = 0;
     do
     {
         DELAY_30U();
         ADF7030_FIXED_DATA();
         ClearWDT();
-    } while (((ADF7030_Read_OneByte & 0x20) != 0x20) || ((ADF7030_Read_OneByte & 0x06) != 0x04));
+    } while ((((ADF7030_Read_OneByte & 0x20) != 0x20) || ((ADF7030_Read_OneByte & 0x06) != 0x04))&&(count < 200));
 }
 /**
 ****************************************************************************
