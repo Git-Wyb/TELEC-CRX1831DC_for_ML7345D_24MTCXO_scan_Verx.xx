@@ -3,7 +3,7 @@
 //CPU?????
 //?????ADF030???????
 //#define TX_TEST_CARRIER_MODE 0
-#include "initial.h" // ��ʼ��  Ԥ����
+#include "initial.h" // 锟斤拷始锟斤拷  预锟斤拷锟斤拷
 
 extern uFLAG FLAG_test1;
 //************************************************
@@ -11,7 +11,7 @@ extern uFLAG FLAG_test1;
 //------------------------------------------------
 #define BIT_SIO FLAG_test1.BIT.Bit0
 #define FG_auto_out FLAG_test1.BIT.Bit1
-#define FG_OUT_OPEN_CLOSE FLAG_test1.BIT.Bit2 //��ʷ��¼   �����ʲ�����
+#define FG_OUT_OPEN_CLOSE FLAG_test1.BIT.Bit2 //锟斤拷史锟斤拷录   锟斤拷锟斤拷锟绞诧拷锟斤拷锟斤拷
 											  //    #define		FG_auto_outbz		FLAG_test1.BIT.Bit3
 #define FG_auto_open_time FLAG_test1.BIT.Bit4
 #define FG_auto_manual_mode FLAG_test1.BIT.Bit5 //1=auto,0=manual
@@ -24,7 +24,7 @@ extern volatile uFLAG FLAG_test;
 //------------------------------------------------
 #define FLAG_Receiver_Scanning FLAG_test.BIT.Bit0
 #define FG_test_tx_1010 FLAG_test.BIT.Bit1
-#define X_HIS FLAG_test.BIT.Bit2 //历史记录   �?码率测试�?
+#define X_HIS FLAG_test.BIT.Bit2 //鍘嗗彶璁板綍   璇?鐮佺巼娴嬭瘯鐢?
 #define FG_test_tx_on FLAG_test.BIT.Bit3
 #define FG_test_tx_off FLAG_test.BIT.Bit4
 #define FG_test_mode FLAG_test.BIT.Bit5
@@ -58,7 +58,7 @@ extern volatile uFLAG FLAG1;
 //************************************************
 
 extern u16 X_COUNT;
-extern u16 X_ERR; //��¼����ĸ���
+extern u16 X_ERR; //记录错误的个数
 extern u16 X_ERRTimer;
 
 extern u8 SIO_cnt;
@@ -74,11 +74,11 @@ extern u8 TIMER250ms_STOP;
 extern u16 TIME_auto_out;
 extern u16 TIME_auto_close;
 extern u16 time_3sec;
-extern u32 ID_Receiver_DATA[256]; //д��EEPROM ID����
+extern u32 ID_Receiver_DATA[256]; //写入EEPROM ID缓存
 extern u16 ID_DATA_PCS;
 extern u32 DATA_Packet_ID;
 extern u8 DATA_Packet_Control;
-extern u8 DATA_Packet_Contro_buf; //2015.3.24�?�?
+extern u8 DATA_Packet_Contro_buf; //2015.3.24淇?姝?
 extern u32 ID_Receiver_Login;
 extern u8 TIME_EMC;
 
@@ -94,7 +94,7 @@ extern u16 TIME_Receiver_LED_OUT;
 extern u16 TIME_Login_EXIT_Button;
 extern u16 Manual_override_TIMER;
 extern u16 time_Login_exit_256;
-extern u16 TIME_Fine_Calibration; //窄带下中频滤波器100KHz精校
+extern u16 TIME_Fine_Calibration; //绐勫甫涓嬩腑棰戞护娉㈠櫒100KHz绮炬牎
 
 extern u8 Count_key_SW3;
 extern u8 Display_key_SW3;

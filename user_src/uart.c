@@ -16,8 +16,9 @@
 #define RXD1_enable (USART1_CR2 = 0x24) // 允许接收及其中断
 
 u8 u1busyCache = 0;
+u8 u1InitCompleteFlag = 0;
 
-UINT8 UartStatus = 0;
+UINT8 UartStatus = FrameHeadSataus;
 UINT8 UartLen = 0;
 UINT8 UartCount = 0;
 UINT8 UART_DATA_buffer[9] = {0};
@@ -30,6 +31,8 @@ unsigned int U1AckTimer = 0;
 void UART1_INIT(void)
 {
 	unsigned int baud_div = 0;
+	u1InitCompleteFlag = 0;
+
 	SYSCFG_RMPCR1_USART1TR_REMAP = 0;
 	USART1_CR1_bit.M = 1;
 	USART1_CR1_bit.PCEN = 1;
@@ -55,7 +58,8 @@ void UART1_INIT(void)
 	//16.00M/9600 = 0x683
 	//USART1_CR2 = 0x08;	// 允许发送
 	//USART1_CR2 = 0x24;
-	Send_char(0xa5);
+	//Send_char(0xa5);
+	u1InitCompleteFlag = 1;
 }
 void UART1_end(void)
 { //
@@ -377,6 +381,8 @@ void OprationFrame(void)
 			break;
 		case 0x48:
 			break;
+		case 0x4a:
+			break;
 		default:
 			ACKBack[2] = 1;
 			return;
@@ -394,13 +400,17 @@ void OprationFrame(void)
 }
 void TranmissionACK(void)
 {
-
-	if ((U1Statues == ReceiveDoneStatues) && (U1AckTimer == 0))
+	if (u1InitCompleteFlag)
 	{
-		U1Busy_OUT = 1;
-		U1Statues = ACKingStatues;
-		Send_Data(ACKBack, 3);
-		U1Statues = IdelStatues;
-		U1Busy_OUT = 1;
+		if ((U1Statues == ReceiveDoneStatues) && (U1AckTimer == 0))
+		{
+			U1Busy_OUT = 1;
+			U1Statues = ACKingStatues;
+			Send_Data(ACKBack, 3);
+			U1Statues = IdelStatues;
+			U1Busy_OUT = 1;
+		}
 	}
+	else
+		return;
 }

@@ -11,7 +11,7 @@ volatile uFLAG FLAG1;
 volatile uFLAG FLAG_test;
 
 u16 X_COUNT = 0;
-u16 X_ERR = 0; //¼ÇÂ¼´íÎóµÄ¸öÊı
+u16 X_ERR = 0; //è®°å½•é”™è¯¯çš„ä¸ªæ•°
 u16 X_ERRTimer = 0;
 
 u8 SIO_cnt = 0;
@@ -27,13 +27,13 @@ u8 TIMER250ms_STOP = 0;
 u16 TIME_auto_out = 0;
 u16 TIME_auto_close = 0;
 u16 time_3sec = 0;
-u32 ID_Receiver_DATA[256] = {0}; //Ğ´ÈëEEPROM ID»º´æ
+u32 ID_Receiver_DATA[256] = {0}; //å†™å…¥EEPROM IDç¼“å­˜
 u16 ID_DATA_PCS = 0;
 u32 DATA_Packet_ID = 0;
 u8 DATA_Packet_Control = 0;
-u8 DATA_Packet_Contro_buf = 0; //2015.3.24ĞŞÕı
+u8 DATA_Packet_Contro_buf = 0; //2015.3.24ä¿®æ­£
 u32 ID_Receiver_Login = 0;
-u8 TIME_EMC = 0; //¾²µç²âÊÔ
+u8 TIME_EMC = 0; //é™ç”µæµ‹è¯•
 u8 LED_Cache = 0;
 
 u16 INquiry = 0;
@@ -48,7 +48,7 @@ u16 TIME_Receiver_LED_OUT = 0;
 u16 TIME_Login_EXIT_Button = 0;
 u16 Manual_override_TIMER = 0;
 u16 time_Login_exit_256 = 0;
-u16 TIME_Fine_Calibration = 0; //Õ­´øÏÂÖĞÆµÂË²¨Æ÷100KHz¾«Ğ£
+u16 TIME_Fine_Calibration = 0; //çª„å¸¦ä¸‹ä¸­é¢‘æ»¤æ³¢å™¨100KHzç²¾æ ¡
 
 u8 Count_key_SW3 = 0;
 u8 Display_key_SW3 = 0xff;

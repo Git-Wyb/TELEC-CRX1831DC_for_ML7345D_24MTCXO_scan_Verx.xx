@@ -12,16 +12,18 @@
 #include "uart.h"
 extern u8 u1busyCache;
 #define U1Busy_OUT u1busyCache
-#define FrameHeadSataus 0x00 //Ö¡Í·
-#define DataStatus 0x01      //Êı¾İÎ»ÖÃ
-#define FrameEndStatus 0x02  //èå½áÊø
-#define FrameHead 0x02       //Êı¾İ¿ªÊ¼
-#define FrameSingnalID 0x11  //ĞÅºÅID
+#define FrameHeadSataus 0x00 //å¸§å¤´
+#define DataStatus 0x01      //æ•°æ®ä½ç½®
+#define FrameEndStatus 0x02  //æ¡¢ç»“æŸ
+#define FrameHead 0x02       //æ•°æ®å¼€å§‹
+#define FrameSingnalID 0x11  //ä¿¡å·ID
 
 extern UINT8 UartStatus;
 extern UINT8 UartLen;
 extern UINT8 UartCount;
 extern UINT8 UART_DATA_buffer[9];
+extern u8 u1InitCompleteFlag;
+
 void ReceiveFrame(UINT8 Cache);
 void OprationFrame(void);
 void TranmissionACK(void);

@@ -20,13 +20,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <iostm8l151g4.h> // CPUĞÍºÅ
-#include "Pin_define.h"   // ¹Ü½Å¶¨Òå
-#include "initial.h"      // ³õÊ¼»¯  Ô¤¶¨Òå
-#include "ram.h"          // RAM¶¨Òå
-#include "ADF7030_1.h"    // ³õÊ¼»¯ADF7021
-#include "Timer.h"        // ¶¨Ê±Æ÷
-#include "ID_Decode.h"    // ID_Decode´¦Àí
+#include <iostm8l151g4.h> // CPUå‹å·
+#include "Pin_define.h"   // ç®¡è„šå®šä¹‰
+#include "initial.h"      // åˆå§‹åŒ–  é¢„å®šä¹‰
+#include "ram.h"          // RAMå®šä¹‰
+#include "ADF7030_1.h"    // åˆå§‹åŒ–ADF7021
+#include "Timer.h"        // å®šæ—¶å™¨
+#include "ID_Decode.h"    // ID_Decodeå¤„ç†
 #include "eeprom.h"       // eeprom
 #include "uart.h"         // uart
 /** @addtogroup STM8L15x_StdPeriph_Template
@@ -49,19 +49,19 @@
 
 void main(void)
 {
-    _DI();             // ¹ØÈ«¾ÖÖĞ¶Ï
-    RAM_clean();       // Çå³ıRAM
-    WDT_init();        //¿´ÃÅ¹·
-    VHF_GPIO_INIT();   //IO³õÊ¼»¯
-    SysClock_Init();   //ÏµÍ³Ê±ÖÓ³õÊ¼»¯
+    _DI();             // å…³å…¨å±€ä¸­æ–­
+    RAM_clean();       // æ¸…é™¤RAM
+    WDT_init();        //çœ‹é—¨ç‹—
+    VHF_GPIO_INIT();   //IOåˆå§‹åŒ–
+    SysClock_Init();   //ç³»ç»Ÿæ—¶é’Ÿåˆå§‹åŒ–
     InitialFlashReg(); //flash EEPROM
-    eeprom_sys_load(); //IDÔØÈë
-    TIM4_Init();       // ¶¨Ê±Æ÷
-    beep_init();       // ·äÃùÆ÷
+    eeprom_sys_load(); //IDè½½å…¥
+    TIM4_Init();       // å®šæ—¶å™¨
+    beep_init();       // èœ‚é¸£å™¨
     ClearWDT();        // Service the WDT
-    ADF7030Init();     //ÉäÆµ³õÊ¼»¯
+    ADF7030Init();     //å°„é¢‘åˆå§‹åŒ–
     UART1_INIT();      // UART1 for PC Software
-    _EI();             // ÔÊĞíÖĞ¶Ï
+    _EI();             // å…è®¸ä¸­æ–­
     ClearWDT();        // Service the WDT
     RF_test_mode();
     FLAG_APP_RX = 1;
@@ -75,7 +75,7 @@ void main(void)
         //Freq_Scanning();
         ID_learn();
         //LEDCtr();
-        SCAN_RECEIVE_PACKET(); //É¨Ãè½ÓÊÕÊı¾İ
+        SCAN_RECEIVE_PACKET(); //æ‰«ææ¥æ”¶æ•°æ®
         TranmissionACK();
         //        READ_RSSI_avg();
 
