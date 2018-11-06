@@ -99,7 +99,7 @@ extern u16 TIME_Fine_Calibration; //绐勫甫涓嬩腑棰戞护娉㈠櫒100KHz�
 extern u8 Count_key_SW3;
 extern u8 Display_key_SW3;
 
-extern u16 TIME_TestNo93or91;
+extern u16 TIME_TestNo91;
 extern u16 TIME_power_led;
 
 

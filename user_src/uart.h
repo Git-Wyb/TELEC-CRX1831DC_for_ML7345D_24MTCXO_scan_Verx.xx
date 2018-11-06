@@ -25,8 +25,11 @@ extern UINT8 UART_DATA_buffer[9];
 extern u8 u1InitCompleteFlag;
 
 extern UINT8 ACKBack[3];
-extern UINT8 FLAG_testNo93;
+extern UINT8 FLAG_testNo91;
 extern UINT8 FLAG_testBEEP;
+extern UINT8 FLAG_testNo91_step;
+extern UINT8 FLAG_testNo91SendUart;
+
 
 
 void ReceiveFrame(UINT8 Cache);

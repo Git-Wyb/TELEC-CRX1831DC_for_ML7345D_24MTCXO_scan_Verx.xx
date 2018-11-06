@@ -119,6 +119,8 @@ void beep_init(void)
     BEEP_CSR2_BEEPSEL = 2;
     CLK_CBEEPR_CLKBEEPSEL0 = 1;
     CLK_CBEEPR_CLKBEEPSEL1 = 0;
+
+	BEEP_CSR2_BEEPEN = 0;
 }
 
 //===================Delayus()延时===============//    Crystal: 16M HSI
@@ -363,7 +365,7 @@ void RF_BRE_Check(void)
 }
 void RF_test_mode(void)
 {
-    UINT8 Boot_i;
+    //UINT8 Boot_i;
 	 Receiver_LED_OUT = 1;
 	/* for (Boot_i = 0; Boot_i < 2; Boot_i++)
 	 {

@@ -53,7 +53,7 @@ u16 TIME_Fine_Calibration = 0; //窄带下中频滤波器100KHz精校
 u8 Count_key_SW3 = 0;
 u8 Display_key_SW3 = 0xff;
 
-u16 TIME_TestNo93or91=0;
+u16 TIME_TestNo91=0;
 u16 TIME_power_led=0;
 
 

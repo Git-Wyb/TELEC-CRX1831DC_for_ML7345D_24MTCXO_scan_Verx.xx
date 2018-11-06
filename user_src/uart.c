@@ -27,8 +27,12 @@ __U1Statues U1Statues;
 UINT8 ACKBack[3] = {0x02, 0x03, 0x00};
 unsigned int U1AckTimer = 0;
 
-UINT8 FLAG_testNo93=0;
+UINT8 FLAG_testNo91=0;
 UINT8 FLAG_testBEEP=0;
+UINT8 FLAG_testNo91_step=0;
+UINT8 FLAG_testNo91SendUart=0;
+
+
 
 //********************************************
 void UART1_INIT(void)
@@ -387,11 +391,27 @@ void OprationFrame(void)
 	}
 	else if (Databits_t.ID_test_No91or93 == 0x91)
 	{
-		ACKBack[2] = 0;
-		FLAG_testNo93=1;
-		TIME_TestNo93or91=1000;
+	    if(ID_DATA_PCS==0)
+	    	{
+			ACKBack[2] = 0;
+			FLAG_testNo91=1;
+			if(FLAG_testNo91SendUart==1)
+				{
+				if(FLAG_testNo91_step<2)
+			       FLAG_testNo91_step++;
+				}
+			FLAG_testNo91SendUart=0;
+			TIME_TestNo91=1000;
+	    	}
+		else 
+			{
+			ACKBack[2] = 1;
+			FLAG_testNo91=2;
+			TIME_TestNo91=1000;	
+			FLAG_testBEEP=1;
+			}
 	}	
-	else if ((Databits_t.ID_test_No91or93 == 0x93)&&(FLAG_testNo93==1))
+	else if (Databits_t.ID_test_No91or93 == 0x93)
 	{
 		switch (Databits_t.SWorOUT)
 		{

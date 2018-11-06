@@ -68,7 +68,7 @@ void main(void)
     FLAG_APP_RX = 1;
     FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
-    FLAG_testNo93=0;
+    FLAG_testNo91=0;
 	FLAG_testBEEP=0;
     while (1)
     {
