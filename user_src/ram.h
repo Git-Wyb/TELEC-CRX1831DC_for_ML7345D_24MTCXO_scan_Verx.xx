@@ -7,7 +7,7 @@
 
 
 #define DEF_APP_TX_freq 3
-
+#define DEF_test_MAX_32pcs
 
 
 extern uFLAG FLAG_test1;

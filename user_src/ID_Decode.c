@@ -255,28 +255,52 @@ void eeprom_IDcheck(void)
             FLAG_IDCheck_OK = 1;
             DATA_Packet_Control = DATA_Packet_Contro_buf;		
 		}
-    for (i = 0; i < ID_DATA_PCS; i++)
-    {
-        if (ID_Receiver_DATA[i] == DATA_Packet_ID)
-        {
-            INquiry = i;
-            i = ID_DATA_PCS;
-            FLAG_IDCheck_OK = 1;
-            if(Radio_Date_Type_bak==1)DATA_Packet_Control = DATA_Packet_Contro_buf;
-			else if(Radio_Date_Type_bak==2)Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
-        } //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
-        if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
-        {
-            i = ID_DATA_PCS;
-            FLAG_IDCheck_OK = 0;
-            DATA_Packet_Control = DATA_Packet_Contro_buf;
-        } //追加多次ID登录
-    }
-	if((Radio_Date_Type_bak==2)&&(DATA_Packet_ID==ID_SCX1801_DATA))
+#ifndef DEF_test_MAX_32pcs
+	if(Radio_Date_Type_bak==1)
+	{
+		    for (i = 0; i < ID_DATA_PCS; i++)
+		    {
+		        if (ID_Receiver_DATA[i] == DATA_Packet_ID)
+		        {
+		            INquiry = i;
+		            i = ID_DATA_PCS;
+		            FLAG_IDCheck_OK = 1;
+		            if(Radio_Date_Type_bak==1)DATA_Packet_Control = DATA_Packet_Contro_buf;
+					else if(Radio_Date_Type_bak==2)Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
+		        } //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
+		        if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
+		        {
+		            i = ID_DATA_PCS;
+		            FLAG_IDCheck_OK = 0;
+		            DATA_Packet_Control = DATA_Packet_Contro_buf;
+		        } //追加多次ID登录
+		    }
+	}
+	else if((Radio_Date_Type_bak==2)&&(DATA_Packet_ID==ID_SCX1801_DATA))
 	{
 		FLAG_IDCheck_OK = 1;
 		Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
 	}
+#else
+		for (i = 0; i < ID_DATA_PCS; i++)
+		{
+			if (ID_Receiver_DATA[i] == DATA_Packet_ID)
+			{
+				INquiry = i;
+				i = ID_DATA_PCS;
+				FLAG_IDCheck_OK = 1;
+				if(Radio_Date_Type_bak==1){DATA_Packet_Control = DATA_Packet_Contro_buf;ID_SCX1801_DATA=DATA_Packet_ID;}
+				else if(Radio_Date_Type_bak==2){Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;ID_SCX1801_DATA=DATA_Packet_ID;}
+			} //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
+			if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
+			{
+				i = ID_DATA_PCS;
+				FLAG_IDCheck_OK = 0;
+				DATA_Packet_Control = DATA_Packet_Contro_buf;
+			} //追加多次ID登录
+		}
+
+#endif	
 }
 /*
    time_beepON、time_beepOFF单位时间�?0.4333333ms
