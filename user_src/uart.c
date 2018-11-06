@@ -414,11 +414,8 @@ void OprationFrame(void)
 	    	{
 			ACKBack[2] = 0;
 			FLAG_testNo91=1;
-			if(FLAG_testNo91SendUart==1)
-				{
-				if(FLAG_testNo91_step<2)
+				if(FLAG_testNo91_step<3)
 			       FLAG_testNo91_step++;
-				}
 			FLAG_testNo91SendUart=0;
 			TIME_TestNo91=1000;
 	    	}

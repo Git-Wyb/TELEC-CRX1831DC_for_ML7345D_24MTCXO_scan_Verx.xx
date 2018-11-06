@@ -161,8 +161,8 @@ void ID_Decode_IDCheck(void)
 		                            if (TIMER1s == 0)
 		                                TIMER1s = 3800 - 30;
 		                        }
-		                        else
-		                            TIMER1s = 1000;
+		                        else if(FLAG_testNo91==1) TIMER1s = 600;
+		                        else TIMER1s = 1000;
 		                    }
 		                    TIMER300ms = 600;  //500
 		                    //Receiver_LED_RX=1;
@@ -393,7 +393,7 @@ void ID_Decode_OUT(void)
 				       switch (Control_i)
                        {
 				        case 0x08: //open
-				            if(FLAG_testNo91_step==0)
+				            if(FLAG_testNo91_step==1)
 				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA1;
@@ -402,7 +402,7 @@ void ID_Decode_OUT(void)
 				            	}
 				            break;   
 				        case 0x04: //stop
-				            if(FLAG_testNo91_step==1)
+				            if(FLAG_testNo91_step==2)
 				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA2;
@@ -411,7 +411,7 @@ void ID_Decode_OUT(void)
 				            	}						
 				            break; 							
 				        case 0x02: //close
-				            if(FLAG_testNo91_step==2)
+				            if(FLAG_testNo91_step==3)
 				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA4;
@@ -671,7 +671,7 @@ void ID_Decode_OUT(void)
             Receiver_OUT_STOP = FG_NOT_allow_out;
             FG_OUT_OPEN_CLOSE = 0;
         }
-		if(FLAG_testNo91_step==2)FLAG_testNo91SendUart=0;
+		FLAG_testNo91SendUart=0;
     }
     if (TIMER300ms == 0)
         FG_Receiver_LED_RX = 0; //Receiver_LED_RX=0;
