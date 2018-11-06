@@ -6,7 +6,8 @@
 #include "initial.h" // 锟斤拷始锟斤�? 预锟斤拷锟斤�?
 
 
-#define DEF_APP_TX_freq  3
+#define DEF_APP_TX_freq 3
+#define DEF_test_MAX_32pcs
 
 
 

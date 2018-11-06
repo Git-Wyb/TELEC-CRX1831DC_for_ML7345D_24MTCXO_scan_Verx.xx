@@ -1208,13 +1208,12 @@ void Select_TX_frequency(void)
 	  }
 	  if(FLAG_APP_TX==1)
 	  {
-	       if(TX_Scan_step==1)TX_Scan_step=2;//Select_TX_frequency();
+	       if(TX_Scan_step==1)Select_TX_frequency();
 		   if(TX_Scan_step==2)
 		   {
 				if(APP_TX_freq==0)
 				{
 				    Receiver_LED_TX = 1;
-					Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
 					TX_DataLoad_HighSpeed(ID_SCX1801_DATA,Last_Uart_Struct_DATA_Packet_Contro, &CONST_TXPACKET_DATA_20000AF0[0]);
 					ADF7030_TRANSMITTING_FROM_POWEROFF();
 					Time_APP_blank_TX=2;
@@ -1222,8 +1221,6 @@ void Select_TX_frequency(void)
 				}
 				else if((APP_TX_freq < DEF_APP_TX_freq)&&(ADF7030_GPIO3 == 0)&&(Time_APP_blank_TX==0))
 				{
-					Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=APP_TX_freq+1;
-					TX_DataLoad_HighSpeed(ID_SCX1801_DATA,Last_Uart_Struct_DATA_Packet_Contro, &CONST_TXPACKET_DATA_20000AF0[0]);				
 					 ADF7030_TRANSMITTING_FROM_POWEROFF();
 					 Time_APP_blank_TX=2;		
 					APP_TX_freq++;
