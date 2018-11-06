@@ -318,7 +318,7 @@ void ReceiveFrame(UINT8 Cache)
 		UartStatus = 0;
 		UartCount = 0;
 		//        Receiver_LED_OUT_INV = !Receiver_LED_OUT_INV;
-		if(Databits_t.ID_No == 0x93) U1Statues = IdelStatues;
+		if((Databits_t.ID_No == 0x93)||(Databits_t.ID_No == 0x98)) U1Statues = IdelStatues;
 		else 
 		{
 			U1Statues = ReceiveDoneStatues;
@@ -395,6 +395,8 @@ void OprationFrame(void)
 	}
 	else if (Databits_t.ID_No == 0x98)
 	{
+	   	Flag_ERROR_Read_once_again=0;
+		TIME_ERROR_Read_once_again=0;
 	}
 	else if (Databits_t.ID_test_No91or93 == 0x91)
 	{

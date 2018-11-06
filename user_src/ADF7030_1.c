@@ -996,7 +996,7 @@ void ADF7030_TX(u8 mode)
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
-    PROFILE_CH_FREQ_32bit_200002EC = PROFILE_CH_FREQ_32bit_200002EC_TELEC; //429175000;
+    PROFILE_CH_FREQ_32bit_200002EC = 429175000;
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
     WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
@@ -1193,7 +1193,6 @@ void Select_TX_frequency(void)
 	 char rssi;
 
 	 if((TP3==0)&&(FLAG_Key_TP3==0))FLAG_Key_TP3=1;
-	 else if(TP3==1)FLAG_Key_TP3=0;
 	  
 	  if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
 	  	  (((FLAG_APP_TX_fromOUT==1)&&(TIME_APP_TX_fromOUT==0))||(FLAG_Key_TP3==1)||
@@ -1203,7 +1202,7 @@ void Select_TX_frequency(void)
 	  	)
 	  {
 					  FLAG_APP_TX_fromUART=0;
-					  FLAG_Key_TP3=2;
+					  FLAG_Key_TP3=0;
 					  Last_Uart_Struct_DATA_Packet_Contro=Uart_Struct_DATA_Packet_Contro;
 					  Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
 					  rssi=RAM_RSSI_AVG/128;
