@@ -619,8 +619,11 @@ void RX_ANALYSIS(void)
                                   (u32)SPI_RECEIVE_BUFF[i * 4 + 5] << 16 |
                                   (u32)SPI_RECEIVE_BUFF[i * 4 + 6] << 24;
     }
-    FLAG_Receiver_IDCheck = 1;
-    ID_Decode_IDCheck();
+	if(Flag_ERROR_Read==0)//在异常履历读取和无线连续几包发射时，不允许接收、解码。
+	{
+       FLAG_Receiver_IDCheck = 1;
+       ID_Decode_IDCheck();
+	}
 }
 
 void SCAN_RECEIVE_PACKET(void)
@@ -1191,10 +1194,49 @@ void Select_TX_frequency(void)
 	void APP_TX_PACKET(void)
 	{
 	 char rssi;
+	 u8 i=2,j=0;
 
 	 if((TP3==0)&&(FLAG_Key_TP3==0))FLAG_Key_TP3=1;
-	  
-	  if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
+	 
+      if((Time_error_read_timeout==0)&&(Flag_ERROR_Read==1))
+      {
+	  	Flag_ERROR_Read=0;
+		FLAG_APP_TX_fromUART_err_read=0;
+      }
+      if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
+	  	   ((FLAG_APP_TX_fromUART_err_read==1)&&(Flag_ERROR_Read==1)&&(Time_error_read_gap==0)&&((FLAG_APP_RX==1)||(FLAG_APP_RXstart==1))&&(Radio_Date_Type_bak==2))
+	  	   )
+      {
+         for(j=0;j<8;j++)Last_Uart_Struct_DATA_Packet_Contro.data[j/2].uc[j%2]=0x00;
+		 
+         Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=0x1f;
+		 Last_Uart_Struct_DATA_Packet_Contro.data[0].uc[0]=0x98;
+		 ERROR_Read_sendTX_packet++;
+		 Last_Uart_Struct_DATA_Packet_Contro.data[0].uc[1]=ERROR_Read_sendTX_packet;
+		 while(ERROR_Read_sendTX_count<UART_DATA_ID98[1]-4)
+		 {
+		     Last_Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=UART_DATA_ID98[ERROR_Read_sendTX_count+4];
+			 ERROR_Read_sendTX_count++;	
+			 i++;
+			 if(i==8)break;
+		 }
+		 if(ERROR_Read_sendTX_count==UART_DATA_ID98[1]-4)
+		 {
+		 	Last_Uart_Struct_DATA_Packet_Contro.data[0].uc[1]= Last_Uart_Struct_DATA_Packet_Contro.data[0].uc[1] |0x80;
+			FLAG_APP_TX_fromUART_err_read=0;
+			Flag_ERROR_Read=0;
+		 }
+
+		 DEF_APP_TX_freq=3;
+		 FLAG_APP_TX=1;
+		 FLAG_APP_RX=0;
+		 //FLAG_APP_RXstart=0;
+		 APP_TX_freq=0;
+		 TX_Scan_step=1; 
+		 First_TX_Scan=0;
+		 		 
+	  }
+	  else if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
 	  	  (((FLAG_APP_TX_fromOUT==1)&&(TIME_APP_TX_fromOUT==0))||(FLAG_Key_TP3==1)||
 	  	   //((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1)))&&(Uart_Struct_DATA_Packet_Contro.data[0].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[0].ui))
 	  	   ((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1))))
@@ -1213,6 +1255,8 @@ void Select_TX_frequency(void)
 					  if(FLAG_APP_TX_fromOUT==1) Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno= Struct_DATA_Packet_Contro_fno;
 					  FLAG_APP_TX_fromOUT=0;
 					  TIME_APP_TX_fromOUT=0;
+
+					  DEF_APP_TX_freq=3;
 					  FLAG_APP_TX=1;
 					  FLAG_APP_RX=0;
 					  APP_TX_freq=0;
@@ -1249,7 +1293,7 @@ void Select_TX_frequency(void)
 				}
 		   }
 	  }
-	  if((FLAG_APP_RXstart==1)&&(Time_APP_RXstart==0))
+	  if((FLAG_APP_RXstart==1)&&(Time_APP_RXstart==0)&&(FLAG_APP_TX_fromUART_err_read==0))
 	  {
 		  FLAG_APP_RXstart=0;
 		TIMER18ms=0;

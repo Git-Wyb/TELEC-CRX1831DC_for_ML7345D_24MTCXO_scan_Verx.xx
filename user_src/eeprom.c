@@ -400,10 +400,6 @@ void ID_EEPROM_write_0x00(void)
 
 void ID_learn(void)
 {
-    static u8 Flag_key_Login_send_err_com=0;
-	static u8 Time_key_Login_send_err_com=0;
-	static u8 Send_err_com[7] = {0x02, 0x07, 0x11,0x98,0x09,0x52,0x46};
-
     //    UINT16 i;
     // #if defined(__Product_PIC32MX2_Receiver__)
     if (FG_10ms)
@@ -413,7 +409,11 @@ void ID_learn(void)
 			--TIME_TestNo91;
 		else FLAG_testNo91=0;
 		if(TIME_ERROR_Read_once_again)
-			--TIME_ERROR_Read_once_again;
+			--TIME_ERROR_Read_once_again;	
+		if(Time_error_read_timeout)
+			--Time_error_read_timeout;
+		if(Time_error_read_gap)
+			--Time_error_read_gap;
 		if(TIME_APP_TX_fromOUT)
 			--TIME_APP_TX_fromOUT;
         if (TIME_EMC)
@@ -444,33 +444,6 @@ void ID_learn(void)
             COUNT_Receiver_Login = 0;
         }
 
-        if (Receiver_Login == 0)
-        {
-        	Time_key_Login_send_err_com++;
-			if(Time_key_Login_send_err_com>3)
-			{
-			   Time_key_Login_send_err_com=3;
-			   if(Flag_key_Login_send_err_com==0)
-			   {
-			      Flag_key_Login_send_err_com=1;
-				  Send_Data(Send_err_com, 7);
-				  Flag_ERROR_Read_once_again=1;
-				  TIME_ERROR_Read_once_again=17;
-			   }
-			}
-        }
-		else if(Receiver_Login == 1)
-		{
-		    Time_key_Login_send_err_com=0;
-			Flag_key_Login_send_err_com=0;
-		}
-		if((Flag_ERROR_Read_once_again==1)&&(TIME_ERROR_Read_once_again==0))
-		{
-		    Flag_ERROR_Read_once_again=0;
-			Send_Data(Send_err_com, 7);
-		}
-
-/*
         if (Receiver_Login == 0)
         {
             if(FLAG_ID_SCX1801_Login!=1)TIME_Receiver_Login++;
@@ -601,7 +574,6 @@ void ID_learn(void)
             else 
                 ID_Login_EXIT_Initial();
         } 
-*/
     }
     //#endif
 }

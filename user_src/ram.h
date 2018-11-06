@@ -6,8 +6,9 @@
 #include "initial.h" // 锟斤拷始锟斤�? 预锟斤拷锟斤�?
 
 
-#define DEF_APP_TX_freq 3
+
 //#define DEF_test_MAX_32pcs
+extern u8 DEF_APP_TX_freq;
 
 
 
@@ -72,6 +73,19 @@ extern volatile uFLAG FLAG2;
 #define FLAG_APP_RXstart FLAG2.BIT.Bit5
 #define FLAG_APP_TX_once FLAG2.BIT.Bit6
 #define FLAG_Key_TP3 FLAG2.BIT.Bit7
+
+//************************************************
+extern volatile uFLAG FLAG3;
+#define FLAG3_BYTE FLAG3.BYTE
+//------------------------------------------------
+#define Flag_ERROR_Read FLAG3.BIT.Bit0   
+//#define  FLAG3.BIT.Bit1 
+#define Flag_shutter_stopping FLAG3.BIT.Bit2 
+#define FLAG_APP_TX_fromUART_err_read FLAG3.BIT.Bit3
+//#define  FLAG3.BIT.Bit4
+//#define  FLAG3.BIT.Bit5
+//#define  FLAG3.BIT.Bit6
+//#define  FLAG3.BIT.Bit7
 
 //************************************************
 
@@ -195,8 +209,13 @@ extern u16 Time_APP_RXstart;
 
 extern u8 TIME_TX_RSSI_Scan;
 extern u8 Flag_TX_ID_load;
-extern u8 Flag_ERROR_Read_once_again;
 extern u8 TIME_ERROR_Read_once_again;
+extern  unsigned char Send_err_com[7] ;
+extern u8 Time_error_read_gap;
+extern u16 Time_error_read_timeout;
+extern u8 ERROR_Read_sendTX_count;
+extern u8 ERROR_Read_sendTX_packet;
+extern u8 Flag_ERROR_Read_once_again;
 
 
 

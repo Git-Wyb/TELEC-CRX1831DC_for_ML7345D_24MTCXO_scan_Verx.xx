@@ -180,7 +180,7 @@ void ID_Decode_IDCheck(void)
 						if((DATA_Packet_Control&0xDF)<0xC0)TIMER_Semi_open=(DATA_Packet_Control&0x1F)+4;
 						else TIMER_Semi_close=(DATA_Packet_Control&0x1F)+4;
 					}
-					else  TIMER1s=1000;
+					else TIMER1s=1000;
 					FLAG_APP_TX_once=1;
                     TIMER300ms = 100;
 		            FG_Receiver_LED_RX = 1;
@@ -579,6 +579,15 @@ void ID_Decode_OUT(void)
                                     TIMER250ms_STOP=((TIMER_Semi_close+1)*1000/107)*100;
                                 }
                       }
+					if((DATA_Packet_Control==0x7F)&&(Flag_ERROR_Read==0)&&(Flag_shutter_stopping==0))
+					{
+					   Flag_ERROR_Read=1;
+					   FLAG_APP_TX_fromUART_err_read=0;
+					  Send_Data(Send_err_com, 7);
+					  Flag_ERROR_Read_once_again=1;
+					  TIME_ERROR_Read_once_again=17;
+					  Time_error_read_timeout=100;
+					}
          }	
 		if((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)){
 					 if((DATA_Packet_Control==0x02)||(DATA_Packet_Control==0x04)||(DATA_Packet_Control==0x08)||(DATA_Packet_Control==0x01)||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)

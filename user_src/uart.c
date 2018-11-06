@@ -21,7 +21,9 @@ u8 u1InitCompleteFlag = 0;
 UINT8 UartStatus = FrameHeadSataus;
 UINT8 UartLen = 0;
 UINT8 UartCount = 0;
-UINT8 UART_DATA_buffer[9] = {0};
+UINT8 UART_DATA_buffer[41] = {0};
+UINT8 UART_DATA_ID98[41] = {0};
+
 __Databits_t Databits_t;
 __U1Statues U1Statues;
 UINT8 ACKBack[3] = {0x02, 0x03, 0x00};
@@ -290,7 +292,7 @@ void ReceiveFrame(UINT8 Cache)
 		UART_DATA_buffer[1] = UART_DATA_buffer[2];
 		UART_DATA_buffer[2] = Cache;
 		if ((UART_DATA_buffer[0] == FrameHead) &&
-			(UART_DATA_buffer[2] == FrameSingnalID))
+			(UART_DATA_buffer[2] == FrameSingnalID))	
 		{
 			U1Statues = ReceivingStatues;
 			UartStatus++;
@@ -318,7 +320,7 @@ void ReceiveFrame(UINT8 Cache)
 		UartStatus = 0;
 		UartCount = 0;
 		//        Receiver_LED_OUT_INV = !Receiver_LED_OUT_INV;
-		if((Databits_t.ID_No == 0x93)||(Databits_t.ID_No == 0x98)) U1Statues = IdelStatues;
+		if((Databits_t.ID_No == 147)||(Databits_t.ID_No == 152)) U1Statues = IdelStatues;
 		else 
 		{
 			U1Statues = ReceiveDoneStatues;
@@ -334,7 +336,7 @@ void OprationFrame(void)
 	unsigned char i;
 	for (i = 0; i < 4; i++)
 		Databits_t.Data[i] = UART_DATA_buffer[3 + i];
-	if (Databits_t.ID_No == 0x92)
+	if (Databits_t.ID_No == 146)  //0x92
 	{
 	    FLAG_APP_TX_fromUART=1;
 		if(TIMER1s);
@@ -343,6 +345,8 @@ void OprationFrame(void)
 		//for(i=3;i<8;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=0x00;
 
 		for(i=0;i<2;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=Databits_t.Data[i+1];
+		if((Databits_t.Statues==3)||(Databits_t.Statues==4))Flag_shutter_stopping=1;
+		else Flag_shutter_stopping=0;
 		ACKBack[2] = 0;
 		switch (Databits_t.Mode)
 		{
@@ -393,12 +397,18 @@ void OprationFrame(void)
 			break;
 		}
 	}
-	else if (Databits_t.ID_No == 0x98)
+	else if (Databits_t.ID_No == 152)  //0x98
 	{
 	   	Flag_ERROR_Read_once_again=0;
 		TIME_ERROR_Read_once_again=0;
+		for (i = 0; i < 41; i++)UART_DATA_ID98[i]=UART_DATA_buffer[i];
+		FLAG_APP_TX_fromUART_err_read=1;
+		Time_error_read_timeout=(UART_DATA_ID98[1]+1)*7;
+		ERROR_Read_sendTX_count=0;
+		ERROR_Read_sendTX_packet=0;
+		Time_error_read_gap=38;	
 	}
-	else if (Databits_t.ID_test_No91or93 == 0x91)
+	else if (Databits_t.ID_test_No91or93 == 145)  //0x91
 	{
 	    if(ID_DATA_PCS==0)
 	    	{
@@ -420,7 +430,7 @@ void OprationFrame(void)
 			FLAG_testBEEP=1;
 			}
 	}	
-	else if (Databits_t.ID_test_No91or93 == 0x93)
+	else if (Databits_t.ID_test_No91or93 == 147)  //0x93
 	{
 		switch (Databits_t.SWorOUT)
 		{
@@ -470,6 +480,11 @@ void TranmissionACK(void)
 			U1Busy_OUT = 1;
 		}
 	}
-	else
-		return;
+
+	if((Flag_ERROR_Read_once_again==1)&&(TIME_ERROR_Read_once_again==0))
+	{
+		Send_Data(Send_err_com, 7);
+		Flag_ERROR_Read_once_again=0;
+		TIME_ERROR_Read_once_again=0;
+	}			
 }

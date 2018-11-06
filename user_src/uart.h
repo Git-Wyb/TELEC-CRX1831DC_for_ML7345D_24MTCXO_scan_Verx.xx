@@ -15,13 +15,15 @@ extern u8 u1busyCache;
 #define FrameHeadSataus 0x00 //帧头
 #define DataStatus 0x01      //数据位置
 #define FrameEndStatus 0x02  //桢结�?
-#define FrameHead 0x02       //数据开�?
+#define FrameHead 0x02       //数据�?�?
 #define FrameSingnalID 0x11  //信号ID
 
 extern UINT8 UartStatus;
 extern UINT8 UartLen;
 extern UINT8 UartCount;
-extern UINT8 UART_DATA_buffer[9];
+extern UINT8 UART_DATA_buffer[41];
+extern UINT8 UART_DATA_ID98[41];
+
 extern u8 u1InitCompleteFlag;
 
 extern UINT8 ACKBack[3];

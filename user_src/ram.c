@@ -5,11 +5,19 @@
 //#include "initial.h"		// ?????  ?????
 #include "type_def.h"
 
+
+
+u8 DEF_APP_TX_freq=3;
+
+
+
+
 uFLAG FLAG_test1;
 volatile uFLAG FLAG0;
 volatile uFLAG FLAG1;
 volatile uFLAG FLAG_test;
 volatile uFLAG FLAG2;
+volatile uFLAG FLAG3;
 
 
 u16 X_COUNT = 0;
@@ -151,8 +159,14 @@ u16 Time_APP_RXstart=0;
 
 u8 TIME_TX_RSSI_Scan=0;
 u8 Flag_TX_ID_load=0;
-u8 Flag_ERROR_Read_once_again=0;
+
 u8 TIME_ERROR_Read_once_again=0;
+unsigned char Send_err_com[7] = {0x02, 0x07, 0x11,0x98,0x09,0x52,0x46};
+u8 Time_error_read_gap=0;
+u16 Time_error_read_timeout=0;
+u8 ERROR_Read_sendTX_count=0;
+u8 ERROR_Read_sendTX_packet=0;
+u8 Flag_ERROR_Read_once_again=0;
 
 
 
