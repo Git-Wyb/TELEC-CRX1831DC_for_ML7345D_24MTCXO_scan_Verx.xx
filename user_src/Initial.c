@@ -371,6 +371,8 @@ void RF_BRE_Check(void)
 void RF_test_mode(void)
 {
     //UINT8 Boot_i;
+    u8 i;
+	
 	 Receiver_LED_OUT = 1;
 	 /*for (Boot_i = 0; Boot_i < 4; Boot_i++)
 	 {
@@ -384,97 +386,169 @@ void RF_test_mode(void)
 	 } 
     Receiver_LED_OUT = 0; */
 
-    while (Receiver_test == 0)
-    {
-        Receiver_LED_OUT = 0;
-        ClearWDT();   // Service the WDT
-        if (TP4 == 0) //test ADF7030 TX
-        {
-            if (TP3 == 0)
-                Tx_Rx_mode = 0;
-            else
-                Tx_Rx_mode = 1;
-        }
-        else //test ADF7030 RX
-        {
-            if (TP3 == 0)
-                Tx_Rx_mode = 2;
-            else
-                Tx_Rx_mode = 3;
-        }
-        if ((Tx_Rx_mode == 0) || (Tx_Rx_mode == 1))
-        {
-            CG2214M6_USE_T;
-            FG_test_rx = 0;
-            Receiver_LED_RX = 0;
-            FG_test_tx_off = 0;
-            if (Tx_Rx_mode == 0) //发载波，无调制信�?
-            {
-                Receiver_LED_TX = 1;
-                FG_test_mode = 0;
-                FG_test_tx_1010 = 0;
-                if (FG_test_tx_on == 0)
-                {
-                    FG_test_tx_on = 1;
-                    ADF7030_TX(TestTXCarrier);
-                    //7021_DATA_ ADF7021_DATA_direc = Input;
-                    //ttset dd_set_TX_mode_carrier();
-                }
-            }
-            else //发载波，有调制信�?
-            {
-                if (TIMER1s == 0)
-                {
-                    TIMER1s = 500;
-                    Receiver_LED_TX = !Receiver_LED_TX;
-                }
-                FG_test_mode = 1;
-                FG_test_tx_on = 0;
-                if (FG_test_tx_1010 == 0)
-                {
-                    ADF7030_TX(TestTx_PreamblePattern);
-                    FG_test_tx_1010 = 1;
+		 while (Receiver_test == 0)
+		 {
+			 Receiver_LED_OUT = 0;
+			 ClearWDT();   // Service the WDT
+			 
+	 // 	   if (TP4 == 0) //test ADF7030 TX
+	 // 	   {
+	 // 		   if (TP3 == 0)
+	 // 			   Tx_Rx_mode = 0;
+	 // 		   else
+	 // 			   Tx_Rx_mode = 1;
+	 // 	   }
+	 // 	   else //test ADF7030 RX
+	 // 	   {
+	 // 		   if (TP3 == 0)
+	 // 			   Tx_Rx_mode = 2;
+	 // 		   else
+	 // 			   Tx_Rx_mode = 3;
+	 // 	   }
+	 
+	 
+					  if(FLAG_TELEC_10ms){
+						 FLAG_TELEC_10ms = 0;
+						 if(TIME_TELEC_CH)--TIME_TELEC_CH;
+						 if(TIME_TELEC_mode)--TIME_TELEC_mode;
+						 if(TIME_TELEC_CH_dec)--TIME_TELEC_CH_dec;
+					 }
+					 if((Receiver_Login==0)&&(FLAG_TELEC_mode==0)&&(TIME_TELEC_mode==0)){
+						 FLAG_TELEC_mode=1;
+						 Tx_Rx_mode++;
+						 if(Tx_Rx_mode>3)Tx_Rx_mode=0;
+					 }
+					 if(Receiver_Login==1){FLAG_TELEC_mode=0;TIME_TELEC_mode=5;}
+					 if((TP3==0)&&(FLAG_TELEC_CH==0)&&(TIME_TELEC_CH==0)){
+						 FLAG_TELEC_CH=1;
+						 TELEC_Frequency_CH++;
+						 if(FG_test_rx==0){
+							 if(TELEC_Frequency_CH==1)TELEC_Frequency_CH=2;
+							 if(TELEC_Frequency_CH>47)TELEC_Frequency_CH=2;
+						 }
+						 else {
+							 if(TELEC_Frequency_CH>47)TELEC_Frequency_CH=1;
+						 }
+						 if(FG_test_rx==0)
+							 {
+							 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+							 for(i=0;i<TELEC_Frequency_CH-2;i++)
+								PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+							 if (Tx_Rx_mode == 0) //发载波，无调制信�?
+								ADF7030_TX(TestTXCarrier);
+							 else if(Tx_Rx_mode == 1) //发载波，有调制信�?
+								ADF7030_TX(TestTx_PreamblePattern); 					 
+							 }
+						  else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+					 }
+					 if(TP3==1){FLAG_TELEC_CH=0;TIME_TELEC_CH=5;}
+			  
+			  
+					 if((TP4==0)&&(FLAG_TELEC_CH_dec==0)&&(TIME_TELEC_CH_dec==0)){
+						 FLAG_TELEC_CH_dec=1;
+						 TELEC_Frequency_CH--;
+						 if(FG_test_rx==0){
+							 if(TELEC_Frequency_CH<=1)TELEC_Frequency_CH=47;
+						 }
+						 else {
+							 if(TELEC_Frequency_CH<1)TELEC_Frequency_CH=47;
+						 }
+						 if(FG_test_rx==0)
+							 {
+							 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+							 for(i=0;i<TELEC_Frequency_CH-2;i++)
+								PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+							 if (Tx_Rx_mode == 0) //发载波，无调制信�?
+								ADF7030_TX(TestTXCarrier);
+							 else if(Tx_Rx_mode == 1) //发载波，有调制信�?
+								ADF7030_TX(TestTx_PreamblePattern);
+							 }						 
+						  else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+					 }
+					 if(TP4==1){FLAG_TELEC_CH_dec=0;TIME_TELEC_CH_dec=5;}
+	 
+	 
+			 
+			 if ((Tx_Rx_mode == 0) || (Tx_Rx_mode == 1))
+			 {
+				 CG2214M6_USE_T;
+				 FG_test_rx = 0;
+				 Receiver_LED_RX = 0;
+				 FG_test_tx_off = 0;
+				 if (Tx_Rx_mode == 0) //发载波，无调制信�?
+				 {
+					 Receiver_LED_TX = 1;
+					 FG_test_mode = 0;
+					 FG_test_tx_1010 = 0;
+					 if (FG_test_tx_on == 0)
+					 {
+						 FG_test_tx_on = 1;
+						 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+						 for(i=0;i<TELEC_Frequency_CH-2;i++)
+							PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+						 ADF7030_TX(TestTXCarrier);
+						 //7021_DATA_ ADF7021_DATA_direc = Input;
+						 //ttset dd_set_TX_mode_carrier();
+					 }
+				 }
+				 else //发载波，有调制信�?
+				 {
+					 if (TIMER1s == 0)
+					 {
+						 TIMER1s = 500;
+						 Receiver_LED_TX = !Receiver_LED_TX;
+					 }
+					 FG_test_mode = 1;
+					 FG_test_tx_on = 0;
+					 if (FG_test_tx_1010 == 0)
+					 {
+						 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+						 for(i=0;i<TELEC_Frequency_CH-2;i++)
+							PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+						 ADF7030_TX(TestTx_PreamblePattern);
+						 FG_test_tx_1010 = 1;
+	 
+						 //7021_DATA_ ADF7021_DATA_direc = Output;
+						 //ttset dd_set_TX_mode_1010pattern();
+					 }
+				 }
+			 }
+			 //else  {			 //test ADF7021 RX
+			 if ((Tx_Rx_mode == 2) || (Tx_Rx_mode == 3))
+			 {
+				 CG2214M6_USE_R;
+				 FG_test_rx = 1;
+				 Receiver_LED_TX = 0;
+				 FG_test_mode = 0;
+				 FG_test_tx_on = 0;
+				 FG_test_tx_1010 = 0;
+				 if (FG_test_tx_off == 0)
+				 {
+					 ADF7030_RECEIVING_FROM_POWEROFF();
+					 FG_test_tx_off = 1;
+				 }
+				 if (Tx_Rx_mode == 2) //packet usart out put RSSI
+				 {
+					 if (TIMER1s == 0)
+					 {
+						 TIMER1s = 500;
+						 Receiver_LED_RX = !Receiver_LED_RX;
+					 }
+					 SCAN_RECEIVE_PACKET(); //扫描接收数据
+				 }
+				 if (Tx_Rx_mode == 3) //packet usart out put BER
+				 {
+					 RF_BRE_Check();
+				 }
+			 }
+			 //PC_PRG(); // PC控制
+			 //  if((ADF7021_DATA_CLK==1)&&(FG_test_mode==1)&&(FG_test1==0)){
+			 // 		  ADF7021_DATA_tx=!ADF7021_DATA_tx;
+			 // 		  FG_test1=1;
+			 // 	   }
+			 // 	  if(ADF7021_DATA_CLK==0)FG_test1=0;
+		 }
 
-                    //7021_DATA_ ADF7021_DATA_direc = Output;
-                    //ttset dd_set_TX_mode_1010pattern();
-                }
-            }
-        }
-        //else  {           //test ADF7021 RX
-        if ((Tx_Rx_mode == 2) || (Tx_Rx_mode == 3))
-        {
-            CG2214M6_USE_R;
-            FG_test_rx = 1;
-            Receiver_LED_TX = 0;
-            FG_test_mode = 0;
-            FG_test_tx_on = 0;
-            FG_test_tx_1010 = 0;
-            if (FG_test_tx_off == 0)
-            {
-                ADF7030_RECEIVING_FROM_POWEROFF();
-                FG_test_tx_off = 1;
-            }
-            if (Tx_Rx_mode == 2) //packet usart out put RSSI
-            {
-                if (TIMER1s == 0)
-                {
-                    TIMER1s = 500;
-                    Receiver_LED_RX = !Receiver_LED_RX;
-                }
-                SCAN_RECEIVE_PACKET(); //扫描接收数据
-            }
-            if (Tx_Rx_mode == 3) //packet usart out put BER
-            {
-                RF_BRE_Check();
-            }
-        }
-        //PC_PRG(); // PC控制
-        //	if((ADF7021_DATA_CLK==1)&&(FG_test_mode==1)&&(FG_test1==0)){
-        //           ADF7021_DATA_tx=!ADF7021_DATA_tx;
-        //           FG_test1=1;
-        //        }
-        //       if(ADF7021_DATA_CLK==0)FG_test1=0;
-    }
     BerExtiUnInit();
     FG_test_rx = 0;
     TIMER1s = 0;
