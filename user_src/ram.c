@@ -172,19 +172,3 @@ u8 Flag_ERROR_Read_once_again=0;
 
 
 
-
-
-
-
-
-
-
-
-
-
-u8 Time_input_open=0;
-u8 Time_input_stop=0;
-u8 Time_input_close=0;
-
-
-

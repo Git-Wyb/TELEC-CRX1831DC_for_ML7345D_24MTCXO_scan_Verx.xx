@@ -7,7 +7,7 @@
 
 
 
-//#define DEF_test_MAX_32pcs
+#define DEF_test_MAX_32pcs
 extern u8 DEF_APP_TX_freq;
 
 
@@ -79,7 +79,7 @@ extern volatile uFLAG FLAG3;
 #define FLAG3_BYTE FLAG3.BYTE
 //------------------------------------------------
 #define Flag_ERROR_Read FLAG3.BIT.Bit0   
-#define Flag_uart_send FLAG3.BIT.Bit1 
+//#define  FLAG3.BIT.Bit1 
 #define Flag_shutter_stopping FLAG3.BIT.Bit2 
 #define FLAG_APP_TX_fromUART_err_read FLAG3.BIT.Bit3
 //#define  FLAG3.BIT.Bit4
@@ -216,27 +216,6 @@ extern u16 Time_error_read_timeout;
 extern u8 ERROR_Read_sendTX_count;
 extern u8 ERROR_Read_sendTX_packet;
 extern u8 Flag_ERROR_Read_once_again;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-extern u8 Time_input_open;
-extern u8 Time_input_stop;
-extern u8 Time_input_close;
-
-
 
 
 

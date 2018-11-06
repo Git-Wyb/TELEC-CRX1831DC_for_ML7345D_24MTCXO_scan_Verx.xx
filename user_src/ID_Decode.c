@@ -393,31 +393,31 @@ void ID_Decode_OUT(void)
 				       switch (Control_i)
                        {
 				        case 0x08: //open
-				            if(FLAG_testNo91_step==1)
-				            	{
+//				            if(FLAG_testNo91_step==1)
+//				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA1;
 								Send_Data(ACKBack, 3);
 								FLAG_testNo91SendUart=1;	
-				            	}
+//				            	}
 				            break;   
 				        case 0x04: //stop
-				            if(FLAG_testNo91_step==2)
-				            	{
+//				            if(FLAG_testNo91_step==2)
+//				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA2;
 								Send_Data(ACKBack, 3);
 								FLAG_testNo91SendUart=1;	
-				            	}						
+//				            	}						
 				            break; 							
 				        case 0x02: //close
-				            if(FLAG_testNo91_step==3)
-				            	{
+//				            if(FLAG_testNo91_step==3)
+//				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA4;
 								Send_Data(ACKBack, 3);
 								FLAG_testNo91SendUart=1;	
-				            	}						
+//				            	}						
 				            break;
 						default:
                             break;	

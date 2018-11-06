@@ -34,7 +34,6 @@ UINT8 FLAG_testBEEP=0;
 UINT8 FLAG_testNo91_step=0;
 UINT8 FLAG_testNo91SendUart=0;
 
-UINT8 shutter_staus[7] = {0x02, 0x07, 0x11,0x92,0x45,0x00,0x00};
 
 
 //********************************************
@@ -285,7 +284,6 @@ void PC_PRG(void) // 串口命令
 }
 void ReceiveFrame(UINT8 Cache)
 {
-/*
 	switch (UartStatus)
 	{
 	case FrameHeadSataus:
@@ -331,30 +329,6 @@ void ReceiveFrame(UINT8 Cache)
 		}
 
 	}
-*/
-
-
-		switch (UartStatus)
-		{
-		case FrameHeadSataus:
-		{
-			UART_DATA_buffer[0] = UART_DATA_buffer[1];
-			UART_DATA_buffer[1] = UART_DATA_buffer[2];
-			UART_DATA_buffer[2] = Cache;
-			if ((UART_DATA_buffer[0] == 0x02) &&
-				(UART_DATA_buffer[1] == 0x03)&&(UART_DATA_buffer[2] == 0x00))	
-			{
-				output_led_ok=1;
-			}
-		}
-		break;
-		default:
-			UartStatus = 0;
-			U1Statues = IdelStatues;
-			break;
-		}
-
-
 }
 
 void OprationFrame(void)

@@ -52,42 +52,22 @@ void ClearWDT(void)
 
 void VHF_GPIO_INIT(void) // CPU端口设置
 {
-//    /****************端口设置说明***************************
-//    *CR1寄存�? 输出 Output�?=推挽�?=OC�?
-//    *           输入 Input�?=上拉�?=浮动�?
-//    ***************end************************************/
-//    KEY_GPIO_Init();             // 输入 test�?登录�?
-//    Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
-//    Receiver_vent_CR1 = 1;
+    /****************端口设置说明***************************
+    *CR1寄存�? 输出 Output�?=推挽�?=OC�?
+    *           输入 Input�?=上拉�?=浮动�?
+    ***************end************************************/
+    KEY_GPIO_Init();             // 输入 test�?登录�?
+    Receiver_vent_direc = Input; // Input   受信机换气联动ON/OFF
+    Receiver_vent_CR1 = 1;
 
-//    PIN_BEEP_direc = Output; // Output   蜂鸣�?
-//    PIN_BEEP_CR1 = 1;
-//    PIN_BEEP = 0;
+    PIN_BEEP_direc = Output; // Output   蜂鸣�?
+    PIN_BEEP_CR1 = 1;
+    PIN_BEEP = 0;
 
-//    LED_GPIO_Init();
-//    ADF7030_GPIO_INIT();
-//    CG2214M6_GPIO_Init();
-//    Receiver_OUT_GPIO_Init(); // Output   受信机继电器
-
-
-input_open_DDR = Input; // Input  
-input_open_CR1 = 1;
-
-input_stop_DDR = Input; // Input  
-input_stop_CR1 = 1; 
-
-input_close_DDR = Input; // Input  
-input_close_CR1 = 1;		
-
-output_led_power_DDR = Output; // Output   蜂鸣�?
-output_led_power_CR1 = 1;
-output_led_power = 0;
-
-output_led_ok_DDR = Output; // Output	蜂鸣�?
-output_led_ok_CR1 = 1;
-output_led_ok = 0;
-
-
+    LED_GPIO_Init();
+    ADF7030_GPIO_INIT();
+    CG2214M6_GPIO_Init();
+    Receiver_OUT_GPIO_Init(); // Output   受信机继电器
 }
 //============================================================================================
 void SysClock_Init(void)
