@@ -339,7 +339,9 @@ void eeprom_IDcheck(void)
         } //追加多次ID登录
     }
 }
-
+/*
+   time_beepON、time_beepOFF单位时间为0.4333333ms
+*/
 void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF)
 {
 	UINT16 i;
@@ -379,7 +381,7 @@ void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF)
 void BEEP_and_LED(void)
 {
     Receiver_LED_OUT = 1;
-    BEEP_Module(4160,0);
+    BEEP_Module(2300,0);
     FG_beep_on = 0;
     BEEP_CSR2_BEEPEN = 0;
     TIME_Receiver_LED_OUT = 185;
@@ -392,7 +394,7 @@ void Receiver_BEEP(void)
     {
         FLAG_Receiver_BEEP = 1;
         for (j = 0; j < 3; j++)
-          BEEP_Module(1600,900);
+          BEEP_Module(1050,1050);
     }
 }
 

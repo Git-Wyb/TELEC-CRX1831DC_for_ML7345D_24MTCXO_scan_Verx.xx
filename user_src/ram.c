@@ -56,17 +56,6 @@ u8 Display_key_SW3 = 0xff;
 u16 TIME_TestNo91=0;
 u16 TIME_power_led=0;
 
-u8 FLAG_TELEC_mode=0;
-u8 FLAG_TELEC_CH=0;
-u8 TIME_TELEC_mode=0;
-u8 TIME_TELEC_CH=0;
-u8 FLAG_TELEC_CH_dec=0;
-u8 TIME_TELEC_CH_dec=0;
-u8 TELEC_Frequency_CH=2;
-u8 FLAG_TELEC_10ms=0;
-u32 xdata;
-
-
 
 /*******LCD**************/
 uFLAG FlagLCDUpdate = {0xff};
@@ -123,5 +112,4 @@ const ADF70XX_REG_T Default_adf7030_value[16] = {
 	0x00000000, 0x00000000, 0x00000000, 0x00000000,
 };
 u32 PROFILE_CH_FREQ_32bit_200002EC = 426075000ul;
-u32 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 426075000ul;
 u32 PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;

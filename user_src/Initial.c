@@ -371,8 +371,6 @@ void RF_BRE_Check(void)
 void RF_test_mode(void)
 {
     //UINT8 Boot_i;
-    u8 i;
-	
 	 Receiver_LED_OUT = 1;
 	/* for (Boot_i = 0; Boot_i < 2; Boot_i++)
 	 {
@@ -390,85 +388,20 @@ void RF_test_mode(void)
     {
         Receiver_LED_OUT = 0;
         ClearWDT();   // Service the WDT
-        
-//        if (TP4 == 0) //test ADF7030 TX
-//        {
-//            if (TP3 == 0)
-//                Tx_Rx_mode = 0;
-//            else
-//                Tx_Rx_mode = 1;
-//        }
-//        else //test ADF7030 RX
-//        {
-//            if (TP3 == 0)
-//                Tx_Rx_mode = 2;
-//            else
-//                Tx_Rx_mode = 3;
-//        }
-
-
-				 if(FLAG_TELEC_10ms){
-					FLAG_TELEC_10ms = 0;
-					if(TIME_TELEC_CH)--TIME_TELEC_CH;
-					if(TIME_TELEC_mode)--TIME_TELEC_mode;
-					if(TIME_TELEC_CH_dec)--TIME_TELEC_CH_dec;
-				}
-				if((Receiver_Login==0)&&(FLAG_TELEC_mode==0)&&(TIME_TELEC_mode==0)){
-					FLAG_TELEC_mode=1;
-					Tx_Rx_mode++;
-					if(Tx_Rx_mode>3)Tx_Rx_mode=0;
-				}
-				if(Receiver_Login==1){FLAG_TELEC_mode=0;TIME_TELEC_mode=5;}
-				if((TP3==0)&&(FLAG_TELEC_CH==0)&&(TIME_TELEC_CH==0)){
-					FLAG_TELEC_CH=1;
-					TELEC_Frequency_CH++;
-					if(FG_test_rx==0){
-						if(TELEC_Frequency_CH==1)TELEC_Frequency_CH=2;
-						if(TELEC_Frequency_CH>47)TELEC_Frequency_CH=2;
-					}
-					else {
-						if(TELEC_Frequency_CH>47)TELEC_Frequency_CH=1;
-					}
-					if(FG_test_rx==0)
-						{
-						PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
-						for(i=0;i<TELEC_Frequency_CH-2;i++)
-						   PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
-				        if (Tx_Rx_mode == 0) //发载波，无调制信�?
-				           ADF7030_TX(TestTXCarrier);
-						else if(Tx_Rx_mode == 1) //发载波，有调制信�?
-						   ADF7030_TX(TestTx_PreamblePattern);						
-						}
-					 else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-				}
-				if(TP3==1){FLAG_TELEC_CH=0;TIME_TELEC_CH=5;}
-		 
-		 
-				if((TP4==0)&&(FLAG_TELEC_CH_dec==0)&&(TIME_TELEC_CH_dec==0)){
-					FLAG_TELEC_CH_dec=1;
-					TELEC_Frequency_CH--;
-					if(FG_test_rx==0){
-						if(TELEC_Frequency_CH<=1)TELEC_Frequency_CH=47;
-					}
-					else {
-						if(TELEC_Frequency_CH<1)TELEC_Frequency_CH=47;
-					}
-					if(FG_test_rx==0)
-						{
-						PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
-						for(i=0;i<TELEC_Frequency_CH-2;i++)
-						   PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
-				        if (Tx_Rx_mode == 0) //发载波，无调制信�?
-				           ADF7030_TX(TestTXCarrier);
-						else if(Tx_Rx_mode == 1) //发载波，有调制信�?
-						   ADF7030_TX(TestTx_PreamblePattern);
-						}						
-					 else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-				}
-				if(TP4==1){FLAG_TELEC_CH_dec=0;TIME_TELEC_CH_dec=5;}
-
-
-		
+        if (TP4 == 0) //test ADF7030 TX
+        {
+            if (TP3 == 0)
+                Tx_Rx_mode = 0;
+            else
+                Tx_Rx_mode = 1;
+        }
+        else //test ADF7030 RX
+        {
+            if (TP3 == 0)
+                Tx_Rx_mode = 2;
+            else
+                Tx_Rx_mode = 3;
+        }
         if ((Tx_Rx_mode == 0) || (Tx_Rx_mode == 1))
         {
             CG2214M6_USE_T;
@@ -483,9 +416,6 @@ void RF_test_mode(void)
                 if (FG_test_tx_on == 0)
                 {
                     FG_test_tx_on = 1;
-					PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
-					for(i=0;i<TELEC_Frequency_CH-2;i++)
-					   PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
                     ADF7030_TX(TestTXCarrier);
                     //7021_DATA_ ADF7021_DATA_direc = Input;
                     //ttset dd_set_TX_mode_carrier();
@@ -502,9 +432,6 @@ void RF_test_mode(void)
                 FG_test_tx_on = 0;
                 if (FG_test_tx_1010 == 0)
                 {
-					PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
-					for(i=0;i<TELEC_Frequency_CH-2;i++)
-					   PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
                     ADF7030_TX(TestTx_PreamblePattern);
                     FG_test_tx_1010 = 1;
 
