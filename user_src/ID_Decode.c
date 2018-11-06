@@ -392,7 +392,7 @@ void Receiver_BEEP(void)
     {
         FLAG_Receiver_BEEP = 1;
         for (j = 0; j < 3; j++)
-          BEEP_Module(1800,1800);
+          BEEP_Module(1600,900);
     }
 }
 
