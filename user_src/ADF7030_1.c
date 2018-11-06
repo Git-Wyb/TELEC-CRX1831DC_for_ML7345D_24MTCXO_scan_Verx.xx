@@ -647,12 +647,10 @@ void SCAN_RECEIVE_PACKET(void)
     {
         if (RSSI_Read_Counter == 0)
         {
-            Receiver_LED_OUT1 = 1;
-			
 			if(Radio_Date_Type==1)
-			  {TIMER18ms = PAYLOAD_SIZE *7;TIMER300ms = 600;}
+			  TIMER18ms = PAYLOAD_SIZE *7;
 			else if(Radio_Date_Type==2)
-			  {TIMER18ms = 50;TIMER300ms = 100;}
+			  TIMER18ms = 50; 
         }
         if ((Flag_RSSI_Read_Timer == 0) && (RSSI_Read_Counter < 5))
         {

@@ -640,10 +640,7 @@ void ID_Decode_OUT(void)
 		if(FLAG_testNo91_step==2)FLAG_testNo91SendUart=0;
     }
     if (TIMER300ms == 0)
-    	{
         FG_Receiver_LED_RX = 0; //Receiver_LED_RX=0;
-        Receiver_LED_OUT1=0;
-    	}
 }
 
 void Freq_Scanning(void)
@@ -659,13 +656,13 @@ void Freq_Scanning(void)
 			{
 				if (ADF7030_Read_RESIGER(0x4000380C, 1, 0) != 0)
 				{
-		             FG_Receiver_LED_RX = 1;
+		             //FG_Receiver_LED_RX = 1;
 					 
 					Flag_FREQ_Scan = 1;
 					if(Radio_Date_Type==1)
-					  {TIMER18ms = 82;TIMER300ms = 600; }
+					  {TIMER18ms = 82;}//TIMER300ms = 600; }
 					else if(Radio_Date_Type==2)
-					  {TIMER18ms = 130;TIMER300ms = 100;  }
+					  {TIMER18ms = 130;} //TIMER300ms = 100;  }
 	
 					return;
 				}
