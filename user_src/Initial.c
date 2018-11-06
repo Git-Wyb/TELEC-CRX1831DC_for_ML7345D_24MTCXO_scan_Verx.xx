@@ -48,7 +48,7 @@ void ClearWDT(void)
 //  GPIO_Mode_Out_PP_High_Fast = (uint8_t)0xF0,   /*!< Output push-pull, high level, 10MHz */
 //  GPIO_Mode_Out_OD_HiZ_Slow  = (uint8_t)0x90,   /*!< Output open-drain, high-impedance level, 2MHz */
 //  GPIO_Mode_Out_PP_High_Slow = (uint8_t)0xD0    /*!< Output push-pull, high level, 2MHz */
-//===降低功耗说明：①I/O没用，必须置Input pull-up    ②I/O外围有IC，但没用，必须置Input floating=====
+//===降低功�?�说明：①I/O没用，必须置Input pull-up    ②I/O外围有IC，但没用，必须置Input floating=====
 
 void VHF_GPIO_INIT(void) // CPU端口设置
 {
@@ -96,7 +96,7 @@ void SysClock_Init(void)
 
     CLK_ICKCR_HSION = 1; // 使能内部RC OSC�?6.00MHz�?
     while ((CLK_ICKCR & 0x02) == 0)
-        ;              // 检查内部晶�?
+        ;              // �?查内部晶�?
     CLK_SWR = 0x01;    // 指定HSI为主时钟
                        //	while(( CLK_SWCR & 0x08 ) == 0 );		// 等待HSI切换
     CLK_SWCR_SWEN = 1; // 执行切换
@@ -108,7 +108,7 @@ void SysClock_Init(void)
 
     CLK_ICKCR_LSION = 1; // 使能内部LSI OSC�?8KHz�?
     while (CLK_ICKCR_LSIRDY == 0)
-        ; // 检查内部LSI OSC
+        ; // �?查内部LSI OSC
 }
 
 void beep_init(void)
@@ -186,7 +186,7 @@ void LED_GPIO_Init(void)
     Receiver_LED_OUT_CR1 = 1;
     Receiver_LED_OUT = 0;
 
-    Receiver_LED_TX_direc = Output; // Output   受信机送信指示  高电平有�?
+    Receiver_LED_TX_direc = Output; // Output   受信机�?�信指示  高电平有�?
     Receiver_LED_TX_CR1 = 1;
     Receiver_LED_TX = 0;
 
@@ -336,17 +336,17 @@ void RF_BRE_Check(void)
     ClearWDT(); // Service the WDT
     if (ADF7030_GPIO3 == 1)
     {
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         ADF7030_Clear_IRQ();
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         while (ADF7030_GPIO3 == 1)
             ;
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         ADF7030_RECEIVING_FROM_POWEROFF();
     }
 
@@ -372,7 +372,7 @@ void RF_test_mode(void)
 {
     //UINT8 Boot_i;
 	 Receiver_LED_OUT = 1;
-	/* for (Boot_i = 0; Boot_i < 2; Boot_i++)
+	 /*for (Boot_i = 0; Boot_i < 4; Boot_i++)
 	 {
 		 for (time_3sec = 0; time_3sec < 6000; time_3sec++)
 		 {

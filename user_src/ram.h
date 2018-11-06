@@ -58,7 +58,7 @@ extern volatile uFLAG FLAG1;
 extern volatile uFLAG FLAG2;
 #define FLAG2_BYTE FLAG2.BYTE
 //------------------------------------------------
-#define FLAG_ID_SCX1801_Login FLAG2.BIT.Bit0   //用于与集中通信机通信的ID，只有一个ID
+#define FLAG_ID_SCX1801_Login FLAG2.BIT.Bit0   //用于与集中�?�信机�?�信的ID，只有一个ID
 #define FG_ID_SCX1801_Login_BEEP FLAG2.BIT.Bit1 
 #define FLAG_APP_TX_fromUART FLAG2.BIT.Bit2 
 #define FLAG_APP_TX_fromOUT FLAG2.BIT.Bit3
@@ -177,6 +177,7 @@ u32 ConfigurationLen(void);
 
 extern Wireless_Body Struct_DATA_Packet_Contro,Struct_DATA_Packet_Contro_buf;
 extern Wireless_Body Uart_Struct_DATA_Packet_Contro,Last_Uart_Struct_DATA_Packet_Contro;
+extern u8 Struct_DATA_Packet_Contro_fno;
 extern u16 TIMER_Semi_open;
 extern u16 TIMER_Semi_close;
 extern u8 FLAG__Semi_open_T;

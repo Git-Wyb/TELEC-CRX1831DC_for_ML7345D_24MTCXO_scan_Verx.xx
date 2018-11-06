@@ -337,11 +337,12 @@ void OprationFrame(void)
 	if (Databits_t.ID_No == 0x92)
 	{
 	    FLAG_APP_TX_fromUART=1;
-		Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno=0;
-		Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
-		for(i=0;i<3;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=Databits_t.Data[i+1];
-		for(i=3;i<8;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=0x00;
-	
+		if(TIMER1s);
+		else Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno=0;
+		//for(i=0;i<3;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=Databits_t.Data[i+1];
+		//for(i=3;i<8;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=0x00;
+
+		for(i=0;i<2;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=Databits_t.Data[i+1];
 		ACKBack[2] = 0;
 		switch (Databits_t.Mode)
 		{

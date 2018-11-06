@@ -84,7 +84,7 @@ void ID_Decode_IDCheck(void)
             eeprom_IDcheck();
             if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login==1))
             {
-                if ((FLAG_ID_Login_OK == 0) && (DATA_Packet_Contro_buf != 0x40) && (DATA_Packet_ID != 0)&&(Radio_Date_Type_bak==1)) //2015.4.1修正 在登录模式下 不允许自动送信登录，只允许手动送信登录
+                if ((FLAG_ID_Login_OK == 0) && (DATA_Packet_Contro_buf != 0x40) && (DATA_Packet_ID != 0)&&(Radio_Date_Type_bak==1)) //2015.4.1修正 在登录模式下 不允许自动�?�信登录，只允许手动送信登录
                 {
                     if ((FLAG_ID_Erase_Login == 1) || (((FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login==1))&&(DATA_Packet_ID != 0xFFFFFE)))
                     	{
@@ -161,13 +161,15 @@ void ID_Decode_IDCheck(void)
 		                        else
 		                            TIMER1s = 1000;
 		                    }
-		                    TIMER300ms = 500;
+		                    TIMER300ms = 600;  //500
 		                    //Receiver_LED_RX=1;
 		                    FG_Receiver_LED_RX = 1;
 		                }
 			    }
 				else if(Radio_Date_Type_bak==2)
 				{
+				   DATA_Packet_Control=0;
+				   Struct_DATA_Packet_Contro_fno=Struct_DATA_Packet_Contro.Fno_Type.UN.fno;
 				   if(Struct_DATA_Packet_Contro.Fno_Type.UN.type==1) DATA_Packet_Control=Struct_DATA_Packet_Contro.data[0].uc[0];
 					if(((DATA_Packet_Control&0xA0)==0x20)||((DATA_Packet_Control&0xC0)==0x40))TIMER1s=500;
 					else if(((DATA_Packet_Control&0xDF)>0x80)&&((DATA_Packet_Control&0x20)==0x00)){
@@ -222,7 +224,7 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
 	        DATA_Packet_ID = (data_NRZ[1] & 0x00FF) * 65536 + data_NRZ[0];
 	        if (DATA_Packet_ID == 0)
 	            FLAG_Signal_DATA_OK = 0;                          //2014.3.21追加  不允许使用ID=0
-	        DATA_Packet_Contro_buf = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使
+	        DATA_Packet_Contro_buf = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能�?
 	    }
 	    else
 	        FLAG_Signal_DATA_OK = 0;
@@ -236,7 +238,7 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
 	        DATA_Packet_ID = (data_NRZ[1] & 0x00FF) * 65536 + data_NRZ[0];
 	        if (DATA_Packet_ID == 0)
 	            FLAG_Signal_DATA_OK = 0;                          //2014.3.21追加  不允许使用ID=0
-	        Struct_DATA_Packet_Contro_buf.Fno_Type.byte = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使
+	        Struct_DATA_Packet_Contro_buf.Fno_Type.byte = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能�?
             for (i = 0; i < 4; i++)
 				Struct_DATA_Packet_Contro_buf.data[i].ui=data_NRZ[i+2];
 	    }
@@ -277,7 +279,7 @@ void eeprom_IDcheck(void)
 	}
 }
 /*
-   time_beepON、time_beepOFF单位时间为0.4333333ms
+   time_beepON、time_beepOFF单位时间�?0.4333333ms
 */
 void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF)
 {
@@ -394,7 +396,7 @@ void ID_Decode_OUT(void)
 				
 				}        	
       }
-	  else 
+	  else
 	  {
         switch (Control_i)
         {
@@ -552,7 +554,7 @@ void ID_Decode_OUT(void)
 		if((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)){
 					 if((DATA_Packet_Control==0x02)||(DATA_Packet_Control==0x04)||(DATA_Packet_Control==0x08)||(DATA_Packet_Control==0x01)||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)
 					  ||(DATA_Packet_Control==0x9)||(DATA_Packet_Control==0x03)||(DATA_Packet_Control==0x0C)||(DATA_Packet_Control==0x06)||(DATA_Packet_Control==0x0A)){
-						 //2015.12.29追加，在半开、半闭动作中，送信机（开+闭）信号，让停止继电器不动作
+						 //2015.12.29追加，在半开、半闭动作中，�?�信机（�?+闭）信号，让停止继电器不动作
 						 FLAG__Semi_open_T=0;FLAG__Semi_close_T=0;TIMER250ms_STOP=0;
 					 }
 		 }
@@ -561,8 +563,8 @@ void ID_Decode_OUT(void)
                ||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)||((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)))&&(FLAG_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2)&&(FLAG_APP_TX==0)&&(FLAG_APP_TX_once==1))
          {
              FLAG_APP_TX_fromOUT=1;		
-			 if(DATA_Packet_Control==0x00)TIME_APP_TX_fromOUT=20;  //200ms
-			 else TIME_APP_TX_fromOUT=50;  //500ms		 
+			 if(DATA_Packet_Control==0x00)TIME_APP_TX_fromOUT=35;  //300ms
+			 else TIME_APP_TX_fromOUT=35;  //200ms 500ms		 
          }
 
 		
@@ -572,7 +574,7 @@ void ID_Decode_OUT(void)
     else
     {
         //           if(FLAG_APP_Reply==1){FLAG_APP_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status;FLAG_HA_START=1;}
-        //           if(FLAG_426MHz_Reply==1){FLAG_426MHz_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status+4;FLAG_HA_START=1;}   //受信器自动发送HA状态码为实际HA�?4
+        //           if(FLAG_426MHz_Reply==1){FLAG_426MHz_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status+4;FLAG_HA_START=1;}   //受信器自动发送HA状�?�码为实际HA�?4
         if ((FG_auto_out == 1) && (TIME_auto_out == 0))
         {
             FG_auto_out = 0;
@@ -614,7 +616,7 @@ void ID_Decode_OUT(void)
             Receiver_LED_OUT = 0;
 
                if((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)){
-//                   if(HA_Status==0x83)TIMER250ms_STOP=0;     //2015.12.29追加，在半开、半闭动作中，受信机的状态变成异常1的时候，让停止继电器不动作
+//                   if(HA_Status==0x83)TIMER250ms_STOP=0;     //2015.12.29追加，在半开、半闭动作中，受信机的状态变成异�?1的时候，让停止继电器不动�?
                    if((TIMER250ms_STOP<1000)&&(TIMER250ms_STOP>0)){Receiver_OUT_STOP=FG_allow_out;Receiver_LED_OUT=1;}
                    else if(TIMER250ms_STOP==0){Receiver_OUT_STOP=FG_NOT_allow_out;FLAG__Semi_open_T=0;FLAG__Semi_close_T=0;}
                }
@@ -654,7 +656,7 @@ void Freq_Scanning(void)
 					if(Radio_Date_Type==1)
 					  TIMER18ms = 82;
 					else if(Radio_Date_Type==2)
-					  TIMER18ms = 30;
+					  TIMER18ms = 130;  //30
 	
 					return;
 				}

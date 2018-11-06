@@ -17,7 +17,7 @@ u8 FilterChar[2][1] = {
 /**Receiver_vent**/ u8 Receiver_vent_Cache;
 u8 SPI_SEND_BUFF[SPI_SEND_BUFF_LONG] = {0X55};
 u8 SPI_RECEIVE_BUFF[SPI_REV_BUFF_LONG] = {0};
-u32 SPI_Receive_DataForC[7]; //C部
+u32 SPI_Receive_DataForC[7]; //C�?
 u16 Head_0x5515_or_0x5456 = 0;
 u32 ADF7030_RESIGER_VALUE_READ = 0;
 u8 ADF7030_Read_OneByte = 0;
@@ -65,15 +65,15 @@ void ADF7030Init(void)
 {
     SPI_conf();             //初始化spi
                             //    ADF7030_GPIO_INIT();
-    ADF7030ParameterInit(); //参数初始化
-    ADF7030_REST = 0;       //ADF7030芯片初始化
+    ADF7030ParameterInit(); //参数初始�?
+    ADF7030_REST = 0;       //ADF7030芯片初始�?
     Delayus(50);
     ClearWDT();
-    ADF7030_REST = 1; //ADF7030芯片初始化完成
+    ADF7030_REST = 1; //ADF7030芯片初始化完�?
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
 
     ClearWDT(); // Service the WDT
     ADF7030_WRITING_PROFILE_FROM_POWERON();
@@ -91,7 +91,7 @@ void ADF7030Init(void)
  * @File     : ADF7030_1.c
  * @Program  : none
  * @Created  : 2017/6/6 by Xiaowine
- * @Brief    : 参数初始化
+ * @Brief    : 参数初始�?
  * @Version  : V1.0
 **/
 void ADF7030ParameterInit(void)
@@ -440,56 +440,56 @@ u32 ADF7030_GET_MISC_FW(void) //??MISC_FW?????
 void ADF7030_WRITING_PROFILE_FROM_POWERON(void)
 {
 /*
-    ADF7030_REST = 0; //ADF7030芯片初始化
+    ADF7030_REST = 0; //ADF7030芯片初始�?
     Delayus(50);
     ClearWDT();
-    ADF7030_REST = 1; //ADF7030芯片初始化完成
+    ADF7030_REST = 1; //ADF7030芯片初始化完�?
 */
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_CFGFILE_MSB(ADF7030Cfg_pointer, CFG_SIZE());
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_Clear_IRQ();
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     //PROFILE_CH_FREQ_32bit_200002EC = 426075000;
     if (WORK_TEST == 0)
     {
         PROFILE_CH_FREQ_32bit_200002EC = 429175000;
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_TESTMODE0, GENERIC_PKT_TEST_MODES0_32bit_20000548);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         //ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_RADIO_DIG_TX_CFG0, RADIO_DIG_TX_CFG0_32bit_20000304);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
     }
     if (BREState == 1)
     {
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(0x400041F8, 0x00000000);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(0x20000378, 0x06C00043);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
     }
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
     //ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_RADIO_DATA_RATE, PROFILE_RADIO_DATA_RATE_32bit_200002FC); 
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_PROFILE_RADIO_AFC_CFG1, PROFILE_RADIO_AFC_CFG1_32bit_2000031C);
     //ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_GENERIC_PKT_FRAME_CFG1, PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_CFG_DEV);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_OFF);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
-    while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高
+    while (ADF7030_GPIO3 == 1) //清中�? GPIO3被置�?
         ;
 }
 
@@ -537,13 +537,13 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
     while (GET_STATUE_BYTE().CMD_READY == 0)
         ;
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
 
     ADF7030_Clear_IRQ();
     GET_STATUE_BYTE();
     DELAY_30U();
-    while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高 等待回位
+    while (ADF7030_GPIO3 == 1) //清中�? GPIO3被置�? 等待回位
         ;
     ADF7030_CHANGE_STATE(STATE_PHY_RX);
     while (GET_STATUE_BYTE().FW_STATUS == 0)
@@ -556,10 +556,10 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
 /*RECEIVE A SINGLE PACKET FROM POWER OFF*/
 void ADF7030_ACC_FROM_POWEROFF(void)
 {
-    /*WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    /*WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-    WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();*/
 
     while (GET_STATUE_BYTE().CMD_READY == 0)
@@ -574,19 +574,19 @@ void ADF7030_ACC_FROM_POWEROFF(void)
     DELAY_30U();
     
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
-    WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_CHANNEL_FERQUENCY, 8, 4);
-    WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();
     Memory_Write_Block_Pointer_Short_Address(CONST_TXPACKET_DATA_20000AF0, PNTR_CUSTOM1_ADDR, 12);
     DELAY_30U();
     /*ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR(ADDR_TXPACKET_DATA, CONST_TXPACKET_DATA_20000AF0, OPEN_LONG);
-    WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();*/
     //ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(0x20000378, 0x06C01043);
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(0x20000378, 0x06C00043);
-    WaitForADF7030_FIXED_DATA(); //ç­‰å¾…èŠ¯ç‰‡ç©ºé—²/å¯æŽ¥å—CMDçŠ¶æ€?
+    WaitForADF7030_FIXED_DATA(); //ç­‰å¾�?�èŠ¯ç�?��?�ç©ºé�?��?/å¯æŽ¥å—CMDçŠ¶æ�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_CMD_CCA);
     while (GET_STATUE_BYTE().FW_STATUS == 0)
@@ -618,19 +618,19 @@ void SCAN_RECEIVE_PACKET(void)
     short Cache;
     if (ADF7030_GPIO3 == 1)
     {
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         ADF7030_Clear_IRQ();
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         Memory_Read_Block_Pointer_Long_Address(PNTR_CUSTOM2_ADDR, PAYLOAD_SIZE);
         RX_ANALYSIS(); //处理数据
         while (ADF7030_GPIO3 == 1)
             ;
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         DELAY_30U();
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
         ADF7030_RECEIVING_FROM_POWEROFF();
         RAM_RSSI_AVG = RAM_RSSI_SUM / RSSI_Read_Counter;
         RSSI_Read_Counter = 0;
@@ -660,7 +660,7 @@ void SCAN_RECEIVE_PACKET(void)
 * @File     : ADF7030_1.c
 * @Program  : none
 * @Created  : 2017/4/18 by Xiaowine
-* @Brief    : 等待ADF7030芯片可操作(命令执行完成/其他) 内置看门狗
+* @Brief    : 等待ADF7030芯片可操�?(命令执行完成/其他) 内置看门�?
 * @Version  : V1.0
 **/
 void WaitForADF7030_FIXED_DATA(void)
@@ -780,7 +780,7 @@ void TX_DataLoad_HighSpeed(u32 IDCache, Wireless_Body CtrCmd, u8 *Packet)
 * @File     : ADF7030_1.c
 * @Program  :
 * @Created  : 2017/4/21 by Xiaowine
-* @Brief    : 配置成接收测试状态  FROM_POWERON
+* @Brief    : 配置成接收测试状�?  FROM_POWERON
 * @Version  : V1.0
 **/
 void ReceiveTestModesCFG(void)
@@ -793,7 +793,7 @@ void ReceiveTestModesCFG(void)
  ****************************************************************************
  * @Function : void TestFunV2(u8 KeyVel)
  * @File     : ADF7030_1.c
- * @Program  : KeyVel: 按键值
+ * @Program  : KeyVel: 按键�?
  * @Created  : 2017/5/2 by Xiaowine
  * @Brief    : 按键 表单切换
  * @Version  : V1.0
@@ -900,22 +900,22 @@ void TestFunV2(u8 KeyVel)
                 if (TestState != 0)
                 {
                     ADF7030_WRITING_PROFILE_FROM_POWERON();
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                     DELAY_30U();
                     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                     DELAY_30U();
                     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                     DELAY_30U();
                     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_CHANNEL_FERQUENCY, 8, 4);
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                     DELAY_30U();
                     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR(ADDR_TXPACKET_DATA, CONST_TXPACKET_DATA_20000AF0, OPEN_LONG);
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                     DELAY_30U();
                     ADF7030_CHANGE_STATE(STATE_PHY_TX);
-                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+                    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
                 }
                 else
                 {
@@ -975,20 +975,20 @@ void ADF7030_TX(u8 mode)
     GENERIC_PKT_TEST_MODES0_32bit_20000548 &= 0xfff8ffff;
     GENERIC_PKT_TEST_MODES0_32bit_20000548 |= ((u32)mode << 16);
     ADF7030_WRITING_PROFILE_FROM_POWERON();
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_OFFSET_MSB(ADF7030Cfg_pointer, CFG_SIZE(), ADDR_GENERIC_FIELDS, 8, 24);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     PROFILE_CH_FREQ_32bit_200002EC = 429175000;
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
-    WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR(ADDR_TXPACKET_DATA, CONST_TXPACKET_DATA_20000AF0, OPEN_LONG);
-    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+    WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�??
     DELAY_30U();
     ADF7030_CHANGE_STATE(STATE_PHY_TX);
     while (GET_STATUE_BYTE().FW_STATUS == 0)
@@ -1066,7 +1066,7 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 					PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
 					PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C; 	
 					Radio_Date_Type=1;
-					Channels=2;
+					Channels=2;  
 					ADF7030Cfg_pointer=ADF7030Cfg;
 				   break;
 			  case 2:
@@ -1123,20 +1123,14 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 	**/
 	void APP_TX_PACKET(void)
 	{
-	 // short Cache;
-	 // static u8 FLag_ACC=0;
-	 // u8 i=0;
+	 char rssi;
 
 	 if((TP3==0)&&(FLAG_Key_TP3==0))FLAG_Key_TP3=1;
 	  
-	  //if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
-	  if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed))&&
+	  if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
+	  //if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed))&&
 	  	  (((FLAG_APP_TX_fromOUT==1)&&(TIME_APP_TX_fromOUT==0))||(FLAG_Key_TP3==1)||
-	  	   ((FLAG_APP_TX_fromUART==1)&&((Uart_Struct_DATA_Packet_Contro.Fno_Type.byte!=Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.byte)||
-		  	                           (Uart_Struct_DATA_Packet_Contro.data[0].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[0].ui)||
-		  	                           (Uart_Struct_DATA_Packet_Contro.data[1].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[1].ui)||
-		  	                           (Uart_Struct_DATA_Packet_Contro.data[2].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[2].ui)||
-		  	                           (Uart_Struct_DATA_Packet_Contro.data[3].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[3].ui)))
+	  	   ((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1)))&&(Uart_Struct_DATA_Packet_Contro.data[0].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[0].ui))
 		  )
 	  	)
 	  {
@@ -1144,13 +1138,12 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 					  FLAG_Key_TP3=0;
 					  Last_Uart_Struct_DATA_Packet_Contro=Uart_Struct_DATA_Packet_Contro;
 					  Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
-					  if(FLAG_APP_TX_fromOUT==1)
-					  {
-					  	//Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno=Struct_DATA_Packet_Contro.Fno_Type.UN.fno;
-					  	Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno=3;
-						Last_Uart_Struct_DATA_Packet_Contro.data[0].ui=18;
-						Last_Uart_Struct_DATA_Packet_Contro.data[1].ui=9;
-					  }
+					  rssi=RAM_RSSI_AVG/128;
+					  rssi=-rssi;
+					  if(rssi>=127)rssi=127;
+					  if(Radio_Date_Type_bak==2)rssi= rssi | 0x80;
+					  Last_Uart_Struct_DATA_Packet_Contro.data[1].uc[0]= rssi;
+					  if(FLAG_APP_TX_fromOUT==1) Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno= Struct_DATA_Packet_Contro_fno;
 					  FLAG_APP_TX_fromOUT=0;
 					  TIME_APP_TX_fromOUT=0;
 					  FLAG_APP_TX=1;

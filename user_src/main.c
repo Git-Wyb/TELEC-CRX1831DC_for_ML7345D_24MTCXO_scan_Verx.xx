@@ -22,10 +22,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include <iostm8l151g4.h> // CPU型号
 #include "Pin_define.h"   // 管脚定义
-#include "initial.h"      // 初始化  预定义
+#include "initial.h"      // 初始�?  预定�?
 #include "ram.h"          // RAM定义
 #include "ADF7030_1.h"    // 初始化ADF7021
-#include "Timer.h"        // 定时器
+#include "Timer.h"        // 定时�?
 #include "ID_Decode.h"    // ID_Decode处理
 #include "eeprom.h"       // eeprom
 #include "uart.h"         // uart
@@ -49,22 +49,22 @@
 
 void main(void)
 {
-    _DI();             // 关全局中断
+    _DI();             // 关全�?中断	
     RAM_clean();       // 清除RAM
-    WDT_init();        //看门狗
-    VHF_GPIO_INIT();   //IO初始化
-    SysClock_Init();   //系统时钟初始化
+    WDT_init();        //看门�?
+    VHF_GPIO_INIT();   //IO初始�?
+    SysClock_Init();   //系统时钟初始�?
     InitialFlashReg(); //flash EEPROM
     eeprom_sys_load(); //ID载入
-    TIM4_Init();       // 定时器
-    beep_init();       // 蜂鸣器
+    TIM4_Init();       // 定时�?
+    beep_init();       // 蜂鸣�?
     ClearWDT();        // Service the WDT
-    
+	
     PROFILE_CH_FREQ_32bit_200002EC = 426075000;
     PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;  
     PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
-    PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;    
-    ADF7030Init();     //射频初始化
+    PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;  
+    ADF7030Init();     //射频初始�?
     
     UART1_INIT();      // UART1 for PC Software
     _EI();             // 允许中断
@@ -89,7 +89,7 @@ void main(void)
         {
     		  Freq_Scanning();
     		  //if(Scan_step==2)
-			  	SCAN_RECEIVE_PACKET(); //ɨ���������
+			  	SCAN_RECEIVE_PACKET(); //ɨ���������?
         }
         TranmissionACK();
         //        READ_RSSI_avg();
