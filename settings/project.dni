@@ -1,6 +1,6 @@
 [DebugChecksum]
 <<<<<<< HEAD
-Checksum=-208269331
+Checksum=1540218762
 =======
 Checksum=773928336
 >>>>>>> f03119bb9d9418453f7da9e2e3549a267f3e0d0b
@@ -78,11 +78,12 @@ Fmt4={W}1:ADF7030_RESIGER_VALUE_READ	4	0
 Fmt5={W}1:ADF7030_Read_OneByte	4	0
 Fmt6={W}1:GENERIC_PKT_FRAME_CFG1_13_15	3	0
 Fmt7={W}1:PREAMBLE_UNIT	3	0
-Fmt8={W}1:TRX_IRQ0_TYPE	3	0
-Fmt9={W}1:TRX_IRQ1_TYPE	3	0
-Fmt10={W}42:ADF7030_RESIGER_VALUE_READ	4	0
-Fmt11={W}42:Tx_Rx_mode	4	0
-Fmt12={W}42:cache	4	0
+Fmt8={W}1:TELEC_Frequency_CH	3	0
+Fmt9={W}1:TRX_IRQ0_TYPE	3	0
+Fmt10={W}1:TRX_IRQ1_TYPE	3	0
+Fmt11={W}42:ADF7030_RESIGER_VALUE_READ	4	0
+Fmt12={W}42:Tx_Rx_mode	4	0
+Fmt13={W}42:cache	4	0
 [DataSample]
 LogEnabled=0
 GraphEnabled=0
@@ -110,8 +111,7 @@ A9=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Window
 A10=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.2.0\user_src\ID_Decode.c" ""
 A11=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.2.0\user_src\main.c" ""
 A12=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.2.0\user_src\uart.c" ""
-A13=_ "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5.1\user_src\uart.c" ""
-Count=14
+Count=13
 SuppressDialog=1
 [DebuggerSettings]
 DisableInterruptsWhenStepping=0
