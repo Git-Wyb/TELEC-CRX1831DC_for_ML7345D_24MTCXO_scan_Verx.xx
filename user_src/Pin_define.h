@@ -32,10 +32,10 @@ extern u8 LED_Cache;
 
 /******************以下是ADF7030-1寄存器************************************/
 /* ADF7030-1 register interface */
-#define ADF7030_REST ADF7030_REST_Cache
-#define ADF7030_REST_DDR ADF7030_REST_Cache
-#define ADF7030_REST_CR1 ADF7030_REST_Cache
-#define ADF7030_REST_CR2 ADF7030_REST_Cache
+#define ADF7030_REST PD_ODR_ODR0//ADF7030_REST_Cache
+#define ADF7030_REST_DDR PD_DDR_DDR0//ADF7030_REST_Cache
+#define ADF7030_REST_CR1 PD_CR1_C10//ADF7030_REST_Cache
+#define ADF7030_REST_CR2 PD_CR2_C20//ADF7030_REST_Cache
 
 #define ADF7030_GPIO2 PC_IDR_IDR5
 #define ADF7030_GPIO2_DDR PC_DDR_DDR5
@@ -169,9 +169,10 @@ extern u8 LED_Cache;
 #define Receiver_OUT_STOP_direc PD_DDR_DDR1 // Output   受信机继电器stop  高电平有效
 #define Receiver_OUT_STOP_CR1 PD_CR1_C11    // Output   受信机继电器stop  高电平有效
 
-#define Receiver_OUT_VENT PD_ODR_ODR0       // Output   受信机继电器VENT  高电平有效
-#define Receiver_OUT_VENT_direc PD_DDR_DDR0 // Output 受信机继电器VENT  高电平有效
-#define Receiver_OUT_VENT_CR1 PD_CR1_C10    // Output 受信机继电器VENT  高电平有效
+#define Receiver_OUT_VENT ADF7030_REST_Cache//PD_ODR_ODR0       // Output   受信机继电器VENT  高电平有效
+#define Receiver_OUT_VENT_direc ADF7030_REST_Cache//PD_DDR_DDR0 // Output 受信机继电器VENT  高电平有效
+#define Receiver_OUT_VENT_CR1 ADF7030_REST_Cache//PD_CR1_C10    // Output 受信机继电器VENT  高电平有效
+
 
 #define Inverters_OUT PA_IDR_IDR2       // 输入   继电器输出信号反向   低电平有效
 #define Inverters_OUT_direc PA_DDR_DDR2 // 输入   继电器输出信号反向   低电平有效

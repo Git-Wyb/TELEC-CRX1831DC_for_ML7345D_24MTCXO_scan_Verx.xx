@@ -339,7 +339,9 @@ void eeprom_IDcheck(void)
         } //追加多次ID登录
     }
 }
-
+/*
+   time_beepON、time_beepOFF单位时间为0.4333333ms
+*/
 void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF)
 {
 	UINT16 i;

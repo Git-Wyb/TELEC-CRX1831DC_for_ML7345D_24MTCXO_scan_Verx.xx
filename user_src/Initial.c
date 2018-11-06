@@ -137,6 +137,7 @@ void Delayus(unsigned char timer)
 }
 void Receiver_OUT_GPIO_Init(void)
 {
+/*
     Inverters_OUT_direc = Input; // 输入   继电器输出信号反�?  低电平有�?
     Inverters_OUT_CR1 = 1;
     if (Inverters_OUT == 1)
@@ -149,6 +150,10 @@ void Receiver_OUT_GPIO_Init(void)
         FG_allow_out = 0;
         FG_NOT_allow_out = 1;
     }
+*/
+	FG_allow_out = 1;
+	FG_NOT_allow_out = 0;
+
 
     Receiver_OUT_OPEN_direc = Output; // Output   受信机继电器OPEN  高电平有�?
     Receiver_OUT_OPEN_CR1 = 1;
