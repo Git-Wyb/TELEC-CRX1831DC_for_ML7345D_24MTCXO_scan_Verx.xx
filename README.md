@@ -1,5 +1,21 @@
 # Windowshade7030
-# 文化降价版受信机
+# 文化窗式模块受信机
+
+## v1.00b
+2018年11月06日11:25:00
+* set version v1.00b
+
+## v1.00a
+2018年11月06日11:25:00
+* set version v1.00a
+* Ver5.9修改为Ver1.00；对应外壳丝印的软件版本号码
+
+## v5.9
+2018年11月06日11:25:00
+* set version v5.9
+
+
+
 # ADF7030 移植
 #2017年6月1日10:36:10
 #增加串口通信  |SB|8-bit data PB|STB| Legends: SB: Start Bit, STB: STOP bit, PB: Parity bit
