@@ -541,7 +541,8 @@ void ID_learn(void)
 					FLAG_ID_Erase_Login=0;
                 	BEEP_and_LED();
 					ID_SCX1801_EEPROM_write(ID_Receiver_Login);
-					ID_EEPROM_write();
+					if(FLAG_IDCheck_OK==1) FLAG_IDCheck_OK = 0;
+					else ID_EEPROM_write();
 					ID_Login_EXIT_Initial();
                 }
 				else 
