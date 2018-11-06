@@ -126,6 +126,8 @@ void ID_Decode_IDCheck(void)
 		                            {
 		                                FLAG_IDCheck_OK = 0;
 		                                BEEP_and_LED();
+										if(ID_SCX1801_DATA==DATA_Packet_ID)
+											ID_SCX1801_EEPROM_write(0x00);
 		                                ID_EEPROM_write_0x00();
 		                            }
 		                        }
