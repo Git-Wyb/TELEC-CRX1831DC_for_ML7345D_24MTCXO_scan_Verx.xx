@@ -6,7 +6,7 @@
 #include "initial.h" // 閿熸枻鎷峰閿熸枻鎷? 棰勯敓鏂ゆ嫹閿熸枻鎷?
 
 
-#define DEF_APP_TX_freq 3  //窗式无线模块确定发送3次
+#define DEF_APP_TX_freq  3
 
 
 
