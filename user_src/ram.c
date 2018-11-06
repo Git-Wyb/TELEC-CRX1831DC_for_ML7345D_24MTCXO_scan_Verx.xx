@@ -146,6 +146,7 @@ u16 TIME_APP_TX_fromOUT=0;
 u8 Time_APP_blank_TX=0;
 u16 Time_APP_RXstart=0;
 
+u8 TIME_TX_RSSI_Scan=0;
 
 
 

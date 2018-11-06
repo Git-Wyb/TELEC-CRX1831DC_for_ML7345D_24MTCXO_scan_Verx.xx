@@ -37,6 +37,11 @@ u8 Radio_Date_Type=1;
 u8 Radio_Date_Type_bak=1;
 u8 APP_TX_freq=0;
 
+u8 TX_Scan_step=0;
+u8 First_TX_Scan=0;
+u8 TX_Scan_count=0;
+
+
 
 void DELAY_30U(void)
 {
@@ -1111,6 +1116,52 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 	   }
 	}
 
+	/**
+	 ****************************************************************************
+	 * @Function : void Select_TX_frequency(void)
+	 * @File	 : ADF7030_1.c
+	 * @Program  :
+	 * @Created  : 
+	 * @Brief	 :
+	 * @Version  : V1.0
+	**/
+void Select_TX_frequency(void)
+   {
+		short rssi_value;
+
+   		if(TIME_TX_RSSI_Scan==0)
+   		{
+   			if(First_TX_Scan==0)
+   			{
+   			    Channels=3;
+				ADF7030_Change_Channel();
+				ADF7030Init();	   				
+				ADF7030_ACC_FROM_POWEROFF();
+				TIME_TX_RSSI_Scan=6;  
+				First_TX_Scan=1;
+				TX_Scan_count=0;
+   			}
+			else 
+			{
+		        DELAY_30U();
+		        while(GET_STATUE_BYTE().CMD_READY != 1);
+		        DELAY_30U();
+		        ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(ADDR_PROFILE_CCA_READBACK,6);
+		        rssi_value = (short)((ADF7030_RESIGER_VALUE_READ & 0x07ff)<<5);//>>16;    
+		        rssi_value =rssi_value/128;
+				if((rssi_value<-90)||(TX_Scan_count>=3)) 
+					TX_Scan_step	=2;
+				else 
+					{   if(Channels==5)Channels=3;
+						ADF7030_Change_Channel();
+						ADF7030Init();	   				
+						ADF7030_ACC_FROM_POWEROFF();
+						TIME_TX_RSSI_Scan=6;
+						TX_Scan_count++;
+					}
+			}
+   		}
+   }
 
 	/**
 	 ****************************************************************************
@@ -1149,9 +1200,14 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 					  FLAG_APP_TX=1;
 					  FLAG_APP_RX=0;
 					  APP_TX_freq=0;
+					  TX_Scan_step=1;
+					  First_TX_Scan=0;
 	  }
 	  if(FLAG_APP_TX==1)
 	  {
+	       if(TX_Scan_step==1)Select_TX_frequency();
+		   if(TX_Scan_step==2)
+		   {
 				if(APP_TX_freq==0)
 				{
 				    Receiver_LED_TX = 1;
@@ -1180,7 +1236,8 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 				   Time_APP_RXstart=1;	
 				   Receiver_LED_TX = 0;
 				   FLAG_APP_TX_once=0;
-				}	
+				}
+		   }
 	  }
 	  if((FLAG_APP_RXstart==1)&&(Time_APP_RXstart==0))
 	  {

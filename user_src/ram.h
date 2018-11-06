@@ -186,6 +186,8 @@ extern u16 TIME_APP_TX_fromOUT;
 extern u8 Time_APP_blank_TX;
 extern u16 Time_APP_RXstart;
 
+extern u8 TIME_TX_RSSI_Scan;
+
 
 
 #endif

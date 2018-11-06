@@ -27,6 +27,8 @@ void TIM4_UPD_OVF(void)
 { //725==1ç§?
     if (TIMER1s)
         --TIMER1s;
+	if(TIME_TX_RSSI_Scan)
+		--TIME_TX_RSSI_Scan;
 	if(TIME_power_led)
 		--TIME_power_led;
     if (TIMER300ms)
