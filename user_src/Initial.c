@@ -451,7 +451,7 @@ void RF_test_mode(void)
             FG_test_tx_1010 = 0;
             if (FG_test_tx_off == 0)
             {
-                ADF7030_RECEIVING_FROM_POWEROFF();
+                ADF7030_RECEIVING_FROM_POWEROFF_testMode();
                 FG_test_tx_off = 1;
             }
             if (Tx_Rx_mode == 2) //packet usart out put RSSI

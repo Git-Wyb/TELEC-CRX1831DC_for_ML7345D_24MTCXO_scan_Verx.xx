@@ -7,7 +7,7 @@
 
 
 
-//#define DEF_test_MAX_32pcs
+#define DEF_test_MAX_32pcs
 extern u8 DEF_APP_TX_freq;
 
 

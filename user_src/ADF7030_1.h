@@ -176,5 +176,7 @@ void ADF7030_Clear_IRQ(void);
 void ADF7030_Change_Channel(void);
 
 void APP_TX_PACKET(void);
+void ADF7030_RECEIVING_FROM_POWEROFF_testMode(void);
+
 
 #endif
