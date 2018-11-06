@@ -7,7 +7,7 @@
 
 
 #define DEF_APP_TX_freq 3
-#define DEF_test_MAX_32pcs
+//#define DEF_test_MAX_32pcs
 
 
 
@@ -143,6 +143,7 @@ extern u8 Flag_RSSI_Read_Timer;
 #define SPI_REV_BUFF_LONG 40
 
 extern const u8 ADF7030Cfg[];
+extern const u8 ADF7030Cfg_load[];
 extern const u8 ADF7030Cfg_4dot8k[];
 extern const u8 *ADF7030Cfg_pointer;
 
@@ -193,6 +194,7 @@ extern u8 Time_APP_blank_TX;
 extern u16 Time_APP_RXstart;
 
 extern u8 TIME_TX_RSSI_Scan;
+extern u8 Flag_TX_ID_load;
 
 
 

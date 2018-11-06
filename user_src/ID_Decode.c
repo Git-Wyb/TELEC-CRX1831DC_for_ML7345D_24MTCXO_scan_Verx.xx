@@ -104,6 +104,7 @@ void ID_Decode_IDCheck(void)
 		                if ((SPI_Receive_DataForC[1] & 0x0000FFFF) == 0x5556)
 		                {
 		                    PAYLOAD_SIZE = RX_PayLoadSizeLogin;
+							Flag_TX_ID_load=1;
 		                    Signal_DATA_Decode(1);
 		                    if (FLAG_Signal_DATA_OK == 1)
 		                    {
@@ -133,7 +134,7 @@ void ID_Decode_IDCheck(void)
 		                else
 		                {
 		                    PAYLOAD_SIZE = RX_PayLoadSizeNOLogin;
-							
+							Flag_TX_ID_load=0;
 		                    if ((DATA_Packet_Control == 0x40) && (Manual_override_TIMER == 0))
 		                    {
 		                        FG_auto_manual_mode = 1;

@@ -73,6 +73,9 @@ u8 Flag_RSSI_Read_Timer = 10;
 const u8 ADF7030Cfg[] = {
 #include "Settings_ADF7030-1.cfg"
 };
+const u8 ADF7030Cfg_load[] = {
+#include "Settings_ADF7030-1_load.cfg"
+};
 const u8 ADF7030Cfg_4dot8k[] = {
 #include "Settings_ADF7030-1_4dot8k.cfg"
 };
@@ -147,6 +150,7 @@ u8 Time_APP_blank_TX=0;
 u16 Time_APP_RXstart=0;
 
 u8 TIME_TX_RSSI_Scan=0;
+u8 Flag_TX_ID_load=0;
 
 
 
