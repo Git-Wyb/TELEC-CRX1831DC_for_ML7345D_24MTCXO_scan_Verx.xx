@@ -8,7 +8,7 @@
 /***********************************************************************/
 #include <iostm8l151g4.h> // CPU型号
 #include "Pin_define.h"   // 管脚定义
-#include "initial.h"      // 初始化  预定义
+#include "initial.h"      // 初始�? 预定�?
 #include "ram.h"          // RAM定义
 #include "ID_Decode.h"
 #include "eeprom.h" // eeprom
@@ -17,7 +17,7 @@
 //void EXIT_init(void)
 //{
 //    EXTI_CR1 = 0x20;          //PORT B2  的中断触发位
-//    ADF7021_DATA_CLK_CR2 = 1; //使能该I/O口中断  PA1
+//    ADF7021_DATA_CLK_CR2 = 1; //使能该I/O口中�? PA1
 //    //   EXTI_CR2=0X00;
 //    //   PIN_PD7_CR2=1;
 //}
@@ -139,7 +139,7 @@ void ID_Decode_function(void)
             //                else Freq_Scanning_CH_bak=1;                                                                                 //                       1代表429M
             rxphase = 0;
             DATA_Packet_Syn = 0;
-            TIMER18ms = 0; //0ms，接受可靠稳定
+            TIMER18ms = 0; //0ms，接受可靠稳�?
             break;
         default:
             break;
@@ -177,12 +177,12 @@ void ID_Decode_IDCheck(void)
             {
                 FLAG_IDCheck_OK = 0;
                 if (DATA_Packet_ID == 0xFFFFFE)
-                    DATA_Packet_Control = DATA_Packet_Contro_buf; //2015.3.24修正 Control缓存起 ID判断是否学习过后才能使用
+                    DATA_Packet_Control = DATA_Packet_Contro_buf; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
                                                                   //                 if (Freq_Scanning_CH_bak == 0)
                                                                   //                 {
                                                                   //                     Freq_Scanning_CH_save = 1;
                                                                   //                     Freq_Scanning_CH_save_HA = 0;
-                                                                  //                 } //当前收到426M控制   但保存记录下收到信号的频率信道,0代表426M
+                                                                  //                 } //当前收到426M控制   但保存记录下收到信号的频率信�?0代表426M
                                                                   //                 else
                                                                   //                     Freq_Scanning_CH_save_HA = 1; //                       1代表429M
                                                                   //                 DATA_Packet_Control_0 = DATA_Packet_Control;
@@ -205,7 +205,7 @@ void ID_Decode_IDCheck(void)
                     {
                         eeprom_IDcheck();
                         if (DATA_Packet_Contro_buf == 0xFF)
-                        { //2015.4.2修正  送信器旁边的登录键 追加登录不行
+                        { //2015.4.2修正  送信器旁边的登录�?追加登录不行
                             if (FLAG_IDCheck_OK == 1)
                                 FLAG_IDCheck_OK = 0;
                             else if (ID_DATA_PCS < 256)
@@ -251,8 +251,8 @@ void ID_Decode_IDCheck(void)
                         FG_auto_out = 0;
                         TIME_auto_close = 0;
                         FG_auto_open_time = 0;
-                        if (FG_auto_manual_mode == 1)      //Manual_override_TIMER=13500;   //2分30秒自动无效
-                            Manual_override_TIMER = 24480; //4分30秒自动无效
+                        if (FG_auto_manual_mode == 1)      //Manual_override_TIMER=13500;   //2�?0秒自动无�?
+                            Manual_override_TIMER = 24480; //4�?0秒自动无�?
                         if ((DATA_Packet_Control & 0x14) == 0x14)
                         {
                             if (TIMER1s == 0)
@@ -303,7 +303,7 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
         DATA_Packet_ID = (data_NRZ[1] & 0x00FF) * 65536 + data_NRZ[0];
         if (DATA_Packet_ID == 0)
             FLAG_Signal_DATA_OK = 0;                          //2014.3.21追加  不允许使用ID=0
-        DATA_Packet_Contro_buf = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存起 ID判断是否学习过后才能使用
+        DATA_Packet_Contro_buf = (data_NRZ[1] & 0xFF00) >> 8; //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
                                                               //          if(Freq_Scanning_CH_bak==1)
                                                               //              Control_bak=DATA_Packet_Control;
     }
@@ -322,7 +322,7 @@ void eeprom_IDcheck(void)
             i = ID_DATA_PCS;
             FLAG_IDCheck_OK = 1;
             DATA_Packet_Control = DATA_Packet_Contro_buf;
-        } //2015.3.24修正 Control缓存起 ID判断是否学习过后才能使用
+        } //2015.3.24修正 Control缓存�?ID判断是否学习过后才能使用
         if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
         {
             i = ID_DATA_PCS;
@@ -332,24 +332,46 @@ void eeprom_IDcheck(void)
     }
 }
 
+void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF)
+{
+	UINT16 i;
+
+	for (i = 0; i < time_beepON; i++)
+	{
+		//Receiver_Buzzer=!Receiver_Buzzer;   //蜂鸣器频�?.08KHZ
+		if (FG_beep_on == 0)
+		{
+			FG_beep_on = 1;
+			FG_beep_off = 0;
+			BEEP_CSR2_BEEPEN = 1;
+		}
+		Delayus(250); //80us
+		Delayus(250); //80us
+		Delayus(250); //80us
+		ClearWDT();   // Service the WDT
+	}
+	for (i = 0; i < time_beepOFF; i++)
+	{
+		// Receiver_Buzzer=0;	//蜂鸣器频�?.08KHZ
+		if (FG_beep_off == 0)
+		{
+			FG_beep_off = 1;
+			FG_beep_on = 0;
+			BEEP_CSR2_BEEPEN = 0;
+		}
+		//Delayus(240);
+		Delayus(250); //80us
+		Delayus(250); //80us
+		Delayus(250); //80us
+		ClearWDT();   // Service the WDT
+	}
+
+}
+
 void BEEP_and_LED(void)
 {
-    UINT16 i;
     Receiver_LED_OUT = 1;
-    for (i = 0; i < 4160; i++)
-    {
-        if (FG_beep_on == 0)
-        {
-            FG_beep_on = 1;
-            FG_beep_off = 0;
-            BEEP_CSR2_BEEPEN = 1;
-        }
-        //Delayus(240);
-        Delayus(250); //80us
-        Delayus(250); //80us
-        Delayus(250); //80us
-        ClearWDT();   // Service the WDT
-    }
+    BEEP_Module(4160,0);
     FG_beep_on = 0;
     BEEP_CSR2_BEEPEN = 0;
     TIME_Receiver_LED_OUT = 185;
@@ -357,49 +379,33 @@ void BEEP_and_LED(void)
 
 void Receiver_BEEP(void)
 {
-    UINT16 i, j;
+    UINT16 j;
     if (FLAG_Receiver_BEEP == 0)
     {
         FLAG_Receiver_BEEP = 1;
         for (j = 0; j < 3; j++)
-        {
-            for (i = 0; i < 1800; i++)
-            {
-                //Receiver_Buzzer=!Receiver_Buzzer;   //蜂鸣器频率2.08KHZ
-                if (FG_beep_on == 0)
-                {
-                    FG_beep_on = 1;
-                    FG_beep_off = 0;
-                    BEEP_CSR2_BEEPEN = 1;
-                }
-                Delayus(250); //80us
-                Delayus(250); //80us
-                Delayus(250); //80us
-                ClearWDT();   // Service the WDT
-            }
-            for (i = 0; i < 1800; i++)
-            {
-                // Receiver_Buzzer=0;   //蜂鸣器频率2.08KHZ
-                if (FG_beep_off == 0)
-                {
-                    FG_beep_off = 1;
-                    FG_beep_on = 0;
-                    BEEP_CSR2_BEEPEN = 0;
-                }
-                //Delayus(240);
-                Delayus(250); //80us
-                Delayus(250); //80us
-                Delayus(250); //80us
-                ClearWDT();   // Service the WDT
-            }
-        }
-        //Receiver_Buzzer=0;
+          BEEP_Module(1800,1800);
     }
+}
+
+void TEST_beep(void)
+{
+	if(FLAG_testBEEP==1)
+		BEEP_Module(1800,1);
+	else if(FLAG_testBEEP==2)
+		{
+		BEEP_Module(1800,1800);
+		BEEP_Module(1800,1);
+		}
+	else if(FLAG_testBEEP==3) BEEP_CSR2_BEEPEN = 1;
+	FLAG_testBEEP=0;
 }
 
 void ID_Decode_OUT(void)
 {
     UINT8 Control_i;
+	static UINT8 FLAG_testNo93SendUart=0;
+
     //    if(Freq_Scanning_CH_bak==0) Control_i=DATA_Packet_Control&0xFF;
     //    else Control_i=DATA_Packet_Control&0x0E;
     //    if(HA_Sensor_signal==1)Receiver_LED_TX=0;                      //test 接近信号回路
@@ -484,6 +490,13 @@ void ID_Decode_OUT(void)
             Receiver_OUT_CLOSE = FG_NOT_allow_out;
             Receiver_OUT_VENT = FG_NOT_allow_out;
             Receiver_OUT_OPEN = FG_allow_out;
+			if((FLAG_testNo93==1)&&(TIME_TestNo93or91!=0)&&(FLAG_testNo93SendUart==0))
+				{
+				ACKBack[2]=0xA1;
+				Send_Data(ACKBack, 3);
+				FLAG_testNo93SendUart=1;
+				}
+
             break;
         case 0x0C: //open+stop
             Receiver_LED_OUT = 1;
@@ -553,7 +566,7 @@ void ID_Decode_OUT(void)
     else
     {
         //           if(FLAG_APP_Reply==1){FLAG_APP_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status;FLAG_HA_START=1;}
-        //           if(FLAG_426MHz_Reply==1){FLAG_426MHz_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status+4;FLAG_HA_START=1;}   //受信器自动发送HA状态码为实际HA码+4
+        //           if(FLAG_426MHz_Reply==1){FLAG_426MHz_Reply=0;ID_data.IDL=DATA_Packet_ID;Control_code=HA_Status+4;FLAG_HA_START=1;}   //受信器自动发送HA状态码为实际HA�?4
         if ((FG_auto_out == 1) && (TIME_auto_out == 0))
         {
             FG_auto_out = 0;
@@ -589,7 +602,7 @@ void ID_Decode_OUT(void)
             ;
         else if (TIME_Receiver_LED_OUT > 0)
             Receiver_LED_OUT = 1;
-        else
+        else if(TIME_power_led==0)
             Receiver_LED_OUT = 0;
         Receiver_OUT_OPEN = FG_NOT_allow_out;
         Receiver_OUT_VENT = FG_NOT_allow_out;
@@ -604,6 +617,7 @@ void ID_Decode_OUT(void)
             Receiver_OUT_STOP = FG_NOT_allow_out;
             FG_OUT_OPEN_CLOSE = 0;
         }
+		FLAG_testNo93SendUart=0;
     }
     if (TIMER300ms == 0)
         FG_Receiver_LED_RX = 0; //Receiver_LED_RX=0;
@@ -628,17 +642,17 @@ void Freq_Scanning(void)
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
         ADF7030_Change_Channel();
         GET_STATUE_BYTE();
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
         DELAY_30U();
         ADF7030_CHANGE_STATE(STATE_PHY_ON);
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
         DELAY_30U();
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_GENERIC_PKT_FRAME_CFG1, GENERIC_PKT_FRAME_CFG1);    //
         ADF7030_WRITE_REGISTER_NOPOINTER_LONGADDR_MSB(ADDR_CHANNEL_FERQUENCY, PROFILE_CH_FREQ_32bit_200002EC); //
-        WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA();                                                                           //等待芯片空闲/可接受CMD状�?
         DELAY_30U();
         ADF7030_Clear_IRQ();
-        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
+        WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状�?
         DELAY_30U();
         ADF7030_CHANGE_STATE(STATE_PHY_RX);
         while (GET_STATUE_BYTE().FW_STATUS == 0)

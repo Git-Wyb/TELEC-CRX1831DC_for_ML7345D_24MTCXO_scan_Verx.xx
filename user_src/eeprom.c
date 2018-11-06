@@ -4,47 +4,47 @@
 /*  DESCRIPTION :routine for VHF60-2011                                */
 /*  CPU TYPE    :STM8S207C8                                            */
 /*  Programmer	:Gong Dong Sheng                                       */
-/*  Mark        :STM8S207C8的CODE空间为64K                             */
-/*              :STM8S207C8的EEPROM的大小为1536字节,即:3页,512节/页    */
+/*  Mark        :STM8S207C8的CODE空间�?4K                             */
+/*              :STM8S207C8的EEPROM的大小为1536字节,�?3�?512�?�?   */
 /***********************************************************************/
 #include <iostm8l151g4.h> // CPU型号
 //#include "stm8l15x.h"
 #include "Pin_define.h" // 管脚定义
-#include "initial.h"    // 初始化  预定义
+#include "initial.h"    // 初始�? 预定�?
 #include "ram.h"        // RAM定义
 #include "eeprom.h"     // eeprom
 #include "ID_Decode.h"
 /***********************************************************************/
-/*                    FLASH & EEPROM 寄存器及控制位                    */
+/*                    FLASH & EEPROM 寄存器及控制�?                   */
 /***********************************************************************/
 #define FIRST_SECURITY_KEY 0xAE
 #define SECOND_SECURITY_KEY 0x56
 #define ADD_EEPROM_S8 0x1000
 
 ///* FLASH_CR2 */
-//#define OPT               7   /* 对选项字节进行写操作 */
-//#define WPRG              6   /* 字编程 */
-//#define ERASE             5   /* 块擦除 */
+//#define OPT               7   /* 对选项字节进行写操�?*/
+//#define WPRG              6   /* 字编�?*/
+//#define ERASE             5   /* 块擦�?*/
 //#define FPRG              4   /* 快速块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
-//#define PRG               0   /* 标准块编程 */
+//#define PRG               0   /* 标准块编�?*/
 //
 ///* FLASH_NCR2 */
-//#define NOPT              7   /* 对选项字节进行写操作 */
-//#define NWPRG             6   /* 字编程 */
-//#define NERASE            5   /* 块擦除 */
+//#define NOPT              7   /* 对选项字节进行写操�?*/
+//#define NWPRG             6   /* 字编�?*/
+//#define NERASE            5   /* 块擦�?*/
 //#define NFPRG             4   /* 快速块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
-//#define NPRG              0   /* 标准块编程 */
+//#define NPRG              0   /* 标准块编�?*/
 //
 ///* FLASH_FPR */
 ////#define NC              7
 ////#define NC              6
-//#define WPB5              5   /* 用户启动代码保护位 */
+//#define WPB5              5   /* 用户启动代码保护�?*/
 //#define WPB4              4
 //#define WPB3              3
 //#define WPB2              2
@@ -54,7 +54,7 @@
 ///* FLASH_NFPR */
 ////#define NC              7
 ////#define NC              6
-//#define NWPB5             5   /* 用户启动代码保护位 */
+//#define NWPB5             5   /* 用户启动代码保护�?*/
 //#define NWPB4             4
 //#define NWPB3             3
 //#define NWPB2             2
@@ -89,7 +89,7 @@
 #define DUL 3       /* DATA EEPROM区域解锁标志 */
 #define EOP 2       /* 编程结束(写或擦除操作)标志 */
 #define PUL 1       /* 快速程序存储器结束标志 */
-#define WR_PG_DIS 0 /* 试图向被保护页进行写操作的标志 */
+#define WR_PG_DIS 0 /* 试图向被保护页进行写操作的标�?*/
 
 #define FLASH_CR1_RESET_VALUE ((uchar)0x00)
 #define FLASH_CR2_RESET_VALUE ((uchar)0x00)
@@ -106,19 +106,19 @@
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 void InitialFlashReg(void)
-{ // 初始化闪存寄存器组
+{ // 初始化闪存寄存器�?
     FLASH_CR1 = FLASH_CR1_RESET_VALUE;
     FLASH_CR2 = FLASH_CR2_RESET_VALUE;
     //FLASH_NCR2 = FLASH_NCR2_RESET_VALUE;
-    FLASH_IAPSR &= (uchar)(~(1 << DUL)); // 清除只读DATA区解锁
-    FLASH_IAPSR &= (uchar)(~(1 << PUL)); // 清除程序区解锁
+    FLASH_IAPSR &= (uchar)(~(1 << DUL)); // 清除只读DATA区解�?
+    FLASH_IAPSR &= (uchar)(~(1 << PUL)); // 清除程序区解�?
 }
 //------------------------------------------------
-//  注: 2个密钥的操作序列正好相反
+//  �? 2个密钥的操作序列正好相反
 void UnlockFlash(unsigned char Type)
 { // 解锁flash
     if (Type == UNLOCK_FLASH_TYPE)
-    { // 解锁程序区
+    { // 解锁程序�?
         FLASH_DUKR = SECOND_SECURITY_KEY;
         FLASH_DUKR = FIRST_SECURITY_KEY;
     }
@@ -130,7 +130,7 @@ void UnlockFlash(unsigned char Type)
 }
 //------------------------------------------------
 void LockFlash(unsigned char Type)
-{ // 锁定存储器
+{ // 锁定存储�?
     if (Type == UNLOCK_FLASH_TYPE)
     {
         FLASH_IAPSR &= ~(1 << PUL);
@@ -142,7 +142,7 @@ void LockFlash(unsigned char Type)
 }
 //------------------------------------------------
 uchar ReadByteEEPROM(ulong Addr)
-{                                    // 从eeprom中读取1字节
+{                                    // 从eeprom中读�?字节
     return (*((__far uchar *)Addr)); // Read byte
 }
 //------------------------------------------------
@@ -152,7 +152,7 @@ void WriteByteToFLASH(ulong Addr, uchar Dat)
 }
 //------------------------------------------------
 void EraseByteFLASH(uint Addr)
-{ // 擦除eeprom中内容
+{ // 擦除eeprom中内�?
     *((__near uchar *)Addr) = 0x00;
 }
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -367,8 +367,10 @@ void ID_learn(void)
     //    UINT16 i;
     // #if defined(__Product_PIC32MX2_Receiver__)
     if (FG_10ms)
-    { //90==1秒
+    { //90==1�?
         FG_10ms = 0;
+		if(TIME_TestNo93or91)
+			--TIME_TestNo93or91;
         if (TIME_EMC)
             --TIME_EMC;
         if (TIME_auto_out)
@@ -409,6 +411,8 @@ void ID_learn(void)
             if ((COUNT_Receiver_Login >= 2) && (FLAG_ID_Erase_Login == 0) && (FLAG_ID_Login == 0) && (ID_DATA_PCS < 256))
             {
                 FLAG_ID_Login = 1;
+				BEEP_Module(1800,900);
+				BEEP_Module(300,1);
                 TIME_Login_EXIT_rest = 5380;
                 TIME_Login_EXIT_Button = 500;
             } //6000
@@ -438,6 +442,9 @@ void ID_learn(void)
             TIME_Receiver_Login = 0;
             FLAG_ID_Erase_Login = 1;
             FLAG_ID_Erase_Login_PCS = 1; //追加多次ID登录
+            BEEP_Module(1800,900);
+			BEEP_Module(300,900);
+			BEEP_Module(300,1);
             TIME_Login_EXIT_rest = 5380;
             TIME_Login_EXIT_Button = 500;
         }
@@ -489,6 +496,17 @@ void ID_learn(void)
 void ID_Login_EXIT_Initial(void)
 {
     // #if defined(__Product_PIC32MX2_Receiver__)
+	if(FLAG_ID_Erase_Login == 1)
+		{
+		BEEP_Module(300,900);
+		BEEP_Module(300,900);
+		BEEP_Module(1800,1);
+		}	
+	else if(FLAG_ID_Login==1)
+		{
+		BEEP_Module(300,900);
+		BEEP_Module(1800,1);		
+		}    
     FLAG_ID_Login_EXIT = 1;
     FLAG_ID_Login_OK = 0;
     FLAG_ID_Login_OK_bank = 0;

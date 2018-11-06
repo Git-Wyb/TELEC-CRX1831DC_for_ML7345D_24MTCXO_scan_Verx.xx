@@ -17,6 +17,11 @@ void eeprom_IDcheck(void);
 void BEEP_and_LED(void);
 void ID_Decode_OUT(void);
 void Receiver_BEEP(void);
+void TEST_beep(void);
+void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF);
+
+
+
 void Freq_Scanning(void);
 void DataReceive(void);
 

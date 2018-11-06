@@ -3,7 +3,7 @@
 //CPU?????
 //?????ADF030???????
 //#define TX_TEST_CARRIER_MODE 0
-#include "initial.h" // 锟斤拷始锟斤拷  预锟斤拷锟斤拷
+#include "initial.h" // 锟斤拷始锟斤�? 预锟斤拷锟斤�?
 
 extern uFLAG FLAG_test1;
 //************************************************
@@ -24,7 +24,7 @@ extern volatile uFLAG FLAG_test;
 //------------------------------------------------
 #define FLAG_Receiver_Scanning FLAG_test.BIT.Bit0
 #define FG_test_tx_1010 FLAG_test.BIT.Bit1
-#define X_HIS FLAG_test.BIT.Bit2 //鍘嗗彶璁板綍   璇?鐮佺巼娴嬭瘯鐢?
+#define X_HIS FLAG_test.BIT.Bit2 //鍘嗗彶璁板綍   �?鐮佺巼娴嬭瘯�?
 #define FG_test_tx_on FLAG_test.BIT.Bit3
 #define FG_test_tx_off FLAG_test.BIT.Bit4
 #define FG_test_mode FLAG_test.BIT.Bit5
@@ -58,7 +58,7 @@ extern volatile uFLAG FLAG1;
 //************************************************
 
 extern u16 X_COUNT;
-extern u16 X_ERR; //记录错误的个数
+extern u16 X_ERR; //记录错误的个�?
 extern u16 X_ERRTimer;
 
 extern u8 SIO_cnt;
@@ -78,7 +78,7 @@ extern u32 ID_Receiver_DATA[256]; //写入EEPROM ID缓存
 extern u16 ID_DATA_PCS;
 extern u32 DATA_Packet_ID;
 extern u8 DATA_Packet_Control;
-extern u8 DATA_Packet_Contro_buf; //2015.3.24淇?姝?
+extern u8 DATA_Packet_Contro_buf; //2015.3.24�?�?
 extern u32 ID_Receiver_Login;
 extern u8 TIME_EMC;
 
@@ -94,10 +94,15 @@ extern u16 TIME_Receiver_LED_OUT;
 extern u16 TIME_Login_EXIT_Button;
 extern u16 Manual_override_TIMER;
 extern u16 time_Login_exit_256;
-extern u16 TIME_Fine_Calibration; //绐勫甫涓嬩腑棰戞护娉㈠櫒100KHz绮炬牎
+extern u16 TIME_Fine_Calibration; //绐勫甫涓嬩腑棰戞护娉㈠櫒100KHz绮炬�?
 
 extern u8 Count_key_SW3;
 extern u8 Display_key_SW3;
+
+extern u16 TIME_TestNo93or91;
+extern u16 TIME_power_led;
+
+
 extern ADF70XX_REG_T ROM_adf7030_value[16];
 extern const ADF70XX_REG_T Default_adf7030_value[16];
 /**********LCD******************/

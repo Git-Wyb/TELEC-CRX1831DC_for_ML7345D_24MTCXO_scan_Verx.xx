@@ -8,11 +8,11 @@
 /***********************************************************************/
 #include <iostm8l151g4.h> // CPU型号
 #include "Pin_define.h"   // 管脚定义
-#include "initial.h"	  // 初始化  预定义
+#include "initial.h"	  // 初始�? 预定�?
 #include "ram.h"		  // RAM定义
 #include "eeprom.h"		  // eeprom
 #include "uart.h"
-#define TXD1_enable (USART1_CR2 = 0x08) // 允许发送
+#define TXD1_enable (USART1_CR2 = 0x08) // 允许发�?
 #define RXD1_enable (USART1_CR2 = 0x24) // 允许接收及其中断
 
 u8 u1busyCache = 0;
@@ -26,6 +26,9 @@ __Databits_t Databits_t;
 __U1Statues U1Statues;
 UINT8 ACKBack[3] = {0x02, 0x03, 0x00};
 unsigned int U1AckTimer = 0;
+
+UINT8 FLAG_testNo93=0;
+UINT8 FLAG_testBEEP=0;
 
 //********************************************
 void UART1_INIT(void)
@@ -46,17 +49,17 @@ void UART1_INIT(void)
 
 	//	USART1_CR3 = 0; // 1个停止位
 	//	USART1_CR4 = 0;
-	//	USART1_CR5 = 0x00;  //0x08;						// 半双工模式
-	/*设置波特率*/
+	//	USART1_CR5 = 0x00;  //0x08;						// 半双工模�?
+	/*设置波特�? */
 	baud_div = 16000000 / 9600; /*求出分频因子*/
 	USART1_BRR2 = baud_div & 0x0f;
 	USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
-	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*先给BRR2赋值 最后再设置BRR1*/
+	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*先给BRR2赋�?最后再设置BRR1*/
 
-	//	USART1_BRR2 = 0x03; // 设置波特率9600
+	//	USART1_BRR2 = 0x03; // 设置波特�?600
 	//	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
 	//16.00M/9600 = 0x683
-	//USART1_CR2 = 0x08;	// 允许发送
+	//USART1_CR2 = 0x08;	// 允许发�?
 	//USART1_CR2 = 0x24;
 	//Send_char(0xa5);
 	u1InitCompleteFlag = 1;
@@ -68,8 +71,8 @@ void UART1_end(void)
 	USART1_CR1 = 0; // 1个起始位,8个数据位
 	USART1_CR3 = 0; // 1个停止位
 	USART1_CR4 = 0;
-	USART1_CR5 = 0x00;  // 半双工模式
-	USART1_BRR2 = 0x00; // 设置波特率9600
+	USART1_CR5 = 0x00;  // 半双工模�?
+	USART1_BRR2 = 0x00; // 设置波特�?600
 	USART1_BRR1 = 0x00; // 3.6864M/9600 = 0x180
 						//16.00M/9600 = 0x683
 	USART1_CR2 = 0x00;  //禁止串口
@@ -98,44 +101,44 @@ void UART1_RX_RXNE(void)
 
 //--------------------------------------------
 void Send_char(unsigned char ch)
-{				 // 发送字符
-	TXD1_enable; // 允许发送
+{				 // 发送字�?
+	TXD1_enable; // 允许发�?
 	while (!USART1_SR_TXE)
 		;
-	USART1_DR = ch; // 发送
+	USART1_DR = ch; // 发�?
 	while (!USART1_SR_TC)
-		;		 // 等待完成发送
+		;		 // 等待完成发�?
 	RXD1_enable; // 允许接收及其中断
 }
 //--------------------------------------------
 void Send_String(unsigned char *string)
 { // 发送字符串
 	unsigned char i = 0;
-	TXD1_enable; // 允许发送
+	TXD1_enable; // 允许发�?
 	while (string[i])
 	{
 		while (!USART1_SR_TXE)
 			;				   // 检查发送OK
-		USART1_DR = string[i]; // 发送
+		USART1_DR = string[i]; // 发�?
 		i++;
 	}
 	while (!USART1_SR_TC)
-		;		 // 等待完成发送
+		;		 // 等待完成发�?
 	RXD1_enable; // 允许接收及其中断
 				 //	BIT_SIO = 0;							// 标志
 }
 void Send_Data(unsigned char *P_data, unsigned int length)
 { // 发送字符串
 	unsigned int i = 0;
-	TXD1_enable; // 允许发送
+	TXD1_enable; // 允许发�?
 	for (i = 0; i < length; i++)
 	{
 		while (!USART1_SR_TXE)
 			;					   // 检查发送OK
-		USART1_DR = *(P_data + i); // 发送
+		USART1_DR = *(P_data + i); // 发�?
 	}
 	while (!USART1_SR_TC)
-		;		 // 等待完成发送
+		;		 // 等待完成发�?
 	RXD1_enable; // 允许接收及其中断
 				 //	BIT_SIO = 0;							// 标志
 }
@@ -182,7 +185,7 @@ void PC_PRG(void) // 串口命令
 		switch (SIO_DATA[1])
 		{
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//%                 写操作               %
+		//%                 写操�?              %
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		case 'W':
 			//==================================== ADF7012
@@ -244,7 +247,7 @@ void PC_PRG(void) // 串口命令
 			}
 			break;
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		//%                 读操作               %
+		//%                 读操�?              %
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		case 'R':
 			//==================================== ADF7012   //(RIx)
@@ -304,16 +307,21 @@ void ReceiveFrame(UINT8 Cache)
 		U1Statues = IdelStatues;
 		break;
 	}
-	if (UartStatus == FrameEndStatus) //接收完一帧处理数据
+	if (UartStatus == FrameEndStatus) //接收完一帧处理数�?
 	{
 		//add Opration function
 		OprationFrame();
 		UartStatus = 0;
 		UartCount = 0;
 		//        Receiver_LED_OUT_INV = !Receiver_LED_OUT_INV;
-		U1Statues = ReceiveDoneStatues;
-		U1AckTimer = U1AckDelayTime;
-		U1Busy_OUT = 1;
+		if(Databits_t.ID_No == 0x93) U1Statues = IdelStatues;
+		else 
+		{
+			U1Statues = ReceiveDoneStatues;
+		    U1AckTimer = U1AckDelayTime;
+		    U1Busy_OUT = 1;			
+		}
+
 	}
 }
 
@@ -327,17 +335,12 @@ void OprationFrame(void)
 		ACKBack[2] = 0;
 		switch (Databits_t.Mode)
 		{
-		case 0:
-			break;
-		case 4:
-			break;
-		case 5:
-			break;
+		case 3:
+		case 4:	
+		case 5:	
 		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
+		case 7:	
+		case 8:			
 			break;
 		default:
 			ACKBack[2] = 1;
@@ -346,18 +349,11 @@ void OprationFrame(void)
 		}
 		switch (Databits_t.Statues)
 		{
-		case 0:
-			break;
-		case 1:
-			break;
-		case 2:
-			break;
+		case 1: 
+		case 2: 
 		case 3:
-			break;
-		case 4:
-			break;
+		case 4: 
 		case 5:
-			break;
 		case 6:
 			break;
 		default:
@@ -368,20 +364,17 @@ void OprationFrame(void)
 		switch (Databits_t.Abnormal)
 		{
 		case 0x00:
-			break;
 		case 0x04:
-			break;
 		case 0x06:
-			break;
 		case 0x45:
-			break;
 		case 0x46:
-			break;
 		case 0x47:
-			break;
 		case 0x48:
-			break;
-		case 0x4a:
+		case 0x49:
+		case 0x4A:
+		case 0x4B:
+		case 0x4C:	
+		case 0x4D:		
 			break;
 		default:
 			ACKBack[2] = 1;
@@ -392,12 +385,49 @@ void OprationFrame(void)
 	else if (Databits_t.ID_No == 0x98)
 	{
 	}
+	else if (Databits_t.ID_test_No91or93 == 0x91)
+	{
+		ACKBack[2] = 0;
+		FLAG_testNo93=1;
+		TIME_TestNo93or91=1000;
+	}	
+	else if ((Databits_t.ID_test_No91or93 == 0x93)&&(FLAG_testNo93==1))
+	{
+		switch (Databits_t.SWorOUT)
+		{
+		case 0x01:
+			DATA_Packet_Control=0x08;
+			TIMER1s = 1000;	
+			break;
+		case 0x02:
+			DATA_Packet_Control=0x04;
+			TIMER1s = 1000;		
+			break;
+		case 0x04:
+			DATA_Packet_Control=0x02;
+			TIMER1s = 1000;
+			break;
+		case 0xFA:
+			FLAG_testBEEP=1;
+			break;
+		case 0xFB:
+			FLAG_testBEEP=2;
+			break;
+		case 0xFC:	
+			FLAG_testBEEP=3;
+			break;
+		default:
+			break;
+		}
+
+	}	
 	else
 	{
 		ACKBack[2] = 1;
 		return;
 	}
 }
+
 void TranmissionACK(void)
 {
 	if (u1InitCompleteFlag)

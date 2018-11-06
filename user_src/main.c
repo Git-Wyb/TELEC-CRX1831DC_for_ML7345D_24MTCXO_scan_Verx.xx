@@ -62,14 +62,19 @@ void main(void)
     ADF7030Init();     //射频初始化
     UART1_INIT();      // UART1 for PC Software
     _EI();             // 允许中断
+    TIME_power_led=500;
     ClearWDT();        // Service the WDT
     RF_test_mode();
     FLAG_APP_RX = 1;
     FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
+    FLAG_testNo93=0;
+	FLAG_testBEEP=0;
     while (1)
     {
         ClearWDT(); // Service the WDT
+        if(FLAG_testBEEP!=0)TEST_beep();
+
         if (time_Login_exit_256 == 0)
             ID_Decode_OUT();
         //Freq_Scanning();

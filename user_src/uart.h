@@ -14,8 +14,8 @@ extern u8 u1busyCache;
 #define U1Busy_OUT u1busyCache
 #define FrameHeadSataus 0x00 //帧头
 #define DataStatus 0x01      //数据位置
-#define FrameEndStatus 0x02  //桢结束
-#define FrameHead 0x02       //数据开始
+#define FrameEndStatus 0x02  //桢结�?
+#define FrameHead 0x02       //数据开�?
 #define FrameSingnalID 0x11  //信号ID
 
 extern UINT8 UartStatus;
@@ -23,6 +23,11 @@ extern UINT8 UartLen;
 extern UINT8 UartCount;
 extern UINT8 UART_DATA_buffer[9];
 extern u8 u1InitCompleteFlag;
+
+extern UINT8 ACKBack[3];
+extern UINT8 FLAG_testNo93;
+extern UINT8 FLAG_testBEEP;
+
 
 void ReceiveFrame(UINT8 Cache);
 void OprationFrame(void);
@@ -39,11 +44,19 @@ typedef union {
     };
     struct
     {
-        unsigned char : 8;
+        unsigned char ID_No98: 8;
         unsigned char SW_Info : 8;
         unsigned char AbnormalOut1 : 8;
         unsigned char AbnormalOut2 : 8;
     };
+    struct
+    {
+        unsigned char ID_test_No91or93: 8;
+        unsigned char SWorOUT : 8;
+        unsigned char prep1 : 8;
+        unsigned char prep2 : 8;
+    };	
+
 } __Databits_t;
 typedef enum {
     IdelStatues = 0,

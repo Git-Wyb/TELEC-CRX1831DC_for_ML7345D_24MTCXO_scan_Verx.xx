@@ -11,7 +11,7 @@ volatile uFLAG FLAG1;
 volatile uFLAG FLAG_test;
 
 u16 X_COUNT = 0;
-u16 X_ERR = 0; //记录错误的个数
+u16 X_ERR = 0; //记录错误的个�?
 u16 X_ERRTimer = 0;
 
 u8 SIO_cnt = 0;
@@ -52,6 +52,10 @@ u16 TIME_Fine_Calibration = 0; //窄带下中频滤波器100KHz精校
 
 u8 Count_key_SW3 = 0;
 u8 Display_key_SW3 = 0xff;
+
+u16 TIME_TestNo93or91=0;
+u16 TIME_power_led=0;
+
 
 /*******LCD**************/
 uFLAG FlagLCDUpdate = {0xff};
