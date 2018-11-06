@@ -12,7 +12,7 @@
 #include "ram.h"		  // RAM定义
 #include "eeprom.h"		  // eeprom
 #include "uart.h"
-#define TXD1_enable (USART1_CR2 = 0x08) // 允许发�?
+#define TXD1_enable (USART1_CR2 = 0x08) // 允许发�??
 #define RXD1_enable (USART1_CR2 = 0x24) // 允许接收及其中断
 
 u8 u1busyCache = 0;
@@ -58,12 +58,12 @@ void UART1_INIT(void)
 	baud_div = 16000000 / 9600; /*求出分频因子*/
 	USART1_BRR2 = baud_div & 0x0f;
 	USART1_BRR2 |= ((baud_div & 0xf000) >> 8);
-	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*先给BRR2赋�?最后再设置BRR1*/
+	USART1_BRR1 = ((baud_div & 0x0ff0) >> 4); /*先给BRR2赋�??�?后再设置BRR1*/
 
 	//	USART1_BRR2 = 0x03; // 设置波特�?600
 	//	USART1_BRR1 = 0x68; // 3.6864M/9600 = 0x180
 	//16.00M/9600 = 0x683
-	//USART1_CR2 = 0x08;	// 允许发�?
+	//USART1_CR2 = 0x08;	// 允许发�??
 	//USART1_CR2 = 0x24;
 	//Send_char(0xa5);
 	u1InitCompleteFlag = 1;
@@ -105,44 +105,44 @@ void UART1_RX_RXNE(void)
 
 //--------------------------------------------
 void Send_char(unsigned char ch)
-{				 // 发送字�?
-	TXD1_enable; // 允许发�?
+{				 // 发�?�字�?
+	TXD1_enable; // 允许发�??
 	while (!USART1_SR_TXE)
 		;
-	USART1_DR = ch; // 发�?
+	USART1_DR = ch; // 发�??
 	while (!USART1_SR_TC)
-		;		 // 等待完成发�?
+		;		 // 等待完成发�??
 	RXD1_enable; // 允许接收及其中断
 }
 //--------------------------------------------
 void Send_String(unsigned char *string)
-{ // 发送字符串
+{ // 发�?�字符串
 	unsigned char i = 0;
-	TXD1_enable; // 允许发�?
+	TXD1_enable; // 允许发�??
 	while (string[i])
 	{
 		while (!USART1_SR_TXE)
-			;				   // 检查发送OK
-		USART1_DR = string[i]; // 发�?
+			;				   // �?查发送OK
+		USART1_DR = string[i]; // 发�??
 		i++;
 	}
 	while (!USART1_SR_TC)
-		;		 // 等待完成发�?
+		;		 // 等待完成发�??
 	RXD1_enable; // 允许接收及其中断
 				 //	BIT_SIO = 0;							// 标志
 }
 void Send_Data(unsigned char *P_data, unsigned int length)
-{ // 发送字符串
+{ // 发�?�字符串
 	unsigned int i = 0;
-	TXD1_enable; // 允许发�?
+	TXD1_enable; // 允许发�??
 	for (i = 0; i < length; i++)
 	{
 		while (!USART1_SR_TXE)
-			;					   // 检查发送OK
-		USART1_DR = *(P_data + i); // 发�?
+			;					   // �?查发送OK
+		USART1_DR = *(P_data + i); // 发�??
 	}
 	while (!USART1_SR_TC)
-		;		 // 等待完成发�?
+		;		 // 等待完成发�??
 	RXD1_enable; // 允许接收及其中断
 				 //	BIT_SIO = 0;							// 标志
 }
@@ -336,6 +336,12 @@ void OprationFrame(void)
 		Databits_t.Data[i] = UART_DATA_buffer[3 + i];
 	if (Databits_t.ID_No == 0x92)
 	{
+	    FLAG_APP_TX_fromUART=1;
+		Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.fno=0;
+		Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
+		for(i=0;i<3;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=Databits_t.Data[i+1];
+		for(i=3;i<8;i++)Uart_Struct_DATA_Packet_Contro.data[i/2].uc[i%2]=0x00;
+	
 		ACKBack[2] = 0;
 		switch (Databits_t.Mode)
 		{

@@ -59,7 +59,13 @@ void main(void)
     TIM4_Init();       // 定时器
     beep_init();       // 蜂鸣器
     ClearWDT();        // Service the WDT
+    
+    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+    PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;  
+    PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
+    PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;    
     ADF7030Init();     //射频初始化
+    
     UART1_INIT();      // UART1 for PC Software
     _EI();             // 允许中断
     TIME_power_led=500;
@@ -77,10 +83,14 @@ void main(void)
 
         if (time_Login_exit_256 == 0)
             ID_Decode_OUT();
-        //Freq_Scanning();
         ID_learn();
-        //LEDCtr();
-        SCAN_RECEIVE_PACKET(); //扫描接收数据
+		APP_TX_PACKET();
+        if(FLAG_APP_RX==1)
+        {
+    		  Freq_Scanning();
+    		  //if(Scan_step==2)
+			  	SCAN_RECEIVE_PACKET(); //ɨ���������
+        }
         TranmissionACK();
         //        READ_RSSI_avg();
 

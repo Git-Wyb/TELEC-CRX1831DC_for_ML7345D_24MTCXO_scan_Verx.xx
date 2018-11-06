@@ -178,6 +178,17 @@ void eeprom_sys_load(void)
     UINT8 xm[3] = {0};
     uni_rom_id xn;
 
+	xm[0] = ReadByteEEPROM(addr_eeprom_sys + 0x3FB);
+	xm[1] = ReadByteEEPROM(addr_eeprom_sys + 0x3FC);
+	xm[2] = ReadByteEEPROM(addr_eeprom_sys + 0x3FD);
+	xn.IDB[0] = 0;
+	xn.IDB[1] = xm[0];
+	xn.IDB[2] = xm[1];
+	xn.IDB[3] = xm[2];
+	if ((xn.IDL == 0) || (xn.IDL == 0xFFFFFF))ID_SCX1801_DATA=0;
+	else ID_SCX1801_DATA= xn.IDL;
+
+
     for (i = 0; i < 256; i++)
         ID_Receiver_DATA[i] = 0; //ID_Receiver_DATA[ID_DATA_PCS]=0;
     xm[0] = ReadByteEEPROM(addr_eeprom_sys + 0x3FE);
@@ -302,6 +313,23 @@ void ID_EEPROM_write(void)
     }
 }
 
+void ID_SCX1801_EEPROM_write(void)
+{
+    UINT8 xm[3] = {0};
+    uni_rom_id xn;
+
+	
+    xn.IDL = ID_Receiver_Login;
+	ID_SCX1801_DATA= ID_Receiver_Login;
+	xm[0] = xn.IDB[1];
+    xm[1] = xn.IDB[2];
+    xm[2] = xn.IDB[3];
+    UnlockFlash(UNLOCK_EEPROM_TYPE);
+    WriteByteToFLASH(addr_eeprom_sys + 0x3FB, xm[0]);
+    WriteByteToFLASH(addr_eeprom_sys + 0x3FC, xm[1]);
+    WriteByteToFLASH(addr_eeprom_sys + 0x3FD, xm[2]);
+    LockFlash(UNLOCK_EEPROM_TYPE);
+}
 void ID_EEPROM_write_0x00(void)
 {
     UINT8 xm[3] = {0};
@@ -380,6 +408,8 @@ void ID_learn(void)
 		if(TIME_TestNo91)
 			--TIME_TestNo91;
 		else FLAG_testNo91=0;
+		if(TIME_APP_TX_fromOUT)
+			--TIME_APP_TX_fromOUT;
         if (TIME_EMC)
             --TIME_EMC;
         if (TIME_auto_out)
@@ -398,11 +428,6 @@ void ID_learn(void)
             --time_Login_exit_256;
         if (TIME_Fine_Calibration)
             --TIME_Fine_Calibration;
-        //     if(rssi_TIME)--rssi_TIME;
-        //     if(TIMER60s)--TIMER60s;
-        //     if(TIMER_err_1s)--TIMER_err_1s;
-        //     if(TIMER_Sensor_open_1s)--TIMER_Sensor_open_1s;
-        //     if(TIMER_Sensor_close_1s)--TIMER_Sensor_close_1s;
         if (TIME_Receiver_Login_restrict)
             --TIME_Receiver_Login_restrict;
         else if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1))
@@ -427,6 +452,7 @@ void ID_learn(void)
                 TIME_Login_EXIT_Button = 500;
             } //6000
             else if (((FLAG_ID_Erase_Login == 1) && (COUNT_Receiver_Login >= 1)) ||
+				((FLAG_ID_SCX1801_Login == 1) && (COUNT_Receiver_Login >= 1)) ||
                 ((FLAG_ID_Login == 1) && (COUNT_Receiver_Login >= 3)))
             {
                 if (TIME_Login_EXIT_Button == 0)
@@ -440,6 +466,18 @@ void ID_learn(void)
                 if (COUNT_Receiver_Login < 10)
                     COUNT_Receiver_Login++;
             }
+	        if (TIME_Receiver_Login >= 250)
+	        {
+	            TIME_Receiver_Login = 0;
+	            FLAG_ID_Erase_Login = 1;
+	            FLAG_ID_Erase_Login_PCS = 1; //追加多次ID登录
+	            BEEP_Module(1800,900);
+				BEEP_Module(300,900);
+				BEEP_Module(300,1);
+				COUNT_Receiver_Login++; //为什么要加这个？？因为加入了BEEP_Module后，beep时间较长，这时采不到按键的时间TIME_Receiver_Login
+	            TIME_Login_EXIT_rest = 5380;
+	            TIME_Login_EXIT_Button = 500;
+	        }			
             if (FLAG_ID_Login_EXIT == 1)
             {
                 FLAG_ID_Login_EXIT = 0;
@@ -447,19 +485,32 @@ void ID_learn(void)
             }
             TIME_Receiver_Login = 0;
         }
-        if (TIME_Receiver_Login >= 250)
+        if(TIME_Receiver_Login >= 590)
         {
-            TIME_Receiver_Login = 0;
-            FLAG_ID_Erase_Login = 1;
-            FLAG_ID_Erase_Login_PCS = 1; //追加多次ID登录
-            BEEP_Module(1800,900);
-			BEEP_Module(300,900);
-			BEEP_Module(300,1);
-			COUNT_Receiver_Login++; //为什么要加这个？？因为加入了BEEP_Module后，beep时间较长，这时采不到按键的时间TIME_Receiver_Login
-            TIME_Login_EXIT_rest = 5380;
-            TIME_Login_EXIT_Button = 500;
+        	FLAG_ID_SCX1801_Login=1;
+	            TIME_Receiver_Login = 0;
+                BEEP_CSR2_BEEPEN = 1;
+				FG_ID_SCX1801_Login_BEEP=0;
+				TIME_ID_SCX1801_Login=130;
+	            TIME_Login_EXIT_rest = 5380;
+	            //TIME_Login_EXIT_Button = 500;			
         }
-        if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1))
+		if((FLAG_ID_SCX1801_Login==1)&&(TIME_ID_SCX1801_Login==0))
+		{
+			if(FG_ID_SCX1801_Login_BEEP==0)
+			{
+			    FG_ID_SCX1801_Login_BEEP=1;
+				TIME_ID_SCX1801_Login=390;
+				BEEP_CSR2_BEEPEN = 0;		
+			}
+			else if(FG_ID_SCX1801_Login_BEEP==1)
+			{
+			    FG_ID_SCX1801_Login_BEEP=0;
+				TIME_ID_SCX1801_Login=130;
+				BEEP_CSR2_BEEPEN = 1;		
+			}
+		}
+        if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login==1))
         {
             TIME_Receiver_Login_led++;
             if (TIME_Receiver_Login_led >= 46)
@@ -474,26 +525,35 @@ void ID_learn(void)
             {
                 if ((ID_Receiver_Login == 0xFFFFFE)&&(FLAG_ID_Erase_Login==1))FLAG_ID_Login_OK_bank=1;             //追加多次ID登录
                 FLAG_ID_Login_OK = 0; //追加多次ID登录
-                if (FLAG_IDCheck_OK == 1)
-                    FLAG_IDCheck_OK = 0;
-                else
+                if(FLAG_ID_SCX1801_Login==1)
                 {
-                    BEEP_and_LED();
-                    TIME_Login_EXIT_rest = 5380; //追加多次ID登录
-                    if ((FLAG_ID_Login == 1) && (ID_Receiver_Login != 0xFFFFFE))
-                        ID_EEPROM_write();
-                    else if (FLAG_ID_Erase_Login == 1)
-                    {
-                        if (FLAG_ID_Erase_Login_PCS == 1)
-                        {
-                            FLAG_ID_Erase_Login_PCS = 0;
-                            ID_DATA_PCS = 0;
-                            ALL_ID_EEPROM_Erase();
-                        } //追加多次ID登录
-                        if (ID_Receiver_Login != 0xFFFFFE)
-                            ID_EEPROM_write();
-                    }
-                } //end else
+                	BEEP_and_LED();
+					ID_SCX1801_EEPROM_write();
+					ID_Login_EXIT_Initial();
+                }
+				else 
+				{
+		                if (FLAG_IDCheck_OK == 1)
+		                    FLAG_IDCheck_OK = 0;
+		                else
+		                {
+		                    BEEP_and_LED();
+		                    TIME_Login_EXIT_rest = 5380; //追加多次ID登录
+		                    if ((FLAG_ID_Login == 1) && (ID_Receiver_Login != 0xFFFFFE))
+		                        ID_EEPROM_write();
+		                    else if (FLAG_ID_Erase_Login == 1)
+		                    {
+		                        if (FLAG_ID_Erase_Login_PCS == 1)
+		                        {
+		                            FLAG_ID_Erase_Login_PCS = 0;
+		                            ID_DATA_PCS = 0;
+		                            ALL_ID_EEPROM_Erase();
+		                        } //追加多次ID登录
+		                        if (ID_Receiver_Login != 0xFFFFFE)
+		                            ID_EEPROM_write();
+		                    }
+		                } //end else
+				}
             }     
             if (TIME_Login_EXIT_rest)
                 --TIME_Login_EXIT_rest;
@@ -517,12 +577,14 @@ void ID_Login_EXIT_Initial(void)
 		{
 		BEEP_Module(300,900);
 		BEEP_Module(1800,1);		
-		}    
+		}   
+	BEEP_CSR2_BEEPEN = 0;
     FLAG_ID_Login_EXIT = 1;
     FLAG_ID_Login_OK = 0;
     FLAG_ID_Login_OK_bank = 0;
     FLAG_ID_Login = 0;
     FLAG_ID_Erase_Login = 0;
+	FLAG_ID_SCX1801_Login=0;
     Receiver_LED_OUT = 0;
     COUNT_Receiver_Login = 0;
     //#endif

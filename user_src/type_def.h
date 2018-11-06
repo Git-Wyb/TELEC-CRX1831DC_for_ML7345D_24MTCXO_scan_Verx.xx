@@ -15,7 +15,7 @@
 /*主控芯片的头文件*/
 //
 
-/*bool 类型头文件*/
+/*bool 类型头文�?*/
 #include "stdbool.h"
 
 /*总中断头文件*/
@@ -33,7 +33,7 @@ typedef unsigned long u32_t;
 #define SUCESS 1
 #define FAILURE 0
 
-//代码标志位
+//代码标志�?
 typedef union _fullflag_ {
     unsigned char BYTE;
     struct
@@ -53,6 +53,28 @@ typedef union {
     u8 byte[4]; // Warning: Be endian-specific when accessing bytes
 
 } ADF70XX_REG_T;
+
+typedef union {
+	  u16  ui ;
+  u8   uc[2] ;
+}uni_i;
+
+
+typedef struct body    //����ṹ��  
+{  
+	union  
+	{  
+		u8 byte;  
+		struct	
+		{  
+			unsigned char type :5;  
+			unsigned char fno :3;   		 
+		} UN;  
+	}Fno_Type; 
+	
+    uni_i data[4];  //����data      
+}Wireless_Body;  //�ṹ��
+
 
 #define TRANSITION_STATUS_TRANSITION 0
 #define TRANSITION_STATUS_EXECUTING 1

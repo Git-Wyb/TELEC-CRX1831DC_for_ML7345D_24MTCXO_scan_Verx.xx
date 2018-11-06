@@ -122,13 +122,15 @@ extern u16 PAYLOAD_SIZE;
                                 (u32)PAYLOAD_SIZE)
 #define RX_PayLoadSizeNOLogin 12
 #define RX_PayLoadSizeLogin 24
+#define RX_PayLoadSize_4dot8k 28
+
 /***************************************************/
 /***************************************************/
 /**ADF7030_REST**/ extern u8 ADF7030_REST_Cache;
 /**Receiver_vent**/ extern u8 Receiver_vent_Cache;
 extern u8 RX_COUNT;
 extern u8 SPI_RECEIVE_BUFF[SPI_REV_BUFF_LONG];
-extern u32 SPI_Receive_DataForC[6];
+extern u32 SPI_Receive_DataForC[7];
 extern u32 ADF7030_RESIGER_VALUE_READ;
 extern u8 ADF7030_Read_OneByte;
 extern u16 Head_0x5515_or_0x5456;
@@ -138,6 +140,10 @@ extern UINT8 DATA_Packet_Control;
 extern UINT8 DATA_Packet_Contro_buf; //2015.3.24����
 
 extern u8 Flag_FREQ_Scan;
+extern u8 Radio_Date_Type;
+extern u8 Radio_Date_Type_bak;
+
+
 
 void DELAY_30U(void);
 
@@ -149,6 +155,8 @@ u8 RadioChangeState(u8 STATE_CMD);
 u32 ADF7030_READ_REGISTER_NOPOINTER_LONGADDR(u32 x_ADDR, u8 x_fnum);
 void WaitForADF7030_FIXED_DATA(void);
 void TX_DataLoad(u32 IDCache, u8 CtrCmd, u8 *Packet);
+void TX_DataLoad_HighSpeed(u32 IDCache, Wireless_Body CtrCmd, u8 *Packet);
+
 void TestCarrier(u8 mode);
 void ADF7030_ACC_FROM_POWEROFF(void);
 ADF7030_1_STATUS_TYPE GET_STATUE_BYTE(void);
@@ -166,4 +174,7 @@ void ADF7030_TX(u8 mode);
 u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset);
 void ADF7030_Clear_IRQ(void);
 void ADF7030_Change_Channel(void);
+
+void APP_TX_PACKET(void);
+
 #endif
