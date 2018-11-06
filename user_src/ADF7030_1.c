@@ -1071,7 +1071,7 @@ u32 ADF7030_Read_RESIGER(u32 addr, u32 Para, u8 offset)
 					PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
 					PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C; 	
 					Radio_Date_Type=1;
-					Channels=2;  
+					Channels=3; //2;  
 					ADF7030Cfg_pointer=ADF7030Cfg;
 				   break;
 			  case 2:
