@@ -31,6 +31,7 @@ extern UINT8 FLAG_testNo91;
 extern UINT8 FLAG_testBEEP;
 extern UINT8 FLAG_testNo91_step;
 extern UINT8 FLAG_testNo91SendUart;
+extern UINT8 shutter_staus[7];
 
 
 

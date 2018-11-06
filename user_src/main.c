@@ -52,52 +52,49 @@ void main(void)
     _DI();             // 关全�?中断	
     RAM_clean();       // 清除RAM
     WDT_init();        //看门�?
-    VHF_GPIO_INIT();   //IO初始�?
+    VHF_GPIO_INIT();   //IO初始�?	
     SysClock_Init();   //系统时钟初始�?
-    InitialFlashReg(); //flash EEPROM
-    eeprom_sys_load(); //ID载入
     TIM4_Init();       // 定时�?
-    beep_init();       // 蜂鸣�?
     ClearWDT();        // Service the WDT
-	
-    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-    PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;  
-    PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
-    //PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;  
-    ADF7030Init();     //射频初始�?
-    
+	    
     UART1_INIT();      // UART1 for PC Software
     _EI();             // 允许中断
-    TIME_power_led=500;
-    ClearWDT();        // Service the WDT
-    RF_test_mode();
-    FLAG_APP_RX = 1;
-    FG_Receiver_LED_RX = 0;
-    TIME_EMC = 10;
-    FLAG_testNo91=0;
-	FLAG_testBEEP=0;
+
+    output_led_power=1;
     while (1)
     {
         ClearWDT(); // Service the WDT
-        if(FLAG_testBEEP!=0)TEST_beep();
+        if(input_open==1)Time_input_open=0;
+		if(input_stop==1)Time_input_stop=0;
+		if(input_close==1)Time_input_close=0;
+		if((input_open==1)&&(input_stop==1)&&(input_close==1)){Flag_uart_send=0;output_led_ok=0;}
+		if(((Time_input_open>=50)||(Time_input_stop>=50)||(Time_input_close>=50))&&(Flag_uart_send==0))
+		{
+		   Flag_uart_send=1;
+		   Send_Data(shutter_staus, 7);
+		}
+		
+		if (FG_10ms)
+		{ 
+			FG_10ms = 0;
 
-        if (time_Login_exit_256 == 0)
-            ID_Decode_OUT();
-        ID_learn();
-		if(ID_SCX1801_DATA!=0)APP_TX_PACKET();
-        if(FLAG_APP_RX==1)
-        {
-    		  Freq_Scanning();
-    		  //if(Scan_step==2)
-			  	SCAN_RECEIVE_PACKET(); //ɨ���������?
-        }
-        TranmissionACK();
-        //        READ_RSSI_avg();
-
-        if (FG_Receiver_LED_RX == 1)
-            Receiver_LED_RX = 1;
-        else if (FG_Receiver_LED_RX == 0)
-            Receiver_LED_RX = 0;
+			if(input_open==0)
+			{
+				Time_input_open++;
+				if(Time_input_open>200)Time_input_open=200;
+			}
+			if(input_stop==0)
+			{
+				Time_input_stop++;
+				if(Time_input_stop>200)Time_input_stop=200;
+			}	
+			if(input_close==0)
+			{
+				Time_input_close++;
+				if(Time_input_close>200)Time_input_close=200;
+			}			
+		}
+		
     }
 }
 

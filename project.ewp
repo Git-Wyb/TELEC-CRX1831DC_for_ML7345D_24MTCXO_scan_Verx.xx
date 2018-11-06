@@ -608,7 +608,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\config\lnkstm8l151g4.icf</state>
+          <state>$TOOLKIT_DIR$\config\lnkstm8l151g6.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1683,9 +1683,6 @@
     <name>user</name>
     <file>
       <name>$PROJ_DIR$\user_src\ADF7030_1.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\user_src\eeprom.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\user_src\ID_Decode.c</name>
