@@ -186,6 +186,10 @@ void LED_GPIO_Init(void)
     Receiver_LED_OUT_CR1 = 1;
     Receiver_LED_OUT = 0;
 
+    Receiver_LED_OUT1_direc = Output; // Output   
+    Receiver_LED_OUT1_CR1 = 1;
+    Receiver_LED_OUT1 = 0;	
+
     Receiver_LED_TX_direc = Output; // Output   受信机�?�信指示  高电平有�?
     Receiver_LED_TX_CR1 = 1;
     Receiver_LED_TX = 0;

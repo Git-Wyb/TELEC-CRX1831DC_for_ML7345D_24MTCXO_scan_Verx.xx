@@ -640,7 +640,10 @@ void ID_Decode_OUT(void)
 		if(FLAG_testNo91_step==2)FLAG_testNo91SendUart=0;
     }
     if (TIMER300ms == 0)
+    	{
         FG_Receiver_LED_RX = 0; //Receiver_LED_RX=0;
+        Receiver_LED_OUT1=0;
+    	}
 }
 
 void Freq_Scanning(void)
@@ -662,7 +665,7 @@ void Freq_Scanning(void)
 					if(Radio_Date_Type==1)
 					  {TIMER18ms = 82;TIMER300ms = 600; }
 					else if(Radio_Date_Type==2)
-					  {TIMER18ms = 130; TIMER300ms = 100;  }
+					  {TIMER18ms = 130;TIMER300ms = 100;  }
 	
 					return;
 				}
