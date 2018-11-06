@@ -648,7 +648,7 @@ void SCAN_RECEIVE_PACKET(void)
         if (RSSI_Read_Counter == 0)
         {
 			if(Radio_Date_Type==1)
-			  TIMER18ms = PAYLOAD_SIZE * 7;
+			  TIMER18ms = PAYLOAD_SIZE *7;
 			else if(Radio_Date_Type==2)
 			  TIMER18ms = 50; 
         }
@@ -1182,9 +1182,9 @@ void Select_TX_frequency(void)
 	 if((TP3==0)&&(FLAG_Key_TP3==0))FLAG_Key_TP3=1;
 	  
 	  if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed)||(PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH2_FREQ_32bit_429HighSpeed))&&
-	  //if((Flag_FREQ_Scan==0)&&((PROFILE_CH_FREQ_32bit_200002EC == PROFILE_CH1_FREQ_32bit_429HighSpeed))&&
 	  	  (((FLAG_APP_TX_fromOUT==1)&&(TIME_APP_TX_fromOUT==0))||(FLAG_Key_TP3==1)||
-	  	   ((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1)))&&(Uart_Struct_DATA_Packet_Contro.data[0].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[0].ui))
+	  	   //((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1)))&&(Uart_Struct_DATA_Packet_Contro.data[0].ui!=Last_Uart_Struct_DATA_Packet_Contro.data[0].ui))
+	  	   ((FLAG_APP_TX_fromUART==1)&&(((TIME_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2))||((TIMER300ms==0)&&(Radio_Date_Type_bak==1))))
 		  )
 	  	)
 	  {
@@ -1208,7 +1208,7 @@ void Select_TX_frequency(void)
 	  }
 	  if(FLAG_APP_TX==1)
 	  {
-	       if(TX_Scan_step==1)Select_TX_frequency();
+	       if(TX_Scan_step==1)TX_Scan_step=2;//Select_TX_frequency();
 		   if(TX_Scan_step==2)
 		   {
 				if(APP_TX_freq==0)

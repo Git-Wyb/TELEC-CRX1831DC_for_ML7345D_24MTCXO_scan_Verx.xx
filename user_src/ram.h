@@ -6,8 +6,8 @@
 #include "initial.h" // 閿熸枻鎷峰閿熸枻鎷? 棰勯敓鏂ゆ嫹閿熸枻鎷?
 
 
-#define DEF_APP_TX_freq 3
-#define DEF_test_MAX_32pcs
+#define DEF_APP_TX_freq 3  //窗式无线模块确定发送3次
+
 
 
 extern uFLAG FLAG_test1;

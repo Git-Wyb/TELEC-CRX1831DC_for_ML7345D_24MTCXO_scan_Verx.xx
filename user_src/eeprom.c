@@ -24,20 +24,20 @@
 #define ADD_EEPROM_S8 0x1000
 
 ///* FLASH_CR2 */
-//#define OPT               7   /* 对选项字节进行写操�?*/
+//#define OPT               7   /* 对�?�项字节进行写操�?*/
 //#define WPRG              6   /* 字编�?*/
 //#define ERASE             5   /* 块擦�?*/
-//#define FPRG              4   /* 快速块编程 */
+//#define FPRG              4   /* 快�?�块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
 //#define PRG               0   /* 标准块编�?*/
 //
 ///* FLASH_NCR2 */
-//#define NOPT              7   /* 对选项字节进行写操�?*/
+//#define NOPT              7   /* 对�?�项字节进行写操�?*/
 //#define NWPRG             6   /* 字编�?*/
 //#define NERASE            5   /* 块擦�?*/
-//#define NFPRG             4   /* 快速块编程 */
+//#define NFPRG             4   /* 快�?�块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
@@ -90,7 +90,7 @@
 //#define NC              4
 #define DUL 3       /* DATA EEPROM区域解锁标志 */
 #define EOP 2       /* 编程结束(写或擦除操作)标志 */
-#define PUL 1       /* 快速程序存储器结束标志 */
+#define PUL 1       /* 快�?�程序存储器结束标志 */
 #define WR_PG_DIS 0 /* 试图向被保护页进行写操作的标�?*/
 
 #define FLASH_CR1_RESET_VALUE ((uchar)0x00)
@@ -149,7 +149,7 @@ uchar ReadByteEEPROM(ulong Addr)
 }
 //------------------------------------------------
 void WriteByteToFLASH(ulong Addr, uchar Dat)
-{ // 写入一字节到eeprom
+{ // 写入�?字节到eeprom
     *((__far uchar *)Addr) = Dat;
 }
 //------------------------------------------------
@@ -313,14 +313,14 @@ void ID_EEPROM_write(void)
     }
 }
 
-void ID_SCX1801_EEPROM_write(void)
+void ID_SCX1801_EEPROM_write(u32 id)
 {
     UINT8 xm[3] = {0};
     uni_rom_id xn;
 
 	
-    xn.IDL = ID_Receiver_Login;
-	ID_SCX1801_DATA= ID_Receiver_Login;
+    xn.IDL = id;//ID_Receiver_Login;
+	ID_SCX1801_DATA= id;//ID_Receiver_Login;
 	xm[0] = xn.IDB[1];
     xm[1] = xn.IDB[2];
     xm[2] = xn.IDB[3];
@@ -528,7 +528,7 @@ void ID_learn(void)
                 if(FLAG_ID_SCX1801_Login==1)
                 {
                 	BEEP_and_LED();
-					ID_SCX1801_EEPROM_write();
+					ID_SCX1801_EEPROM_write(ID_Receiver_Login);
 					ID_Login_EXIT_Initial();
                 }
 				else 
@@ -548,6 +548,7 @@ void ID_learn(void)
 		                            FLAG_ID_Erase_Login_PCS = 0;
 		                            ID_DATA_PCS = 0;
 		                            ALL_ID_EEPROM_Erase();
+									ID_SCX1801_EEPROM_write(0x00);
 		                        } //追加多次ID登录
 		                        if (ID_Receiver_Login != 0xFFFFFE)
 		                            ID_EEPROM_write();

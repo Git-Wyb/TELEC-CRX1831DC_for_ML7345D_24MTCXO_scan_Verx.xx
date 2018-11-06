@@ -255,7 +255,6 @@ void eeprom_IDcheck(void)
             FLAG_IDCheck_OK = 1;
             DATA_Packet_Control = DATA_Packet_Contro_buf;		
 		}
-#ifndef DEF_test_MAX_32pcs
 	if(Radio_Date_Type_bak==1)
 	{
 		    for (i = 0; i < ID_DATA_PCS; i++)
@@ -267,13 +266,13 @@ void eeprom_IDcheck(void)
 		            FLAG_IDCheck_OK = 1;
 		            if(Radio_Date_Type_bak==1)DATA_Packet_Control = DATA_Packet_Contro_buf;
 					else if(Radio_Date_Type_bak==2)Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
-		        } //2015.3.24淇 Control缂撳瓨璧?ID鍒ゆ柇鏄惁瀛︿範杩囧悗鎵嶈兘浣跨敤
+		        } //2015.3.24ä¿®æ­£ Controlç¼“å­˜èµ?IDåˆ¤æ–­æ˜¯å¦å­¦ä¹ è¿‡åŽæ‰èƒ½ä½¿ç”¨
 		        if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
 		        {
 		            i = ID_DATA_PCS;
 		            FLAG_IDCheck_OK = 0;
 		            DATA_Packet_Control = DATA_Packet_Contro_buf;
-		        } //杩藉姞澶氭ID鐧诲綍
+		        } //è¿½åŠ å¤šæ¬¡IDç™»å½•
 		    }
 	}
 	else if((Radio_Date_Type_bak==2)&&(DATA_Packet_ID==ID_SCX1801_DATA))
@@ -281,26 +280,7 @@ void eeprom_IDcheck(void)
 		FLAG_IDCheck_OK = 1;
 		Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
 	}
-#else
-		for (i = 0; i < ID_DATA_PCS; i++)
-		{
-			if (ID_Receiver_DATA[i] == DATA_Packet_ID)
-			{
-				INquiry = i;
-				i = ID_DATA_PCS;
-				FLAG_IDCheck_OK = 1;
-				if(Radio_Date_Type_bak==1){DATA_Packet_Control = DATA_Packet_Contro_buf;ID_SCX1801_DATA=DATA_Packet_ID;}
-				else if(Radio_Date_Type_bak==2){Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;ID_SCX1801_DATA=DATA_Packet_ID;}
-			} //2015.3.24淇 Control缂撳瓨璧?ID鍒ゆ柇鏄惁瀛︿範杩囧悗鎵嶈兘浣跨敤
-			if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
-			{
-				i = ID_DATA_PCS;
-				FLAG_IDCheck_OK = 0;
-				DATA_Packet_Control = DATA_Packet_Contro_buf;
-			} //杩藉姞澶氭ID鐧诲綍
-		}
 
-#endif	
 }
 /*
    time_beepON銆乼ime_beepOFF鍗曚綅鏃堕棿涓?0.4333333ms
@@ -676,11 +656,13 @@ void Freq_Scanning(void)
 			{
 				if (ADF7030_Read_RESIGER(0x4000380C, 1, 0) != 0)
 				{
+		             FG_Receiver_LED_RX = 1;
+					 
 					Flag_FREQ_Scan = 1;
 					if(Radio_Date_Type==1)
-					  TIMER18ms = 82;
+					  {TIMER18ms = 82;TIMER300ms = 600; }
 					else if(Radio_Date_Type==2)
-					  TIMER18ms = 130;  //30
+					  {TIMER18ms = 130; TIMER300ms = 100;  }
 	
 					return;
 				}
