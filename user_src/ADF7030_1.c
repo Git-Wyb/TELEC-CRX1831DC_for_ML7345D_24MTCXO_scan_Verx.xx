@@ -520,8 +520,11 @@ void ADF7030_TRANSMITTING_FROM_POWEROFF(void)
 void ADF7030_RECEIVING_FROM_POWEROFF(void)
 {
     CG2214M6_USE_R;
+	TIME_ADF7030_GET_STATUE_BYTE=1000;
     while (GET_STATUE_BYTE().CMD_READY == 0)
-        ;
+    	{
+          if(TIME_ADF7030_GET_STATUE_BYTE==0)break;
+    	}
     ADF7030_CHANGE_STATE(STATE_PHY_ON);
     WaitForADF7030_FIXED_DATA(); //等待芯片空闲/可接受CMD状态
     DELAY_30U();
@@ -537,10 +540,16 @@ void ADF7030_RECEIVING_FROM_POWEROFF(void)
     while (ADF7030_GPIO3 == 1) //清中断 GPIO3被置高 等待回位
         ;
     ADF7030_CHANGE_STATE(STATE_PHY_RX);
+	TIME_ADF7030_GET_STATUE_BYTE=1000;
     while (GET_STATUE_BYTE().FW_STATUS == 0)
-        ;
+    	{
+          if(TIME_ADF7030_GET_STATUE_BYTE==0)break;
+    	}
+	TIME_ADF7030_GET_STATUE_BYTE=1000;
     while (GET_STATUE_BYTE().FW_STATUS != 1)
-        ;
+    	{
+          if(TIME_ADF7030_GET_STATUE_BYTE==0)break;
+    	}
     DELAY_30U();
 }
 

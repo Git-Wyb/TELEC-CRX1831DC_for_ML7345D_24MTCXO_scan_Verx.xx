@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5\settings\project.Debug.general.xcl" --backend -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5\settings\project.Debug.driver.xcl" 
+"D:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5.1 - test\settings\project.Debug.general.xcl" --backend -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5.1 - test\settings\project.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5\settings\project.Debug.general.xcl" "--debug_file=%~1" --backend -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5\settings\project.Debug.driver.xcl" 
+"D:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\common\bin\cspybat" -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5.1 - test\settings\project.Debug.general.xcl" "--debug_file=%~1" --backend -f "F:\Source Code\bunka-s\Bunka STM8L151G6 RX_ADF7030 Source CRX1831DC\Windowshade7030 Ver3.5.1 - test\settings\project.Debug.driver.xcl" 
 
 @echo off 
 :end

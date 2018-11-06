@@ -230,7 +230,7 @@ void ADF7030_GPIO_INIT(void)
     ADF7030_GPIO3_DDR = Input; //输入
     ADF7030_GPIO3_CR1 = 1;     //1: Input with pull-up 0: Floating input
     ADF7030_GPIO3_CR2 = 0;     //禁止中断
-    while (Receiver_test == 0)
+    if(Receiver_test == 0)
         BerExtiInit();
 }
 /**
@@ -376,11 +376,12 @@ void RF_test_mode(void)
 						   // Send_char(0x05);
 		 }
 		 Receiver_LED_OUT = !Receiver_LED_OUT;
-	 }
+	 } 
     Receiver_LED_OUT = 0; */
 
     while (Receiver_test == 0)
     {
+        Receiver_LED_OUT = 0;
         ClearWDT();   // Service the WDT
         if (TP4 == 0) //test ADF7030 TX
         {

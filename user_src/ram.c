@@ -55,7 +55,7 @@ u8 Display_key_SW3 = 0xff;
 
 u16 TIME_TestNo91=0;
 u16 TIME_power_led=0;
-
+u16 TIME_ADF7030_GET_STATUE_BYTE=0; 
 
 /*******LCD**************/
 uFLAG FlagLCDUpdate = {0xff};

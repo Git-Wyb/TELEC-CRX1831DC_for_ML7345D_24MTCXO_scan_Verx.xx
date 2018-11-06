@@ -101,6 +101,8 @@ extern u8 Display_key_SW3;
 
 extern u16 TIME_TestNo91;
 extern u16 TIME_power_led;
+extern u16 TIME_ADF7030_GET_STATUE_BYTE; 
+
 
 
 extern ADF70XX_REG_T ROM_adf7030_value[16];
