@@ -430,7 +430,7 @@ void ID_learn(void)
             --TIME_Fine_Calibration;
         if (TIME_Receiver_Login_restrict)
             --TIME_Receiver_Login_restrict;
-        else if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1))
+        else if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login == 1))
             ;
         else
         {
@@ -440,7 +440,7 @@ void ID_learn(void)
 
         if (Receiver_Login == 0)
         {
-            TIME_Receiver_Login++;
+            if(FLAG_ID_SCX1801_Login!=1)TIME_Receiver_Login++;
             TIME_Receiver_Login_restrict = 350;
             if ((COUNT_Receiver_Login >= 2) && (FLAG_ID_Erase_Login == 0) && (FLAG_ID_Login == 0) && (ID_DATA_PCS < 256))
             {
@@ -452,7 +452,7 @@ void ID_learn(void)
                 TIME_Login_EXIT_Button = 500;
             } //6000
             else if (((FLAG_ID_Erase_Login == 1) && (COUNT_Receiver_Login >= 1)) ||
-				((FLAG_ID_SCX1801_Login == 1) && (COUNT_Receiver_Login >= 1)) ||
+				(FLAG_ID_SCX1801_Login == 1)||
                 ((FLAG_ID_Login == 1) && (COUNT_Receiver_Login >= 3)))
             {
                 if (TIME_Login_EXIT_Button == 0)
@@ -482,10 +482,10 @@ void ID_learn(void)
 				FG_ID_SCX1801_Login_BEEP=0;
 				TIME_ID_SCX1801_Login=130;
 	            TIME_Login_EXIT_rest = 5380;
-				COUNT_Receiver_Login++; //为什么要加这个？？因为加入了BEEP_Module后，beep时间较长，这时采不到按键的时间TIME_Receiver_Login
+				COUNT_Receiver_Login=0;
 	            TIME_Login_EXIT_Button = 500;			
         }		
-	    if ((TIME_Receiver_Login >= 250)&&(FLAG_ID_Erase_Login==0)&&(FLAG_ID_SCX1801_Login==0))
+	    else if ((TIME_Receiver_Login >= 250)&&(FLAG_ID_Erase_Login==0)&&(FLAG_ID_SCX1801_Login==0))
 	      {
 	            //TIME_Receiver_Login = 0;
 	            FLAG_ID_Erase_Login = 1;
