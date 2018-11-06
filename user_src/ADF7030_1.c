@@ -647,7 +647,10 @@ void SCAN_RECEIVE_PACKET(void)
     {
         if (RSSI_Read_Counter == 0)
         {
-            TIMER18ms = PAYLOAD_SIZE * 7;
+			if(Radio_Date_Type==1)
+			  TIMER18ms = PAYLOAD_SIZE * 7;
+			else if(Radio_Date_Type==2)
+			  TIMER18ms = 50; 
         }
         if ((Flag_RSSI_Read_Timer == 0) && (RSSI_Read_Counter < 5))
         {
@@ -1216,21 +1219,15 @@ void Select_TX_frequency(void)
 					Time_APP_blank_TX=2;
 					APP_TX_freq=1; //1
 				}
-				else if((APP_TX_freq==1)&&(ADF7030_GPIO3 == 0)&&(Time_APP_blank_TX==0))
+				else if((APP_TX_freq < DEF_APP_TX_freq)&&(ADF7030_GPIO3 == 0)&&(Time_APP_blank_TX==0))
 				{
 					 ADF7030_TRANSMITTING_FROM_POWEROFF();
-					 Time_APP_blank_TX=2;
-					Delayus(50);
-					ClearWDT(); 		
-					APP_TX_freq=2;
+					 Time_APP_blank_TX=2;		
+					APP_TX_freq++;
 				}
-				else if((APP_TX_freq==2)&&(ADF7030_GPIO3 == 0)&&(Time_APP_blank_TX==0))
-				{
-					ADF7030_TRANSMITTING_FROM_POWEROFF();
-					Time_APP_blank_TX=2;
-					Delayus(50);
-					ClearWDT(); 	   
-					APP_TX_freq=3;
+				else if((APP_TX_freq==DEF_APP_TX_freq)&&(ADF7030_GPIO3 == 0)&&(Time_APP_blank_TX==0))
+				{	   
+					APP_TX_freq++;
 				   FLAG_APP_RXstart=1;
 				   FLAG_APP_TX=0;
 				   Time_APP_RXstart=1;	

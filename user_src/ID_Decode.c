@@ -563,8 +563,8 @@ void ID_Decode_OUT(void)
                ||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)||((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)))&&(FLAG_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2)&&(FLAG_APP_TX==0)&&(FLAG_APP_TX_once==1))
          {
              FLAG_APP_TX_fromOUT=1;		
-			 if(DATA_Packet_Control==0x00)TIME_APP_TX_fromOUT=35;  //300ms
-			 else TIME_APP_TX_fromOUT=35;  //200ms 500ms		 
+			 if(DATA_Packet_Control==0x00)TIME_APP_TX_fromOUT=35;//15+DEF_APP_TX_freq*8;  //350ms
+			 else TIME_APP_TX_fromOUT=35;//15+DEF_APP_TX_freq*8;  //350ms		 
          }
 
 		

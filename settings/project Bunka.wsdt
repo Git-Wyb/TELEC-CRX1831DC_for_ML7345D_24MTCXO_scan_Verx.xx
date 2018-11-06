@@ -75,14 +75,14 @@
       
       
       
-    <Pane/><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\user_src\main.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd><XPos2>0</XPos2><YPos2>37</YPos2><SelStart2>2120</SelStart2><SelEnd2>2120</SelEnd2></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-00279270><key>iaridepm.enu1</key></Toolbar-00279270></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>378</Bottom><Right>375</Right><x>-2</x><y>-2</y><xscreen>38</xscreen><yscreen>27</yscreen><sizeHorzCX>28190</sizeHorzCX><sizeHorzCY>39764</sizeHorzCY><sizeVertCX>279674</sizeVertCX><sizeVertCY>559647</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>256</Bottom><Right>1350</Right><x>-2</x><y>-2</y><xscreen>1352</xscreen><yscreen>258</yscreen><sizeHorzCX>1002967</sizeHorzCX><sizeHorzCY>379971</sizeHorzCY><sizeVertCX>28190</sizeVertCX><sizeVertCY>39764</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-012C9270><key>iaridepm.enu1</key></Toolbar-012C9270></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>378</Bottom><Right>375</Right><x>-2</x><y>-2</y><xscreen>38</xscreen><yscreen>27</yscreen><sizeHorzCX>28190</sizeHorzCX><sizeHorzCY>39764</sizeHorzCY><sizeVertCX>279674</sizeVertCX><sizeVertCY>559647</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>256</Bottom><Right>1350</Right><x>-2</x><y>-2</y><xscreen>1352</xscreen><yscreen>258</yscreen><sizeHorzCX>1002967</sizeHorzCX><sizeHorzCY>379971</sizeHorzCY><sizeVertCX>28190</sizeVertCX><sizeVertCY>39764</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 
