@@ -113,7 +113,7 @@ void ID_Decode_IDCheck(void)
 		                        { //2015.4.2淇  閫佷俊鍣ㄦ梺杈圭殑鐧诲綍閿?杩藉姞鐧诲綍涓嶈
 		                            if (FLAG_IDCheck_OK == 1)
 		                                FLAG_IDCheck_OK = 0;
-		                            else if (ID_DATA_PCS < 256)
+		                            else if (ID_DATA_PCS < 255)
 		                            {
 		                                BEEP_and_LED();
 		                                ID_Receiver_Login = DATA_Packet_ID;
@@ -127,9 +127,19 @@ void ID_Decode_IDCheck(void)
 		                                FLAG_IDCheck_OK = 0;
 		                                BEEP_and_LED();
 										if(ID_SCX1801_DATA==DATA_Packet_ID)
-											ID_SCX1801_EEPROM_write(0x00);
-		                                ID_EEPROM_write_0x00();
-		                            }
+                                        {
+                                            ID_SCX1801_DATA = 0;
+                                            ID_SCX1801_EEPROM_write(0x00);
+                                            if (ID_Receiver_DATA[0] != 0)
+                                            {
+                                                ID_SCX1801_DATA = ID_Receiver_DATA[0];
+                                                ID_SCX1801_EEPROM_write(ID_SCX1801_DATA);
+                                                Delete_GeneralID_EEPROM(ID_SCX1801_DATA);
+                                            }
+                                        }
+                                        else
+                                            Delete_GeneralID_EEPROM(DATA_Packet_ID);
+                                    }
 		                        }
 		                    }
 		                }
@@ -261,7 +271,8 @@ void eeprom_IDcheck(void)
 #ifndef DEF_test_MAX_32pcs
 		if(Radio_Date_Type_bak==1)
 		{
-				for (i = 0; i < ID_DATA_PCS; i++)
+				i = 0; 
+                do
 				{
 					if (ID_Receiver_DATA[i] == DATA_Packet_ID)
 					{
@@ -271,14 +282,21 @@ void eeprom_IDcheck(void)
 						if(Radio_Date_Type_bak==1)DATA_Packet_Control = DATA_Packet_Contro_buf;
 						else if(Radio_Date_Type_bak==2)Struct_DATA_Packet_Contro=Struct_DATA_Packet_Contro_buf;
 					} //2015.3.24ä¿®æ­£ Controlç¼“å­˜èµ?IDåˆ¤æ–­æ˜¯å¦å­¦ä¹ è¿‡åŽæ‰èƒ½ä½¿ç”¨
-					if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
+                    else if (DATA_Packet_ID == ID_SCX1801_DATA)
+                    {
+                        i = ID_DATA_PCS;
+                        FLAG_IDCheck_OK = 1;
+                        DATA_Packet_Control = DATA_Packet_Contro_buf;
+                    }
+                    if ((FLAG_ID_Erase_Login == 1) && (FLAG_ID_Erase_Login_PCS == 1))
 					{
 						i = ID_DATA_PCS;
 						FLAG_IDCheck_OK = 0;
 						DATA_Packet_Control = DATA_Packet_Contro_buf;
 					} //è¿½åŠ å¤šæ¬¡IDç™»å½•
-				}
-		}
+                    i++;
+                } while (i < ID_DATA_PCS);
+        }
 		else if((Radio_Date_Type_bak==2)&&(DATA_Packet_ID==ID_SCX1801_DATA))
 		{
 			FLAG_IDCheck_OK = 1;

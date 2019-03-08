@@ -10,7 +10,7 @@
 #include <iostm8l151g4.h> // CPU型号
 //#include "stm8l15x.h"
 #include "Pin_define.h" // 管脚定义
-#include "initial.h"    // 初始�? 预定�?
+#include "initial.h"    // 初�?��?? 预定�?
 #include "ram.h"        // RAM定义
 #include "eeprom.h"     // eeprom
 #include "ID_Decode.h"
@@ -24,20 +24,20 @@
 #define ADD_EEPROM_S8 0x1000
 
 ///* FLASH_CR2 */
-//#define OPT               7   /* 对�?�项字节进行写操�?*/
+//#define OPT               7   /* 对�?�项字节进�?�写操�??*/
 //#define WPRG              6   /* 字编�?*/
 //#define ERASE             5   /* 块擦�?*/
-//#define FPRG              4   /* 快�?�块编程 */
+//#define FPRG              4   /* �???�块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
 //#define PRG               0   /* 标准块编�?*/
 //
 ///* FLASH_NCR2 */
-//#define NOPT              7   /* 对�?�项字节进行写操�?*/
+//#define NOPT              7   /* 对�?�项字节进�?�写操�??*/
 //#define NWPRG             6   /* 字编�?*/
 //#define NERASE            5   /* 块擦�?*/
-//#define NFPRG             4   /* 快�?�块编程 */
+//#define NFPRG             4   /* �???�块编程 */
 ////#define NC              3
 ////#define NC              2
 ////#define NC              1
@@ -46,7 +46,7 @@
 ///* FLASH_FPR */
 ////#define NC              7
 ////#define NC              6
-//#define WPB5              5   /* 用户启动代码保护�?*/
+//#define WPB5              5   /* 用户�?动代码保护�??*/
 //#define WPB4              4
 //#define WPB3              3
 //#define WPB2              2
@@ -56,7 +56,7 @@
 ///* FLASH_NFPR */
 ////#define NC              7
 ////#define NC              6
-//#define NWPB5             5   /* 用户启动代码保护�?*/
+//#define NWPB5             5   /* 用户�?动代码保护�??*/
 //#define NWPB4             4
 //#define NWPB3             3
 //#define NWPB2             2
@@ -90,8 +90,8 @@
 //#define NC              4
 #define DUL 3       /* DATA EEPROM区域解锁标志 */
 #define EOP 2       /* 编程结束(写或擦除操作)标志 */
-#define PUL 1       /* 快�?�程序存储器结束标志 */
-#define WR_PG_DIS 0 /* 试图向被保护页进行写操作的标�?*/
+#define PUL 1       /* �???�程序存储器结束标志 */
+#define WR_PG_DIS 0 /* 试图向�??保护页进行写操作的标�?*/
 
 #define FLASH_CR1_RESET_VALUE ((uchar)0x00)
 #define FLASH_CR2_RESET_VALUE ((uchar)0x00)
@@ -108,15 +108,15 @@
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 void InitialFlashReg(void)
-{ // 初始化闪存寄存器�?
+{ // 初�?�化�?存寄存器�?
     FLASH_CR1 = FLASH_CR1_RESET_VALUE;
     FLASH_CR2 = FLASH_CR2_RESET_VALUE;
     //FLASH_NCR2 = FLASH_NCR2_RESET_VALUE;
-    FLASH_IAPSR &= (uchar)(~(1 << DUL)); // 清除只读DATA区解�?
+    FLASH_IAPSR &= (uchar)(~(1 << DUL)); // 清除�?读DATA区解�?
     FLASH_IAPSR &= (uchar)(~(1 << PUL)); // 清除程序区解�?
 }
 //------------------------------------------------
-//  �? 2个密钥的操作序列正好相反
+//  �? 2�?密钥的操作序列�?�好相反
 void UnlockFlash(unsigned char Type)
 { // 解锁flash
     if (Type == UNLOCK_FLASH_TYPE)
@@ -144,7 +144,7 @@ void LockFlash(unsigned char Type)
 }
 //------------------------------------------------
 uchar ReadByteEEPROM(ulong Addr)
-{                                    // 从eeprom中读�?字节
+{                                    // 从eeprom�?读�??字节
     return (*((__far uchar *)Addr)); // Read byte
 }
 //------------------------------------------------
@@ -154,7 +154,7 @@ void WriteByteToFLASH(ulong Addr, uchar Dat)
 }
 //------------------------------------------------
 void EraseByteFLASH(uint Addr)
-{ // 擦除eeprom中内�?
+{ // 擦除eeprom�?内�??
     *((__near uchar *)Addr) = 0x00;
 }
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -196,8 +196,8 @@ void eeprom_sys_load(void)
     ID_DATA_PCS = xm[0] * 256 + xm[1];
     if (ID_DATA_PCS == 0xFFFF)
         ID_DATA_PCS = 0;
-    else if (ID_DATA_PCS > 256)
-        ID_DATA_PCS = 256;
+    else if (ID_DATA_PCS > 255)
+        ID_DATA_PCS = 255;
     q = ID_DATA_PCS;
     p = 0;
     for (i = 0; i < q; i++)
@@ -241,13 +241,15 @@ void ALL_ID_EEPROM_Erase(void)
     xm[1] = 0;
     xm[2] = 0;
 
-	UnlockFlash(UNLOCK_EEPROM_TYPE);
+    ID_DATA_PCS = 0;
+    UnlockFlash(UNLOCK_EEPROM_TYPE);
     WriteByteToFLASH(addr_eeprom_sys + 0x3FE, xm[1]);
     WriteByteToFLASH(addr_eeprom_sys + 0x3FF, xm[0]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 	
-    for (i = 0; i < 260; i++)
+    for (i = 0; i < 256; i++)
     {
+        ID_Receiver_DATA[i] = 0;
         m2 = 3 * i;
         UnlockFlash(UNLOCK_EEPROM_TYPE);
         WriteByteToFLASH(addr_eeprom_sys + m2, xm[0]);
@@ -276,7 +278,7 @@ void ID_EEPROM_write(void)
     ID_Receiver_DATA[ID_DATA_PCS - 1] = ID_Receiver_Login;
     xn.IDL = ID_Receiver_Login;
 
-    for (i = 0; i < 260; i++)
+    for (i = 0; i < 256; i++)
     {
         j = 3 * i;
         xm[0] = ReadByteEEPROM(addr_eeprom_sys + j);
@@ -305,7 +307,7 @@ void ID_EEPROM_write(void)
     WriteByteToFLASH(addr_eeprom_sys + m1, xm[2]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 
-    if (ID_DATA_PCS >= 256)
+    if (ID_DATA_PCS >= 255)
     {
         ID_Login_EXIT_Initial();
         DATA_Packet_Control = 0;
@@ -330,6 +332,56 @@ void ID_SCX1801_EEPROM_write(u32 id)
     WriteByteToFLASH(addr_eeprom_sys + 0x3FD, xm[2]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 }
+void Delete_GeneralID_EEPROM(u32 id)
+{
+    UINT16 i, j, m2, original_pcs = 0;
+    UINT8 xm[3] = {0};
+    uni_rom_id xn;
+
+    original_pcs = ID_DATA_PCS;
+    for (i = 0; i < ID_DATA_PCS; i++)
+    {
+		if ((ID_Receiver_DATA[i] == id)&&(id!=0xFFFFFE)&&(id!=0))
+		{
+            for (j = i; j < ID_DATA_PCS; j++)
+            {
+                ID_Receiver_DATA[j] = ID_Receiver_DATA[j+1];
+                ClearWDT(); // Service the WDT
+            }
+            ID_DATA_PCS--;
+            if (ID_DATA_PCS==0)
+            {
+                ALL_ID_EEPROM_Erase();
+                return;
+            }
+        }
+        ClearWDT(); // Service the WDT
+    }
+
+    xm[0] = ID_DATA_PCS % 256;
+    xm[1] = ID_DATA_PCS / 256;
+    UnlockFlash(UNLOCK_EEPROM_TYPE);
+    WriteByteToFLASH(addr_eeprom_sys + 0x3FE, xm[1]);
+    WriteByteToFLASH(addr_eeprom_sys + 0x3FF, xm[0]);
+    LockFlash(UNLOCK_EEPROM_TYPE);
+
+    for (i = 0; i < original_pcs; i++)
+    {
+        xn.IDL = ID_Receiver_DATA[i];
+        xm[0] = xn.IDB[1];
+        xm[1] = xn.IDB[2];
+        xm[2] = xn.IDB[3];
+        m2 = 3 * i;
+        UnlockFlash(UNLOCK_EEPROM_TYPE);
+        WriteByteToFLASH(addr_eeprom_sys + m2, xm[0]);
+        m2++;
+        WriteByteToFLASH(addr_eeprom_sys + m2, xm[1]);
+        m2++;
+        WriteByteToFLASH(addr_eeprom_sys + m2, xm[2]);
+        LockFlash(UNLOCK_EEPROM_TYPE);
+        ClearWDT(); // Service the WDT
+    }
+}
 void ID_EEPROM_write_0x00(void)
 {
     UINT8 xm[3] = {0};
@@ -345,7 +397,7 @@ void ID_EEPROM_write_0x00(void)
     WriteByteToFLASH(addr_eeprom_sys + 0x3FF, xm[0]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 
-    for (i = 0; i < 260; i++)
+    for (i = 0; i < 256; i++)
     {
         j = 3 * i;
         xm[0] = ReadByteEEPROM(addr_eeprom_sys + j);
@@ -495,7 +547,7 @@ void ID_learn(void)
 	      {
 	            //TIME_Receiver_Login = 0;
 	            FLAG_ID_Erase_Login = 1;
-	            FLAG_ID_Erase_Login_PCS = 1; //追加多次ID登录
+	            FLAG_ID_Erase_Login_PCS = 1; //追加多�??ID登录
 	            BEEP_Module(1800,900);
 				BEEP_Module(300,900);
 				BEEP_Module(300,1);
@@ -531,8 +583,8 @@ void ID_learn(void)
             }
             if ((FLAG_ID_Login_OK == 1) && (FLAG_ID_Login_OK_bank == 0))
             {
-                if ((ID_Receiver_Login == 0xFFFFFE)&&(FLAG_ID_Erase_Login==1))FLAG_ID_Login_OK_bank=1;             //追加多次ID登录
-                FLAG_ID_Login_OK = 0; //追加多次ID登录
+                if ((ID_Receiver_Login == 0xFFFFFE)&&(FLAG_ID_Erase_Login==1))FLAG_ID_Login_OK_bank=1;             //追加多�??ID登录
+                FLAG_ID_Login_OK = 0; //追加多�??ID登录
                 if(FLAG_ID_SCX1801_Login==1)
                 {
                     FLAG_ID_SCX1801_Login=0;
@@ -541,8 +593,11 @@ void ID_learn(void)
 					FLAG_ID_Erase_Login=0;
                 	BEEP_and_LED();
 					ID_SCX1801_EEPROM_write(ID_Receiver_Login);
-					if(FLAG_IDCheck_OK==1) FLAG_IDCheck_OK = 0;
-					else ID_EEPROM_write();
+					if(FLAG_IDCheck_OK==1) 
+                    {
+                        FLAG_IDCheck_OK = 0;
+                        Delete_GeneralID_EEPROM(ID_SCX1801_DATA);
+                    }
 					ID_Login_EXIT_Initial();
                 }
 				else 
@@ -552,9 +607,13 @@ void ID_learn(void)
 		                else
 		                {
 		                    BEEP_and_LED();
-		                    TIME_Login_EXIT_rest = 5380; //追加多次ID登录
+		                    TIME_Login_EXIT_rest = 5380; //追加多�??ID登录
 		                    if ((FLAG_ID_Login == 1) && (ID_Receiver_Login != 0xFFFFFE))
-		                        ID_EEPROM_write();
+                            {
+                                if (ID_SCX1801_DATA == 0)
+                                    ID_SCX1801_EEPROM_write(ID_Receiver_Login);
+                                else ID_EEPROM_write();
+                            }
 		                    else if (FLAG_ID_Erase_Login == 1)
 		                    {
 		                        if (FLAG_ID_Erase_Login_PCS == 1)
@@ -562,9 +621,12 @@ void ID_learn(void)
 		                            FLAG_ID_Erase_Login_PCS = 0;
 		                            ID_DATA_PCS = 0;
 		                            ALL_ID_EEPROM_Erase();
-									ID_SCX1801_EEPROM_write(0x00);
-		                        } //追加多次ID登录
-		                        if (ID_Receiver_Login != 0xFFFFFE)
+                                    ID_SCX1801_DATA = 0;
+                                    ID_SCX1801_EEPROM_write(0x00);
+                                    if (ID_Receiver_Login != 0xFFFFFE)
+                                        ID_SCX1801_EEPROM_write(ID_Receiver_Login);
+		                        } //追加多�??ID登录
+		                        else if (ID_Receiver_Login != 0xFFFFFE)
 		                            ID_EEPROM_write();
 		                    }
 		                } //end else
