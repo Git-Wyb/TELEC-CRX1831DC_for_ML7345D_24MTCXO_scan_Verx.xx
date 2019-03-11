@@ -196,8 +196,8 @@ void eeprom_sys_load(void)
     ID_DATA_PCS = xm[0] * 256 + xm[1];
     if (ID_DATA_PCS == 0xFFFF)
         ID_DATA_PCS = 0;
-    else if (ID_DATA_PCS > 255)
-        ID_DATA_PCS = 255;
+    else if (ID_DATA_PCS > ID_Max_PCS)
+        ID_DATA_PCS = ID_Max_PCS;
     q = ID_DATA_PCS;
     p = 0;
     for (i = 0; i < q; i++)
@@ -307,7 +307,7 @@ void ID_EEPROM_write(void)
     WriteByteToFLASH(addr_eeprom_sys + m1, xm[2]);
     LockFlash(UNLOCK_EEPROM_TYPE);
 
-    if (ID_DATA_PCS >= 255)
+    if (ID_DATA_PCS >= ID_Max_PCS)
     {
         ID_Login_EXIT_Initial();
         DATA_Packet_Control = 0;
@@ -500,7 +500,7 @@ void ID_learn(void)
         {
             if(FLAG_ID_SCX1801_Login!=1)TIME_Receiver_Login++;
             TIME_Receiver_Login_restrict = 350;
-            if ((COUNT_Receiver_Login >= 2) && (FLAG_ID_Erase_Login == 0) && (FLAG_ID_Login == 0) && (ID_DATA_PCS < 256))
+            if ((COUNT_Receiver_Login >= 2) && (FLAG_ID_Erase_Login == 0) && (FLAG_ID_Login == 0) && (ID_DATA_PCS < ID_Max_PCS))
             {
                 FLAG_ID_Login = 1;
 				BEEP_Module(1800,900);

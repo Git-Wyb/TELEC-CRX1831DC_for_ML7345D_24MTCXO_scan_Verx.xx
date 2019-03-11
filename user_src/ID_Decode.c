@@ -113,8 +113,8 @@ void ID_Decode_IDCheck(void)
 		                        { //2015.4.2修正  送信器旁边的登录�?追加登录不行
 		                            if (FLAG_IDCheck_OK == 1)
 		                                FLAG_IDCheck_OK = 0;
-		                            else if (ID_DATA_PCS < 255)
-		                            {
+                                    else if (ID_DATA_PCS < ID_Max_PCS)
+                                    {
 		                                BEEP_and_LED();
 		                                ID_Receiver_Login = DATA_Packet_ID;
 		                                ID_EEPROM_write();
