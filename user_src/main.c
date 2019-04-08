@@ -52,6 +52,7 @@ void main(void)
 {
     _DI();             // 关全�?中断	
     RAM_clean();       // 清除RAM
+    OTA_bootloader_enable();  //IAP OTA    
     WDT_init();        //看门�?
     VHF_GPIO_INIT();   //IO初始�?
     SysClock_Init();   //系统时钟初始�?

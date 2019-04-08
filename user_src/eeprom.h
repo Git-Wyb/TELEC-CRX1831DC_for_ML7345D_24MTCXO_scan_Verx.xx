@@ -8,6 +8,7 @@
 /*  Programmer	:Gong Dong Sheng                */
 /*  Mark        :0x4000~0x47FF                  */
 /************************************************/
+void OTA_bootloader_enable(void);
 void InitialFlashReg(void);
 void UnlockFlash(unsigned char Type); // ½âËøflash
 void LockFlash(unsigned char Type);   // Ëø¶¨´æ´¢Æ÷

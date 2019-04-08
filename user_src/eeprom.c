@@ -106,6 +106,40 @@
 //#define UNLOCK_FLASH_TYPE       (( uchar )0x00 )
 //#define UNLOCK_EEPROM_TYPE      (( uchar )0x01 )
 
+#if defined (STM8L15X_MD) || defined (STM8L15X_MDP) || defined (STM8L15X_LD)  ||  defined (STM8L15X_HD)     //STM8L
+void OTA_bootloader_enable(void)
+{
+    FLASH_DUKR = 0xae;     
+    asm("nop");     
+    FLASH_DUKR = 0x56;                  // 解除写保护     
+    asm("nop");     
+    while(!(FLASH_IAPSR & 0x08));       // 等待解锁     
+    asm("nop");     
+    FLASH_CR2 = 0x80;                   // 对选项字节进行写操作     
+    asm("nop");     
+    *((unsigned char *)0x480b) = 0x55;     
+    asm("nop");     
+    *((unsigned char *)0x480c) = 0xaa;  // 写入选项字节       
+}
+#else    //STM8S
+void OTA_bootloader_enable(void)
+{
+    FLASH_DUKR = 0xae;     
+    asm("nop");     
+    FLASH_DUKR = 0x56;     
+    asm("nop");     
+    while(!(FLASH_IAPSR & 0x08));     
+    asm("nop");     
+    FLASH_CR2 = 0x80;     
+    asm("nop");     
+    FLASH_NCR2 = 0x7f;     
+    asm("nop");     
+    *((unsigned char *)0x487e) = 0x55;     
+    asm("nop");     
+    *((unsigned char *)0x487f) = 0xaa;  
+}
+#endif
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 void InitialFlashReg(void)
 { // 鍒濆?嬪寲闂?瀛樺瘎瀛樺櫒缁?
