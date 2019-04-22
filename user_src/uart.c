@@ -410,7 +410,7 @@ void OprationFrame(void)
 	}
 	else if (Databits_t.ID_test_No91or93 == 145)  //0x91
 	{
-	    if(ID_DATA_PCS==0)
+	    if((ID_DATA_PCS==0)&&(ID_SCX1801_DATA==0))
 	    	{
 			ACKBack[2] = 0;
 			FLAG_testNo91=1;
