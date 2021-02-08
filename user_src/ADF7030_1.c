@@ -713,7 +713,7 @@ void WaitForADF7030_FIXED_DATA(void)
     {
         DELAY_30U();
         ADF7030_FIXED_DATA();
-        ClearWDT();
+        //ClearWDT();
         //count++;
     } while ((((ADF7030_Read_OneByte & 0x20) != 0x20) || ((ADF7030_Read_OneByte & 0x06) != 0x04)) && (count < 200));
 }
