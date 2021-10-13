@@ -30,6 +30,7 @@
 #include "ID_Decode.h"
 #include "uart.h" // uart
 
+
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -211,7 +212,7 @@ INTERRUPT_HANDLER(EXTI4_IRQHandler, 12)
   /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */
-  DataReceive();
+    //DataReceive();
 }
 
 /**
@@ -219,11 +220,13 @@ INTERRUPT_HANDLER(EXTI4_IRQHandler, 12)
   * @param  None
   * @retval None
   */
+extern void ML7345_TRX_Del(void);
 INTERRUPT_HANDLER(EXTI5_IRQHandler, 13)
 {
   /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */
+    ML7345_TRX_Del();
 }
 
 /**
@@ -236,6 +239,7 @@ INTERRUPT_HANDLER(EXTI6_IRQHandler, 14)
   /* In order to detect unexpected events during development,
        it is recommended to set a breakpoint on the following instruction.
     */
+    DataReceive();
 }
 
 /**

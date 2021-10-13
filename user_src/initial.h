@@ -58,4 +58,8 @@ void ClearWDT(void);
 void RF_BRE_Check(void);
 void BerExtiInit(void);
 void BerExtiUnInit(void);
+
+//-----------------------------------------------------------------------------
+u8 Key_Scan(void);
+
 #endif

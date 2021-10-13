@@ -23,6 +23,6 @@ void BEEP_Module(UINT16 time_beepON, UINT16 time_beepOFF);
 
 
 void Freq_Scanning(void);
-void DataReceive(void);
+
 
 #endif

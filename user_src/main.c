@@ -25,11 +25,12 @@
 #include "Pin_define.h"   // 管脚定义
 #include "initial.h"      // 初始�?  预定�?
 #include "ram.h"          // RAM定义
-#include "ADF7030_1.h"    // 初始化ADF7021
+#include "ML7345.h"    // 初始化ADF7021
 #include "Timer.h"        // 定时�?
 #include "ID_Decode.h"    // ID_Decode处理
 #include "eeprom.h"       // eeprom
 #include "uart.h"         // uart
+
 /** @addtogroup STM8L15x_StdPeriph_Template
   * @{
   */
@@ -50,34 +51,32 @@
 
 void main(void)
 {
-    _DI();             // 关全�?中断	
+    _DI();             // 关全�?中断
     RAM_clean();       // 清除RAM
-    //OTA_bootloader_enable();  //IAP OTA    
+    //OTA_bootloader_enable();  //IAP OTA
     WDT_init();        //看门�?
     VHF_GPIO_INIT();   //IO初始�?
-    SysClock_Init();   //系统时钟初始�?
+    SysClock_Init();   //系统时钟初始�
     InitialFlashReg(); //flash EEPROM
     eeprom_sys_load(); //ID载入
     TIM4_Init();       // 定时�?
     beep_init();       // 蜂鸣�?
-    ClearWDT();        // Service the WDT
-	
-    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-    PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;  
-    PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
-    //PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;  
-    ADF7030Init();     //射频初始�?
-    
+    ClearWDT();        // Service the WDT */
+    SPI_Config_Init();
+    RF_ML7345_Init(Fre_426_075,0x55,12);
     UART1_INIT();      // UART1 for PC Software
-    _EI();             // 允许中断
+    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
     TIME_power_led=500;
     ClearWDT();        // Service the WDT
-    RF_test_mode();
+    ML7345D_RF_test_mode();
     FLAG_APP_RX = 1;
     FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
     FLAG_testNo91=0;
 	FLAG_testBEEP=0;
+    _EI();
+    ML7345_SetAndGet_State(RX_ON);
+
     while (1)
     {
         ClearWDT(); // Service the WDT
@@ -89,9 +88,8 @@ void main(void)
 		if(ID_SCX1801_DATA!=0)APP_TX_PACKET();
         if(FLAG_APP_RX==1)
         {
-    		  Freq_Scanning();
-    		  //if(Scan_step==2)
-			  	SCAN_RECEIVE_PACKET(); //ɨ���������?
+    		  ML7345D_Freq_Scanning();
+			  SCAN_RECEIVE_PACKET(); //ɨ���������?
         }
         TranmissionACK();
         //        READ_RSSI_avg();

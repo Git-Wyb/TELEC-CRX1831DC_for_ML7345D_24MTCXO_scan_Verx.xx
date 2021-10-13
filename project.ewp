@@ -257,8 +257,9 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>$PROJ_DIR$\user_src</state>
-          <state>$PROJ_DIR$\Libraries\inc</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\Libraries\inc</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\radio</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\user_src</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>
@@ -608,7 +609,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>$TOOLKIT_DIR$\config\lnkstm8l151g4.icf</state>
+          <state>$TOOLKIT_DIR$\config\lnkstm8l151g6.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1590,6 +1591,24 @@
     </settings>
   </configuration>
   <group>
+    <name>Radio</name>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_defs.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_HAL.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_HAL.h</name>
+    </file>
+  </group>
+  <group>
     <name>STM8L15x Libraries</name>
     <excluded>
       <configuration>Debug</configuration>
@@ -1681,9 +1700,6 @@
   </group>
   <group>
     <name>user</name>
-    <file>
-      <name>$PROJ_DIR$\user_src\ADF7030_1.c</name>
-    </file>
     <file>
       <name>$PROJ_DIR$\user_src\eeprom.c</name>
     </file>

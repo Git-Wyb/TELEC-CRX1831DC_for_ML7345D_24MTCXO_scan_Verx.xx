@@ -60,7 +60,7 @@ typedef union {
         unsigned char SWorOUT : 8;
         unsigned char prep1 : 8;
         unsigned char prep2 : 8;
-    };	
+    };
 
 } __Databits_t;
 typedef enum {

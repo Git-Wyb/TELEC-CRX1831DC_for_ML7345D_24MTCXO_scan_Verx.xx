@@ -47,7 +47,7 @@ extern u8 LED_Cache;
 #define ADF7030_GPIO3_CR1 PD_CR1_C14
 #define ADF7030_GPIO3_CR2 PD_CR2_C24
 //
-#define ADF7030_GPIO4 PC_IDR_IDR4
+#define ADF7030_GPIO4     PC_IDR_IDR4
 #define ADF7030_GPIO4_DDR PC_DDR_DDR4
 #define ADF7030_GPIO4_CR1 PC_CR1_C14
 #define ADF7030_GPIO4_CR2 PC_CR2_C24
@@ -179,5 +179,116 @@ extern u8 LED_Cache;
 #define Inverters_OUT_CR1 PA_CR1_C12    // 输入   继电器输出信号反向   低电平有效
 
 /*********************************************************************************/
+
+//----------------------------------ML7345D------------------------------------------------
+#define Key_Login_Val   PB_IDR_IDR0 //登录按键
+#define Key_Login_DDR   PB_DDR_DDR0
+#define Key_Login_CR1   PB_CR1_C10
+#define Key_Login_CR2   PB_CR2_C20
+
+#define RX_LED          PB_ODR_ODR3 //受信指示
+#define RX_LED_DDR      PB_DDR_DDR3
+#define RX_LED_CR1      PB_CR1_C13
+#define RX_LED_CR2      PB_CR2_C23
+
+#define TX_LED          PB_ODR_ODR2 //送信指示
+#define TX_LED_DDR      PB_DDR_DDR2
+#define TX_LED_CR1      PB_CR1_C12
+#define TX_LED_CR2      PB_CR2_C22
+/*
+#define RX_LED_OUT      PA_ODR_ODR3 //动作指示
+#define RX_LED_OUT_DDR  PA_DDR_DDR3
+#define RX_LED_OUT_CR1  PA_CR1_C13
+#define RX_LED_OUT_CR2  PA_CR2_C23
+*/
+#define KEY_TX_OPEN     PD_IDR_IDR3 /* 工作模式下按键发送OPEN,低电平有效 */
+#define KEY_TX_OPEN_DDR PD_DDR_DDR3
+#define KEY_TX_OPEN_CR1 PD_CR1_C13
+#define KEY_TX_OPEN_CR2 PD_CR2_C23
+#define Key_Tx_Carrier  KEY_TX_OPEN /* 测试模式下按键发载波 */
+
+#define KEY_TX_STOP     PD_IDR_IDR1 /* 工作模式下按键发送STOP,低电平有效 */
+#define KEY_TX_STOP_DDR PD_DDR_DDR1
+#define KEY_TX_STOP_CR1 PD_CR1_C11
+#define KEY_TX_STOP_CR2 PD_CR2_C21
+#define Key_Rx_Data     KEY_TX_STOP /* 测试模式下按键接收数据 */
+
+#define KEY_TX_CLOSE     PD_IDR_IDR2 /* 工作模式下按键发送CLOSE,低电平有效 */
+#define KEY_TX_CLOSE_DDR PD_DDR_DDR2
+#define KEY_TX_CLOSE_CR1 PD_CR1_C12
+#define KEY_TX_CLOSE_CR2 PD_CR2_C22
+#define Key_Tx_Data      KEY_TX_CLOSE   /* 测试模式下按键发数据 */
+
+#define TP7_TEST_MODE       PC_IDR_IDR0  /* 0:测试模式；1:工作模式 */
+#define TP7_TEST_MODE_DDR   PC_DDR_DDR0
+#define TP7_TEST_MODE_CR1   PC_CR1_C10
+#define TP7_TEST_MODE_CR2   PC_CR2_C20
+
+#define TP8_TXRX_MODE       PC_IDR_IDR1  /* 预留 */
+#define TP8_TXRX_MODE_DDR   PC_DDR_DDR1
+#define TP8_TXRX_MODE_CR1   PC_CR1_C11
+#define TP8_TXRX_MODE_CR2   PC_CR2_C21
+/*
+#define RF_WORKE_MODE          PD_ODR_ODR0  //0:RF处于工作模式;1:RF处于深度睡眠模式
+#define RF_WORKE_MODE_DDR      PD_DDR_DDR0
+#define RF_WORKE_MODE_CR1      PD_CR1_C10
+#define RF_WORKE_MODE_CR2      PD_CR2_C20
+*/
+#define ML7345_RESETN      PD_ODR_ODR0 /* L 硬件复位; H 工作 */
+#define ML7345_RESETN_DDR  PD_DDR_DDR0
+#define ML7345_RESETN_CR1  PD_CR1_C10
+#define ML7345_RESETN_CR2  PD_CR2_C20
+
+#define ML7345_INT_GPIO0        PD_IDR_IDR4 // 低电平有效
+#define ML7345_INT_GPIO0_DDR    PD_DDR_DDR4
+#define ML7345_INT_GPIO0_CR1    PD_CR1_C14
+#define ML7345_INT_GPIO0_CR2    PD_CR2_C24
+
+#define ML7345_INT_GPIO1        PC_IDR_IDR6 /* 低电平有效 */
+#define ML7345_INT_GPIO1_DDR    PC_DDR_DDR6
+#define ML7345_INT_GPIO1_CR1    PC_CR1_C16
+#define ML7345_INT_GPIO1_CR2    PC_CR2_C26
+
+#define ML7345_INT_GPIO2        PC_IDR_IDR5 /* 低电平有效 */
+#define ML7345_INT_GPIO2_DDR    PC_DDR_DDR5
+#define ML7345_INT_GPIO2_CR1    PC_CR1_C15
+#define ML7345_INT_GPIO2_CR2    PC_CR2_C25
+
+#define ML7345_INT_GPIO3        PC_IDR_IDR4 /* 低电平有效 */
+#define ML7345_INT_GPIO3_DDR    PC_DDR_DDR4
+#define ML7345_INT_GPIO3_CR1    PC_CR1_C14
+#define ML7345_INT_GPIO3_CR2    PC_CR2_C24
+
+#define KEY_POWER_ON      PA_ODR_ODR4 /* 按键使能,高电平有效 */
+#define KEY_POWER_ON_DDR  PA_DDR_DDR4
+#define KEY_POWER_ON_CR1  PA_CR1_C14
+#define KEY_POWER_ON_CR2  PA_CR2_C24
+
+#define RF_POWER_ON         PA_ODR_ODR5 /* RF使能,高电平有效 */
+#define RF_POWER_ON_DDR     PA_DDR_DDR5
+#define RF_POWER_ON_CR1     PA_CR1_C15
+#define RF_POWER_ON_CR2     PA_CR2_C25
+
+
+#define ML7345_CLK      PC_IDR_IDR6
+#define ML7345_CLK_DDR  PC_DDR_DDR6
+#define ML7345_CLK_CR1  PC_CR1_C16
+#define ML7345_CLK_CR2  PC_CR2_C26
+
+#define ML7345_DATA     PC_IDR_IDR4
+#define ML7345_DATA_DDR PC_DDR_DDR4
+#define ML7345_DATA_CR1 PC_CR1_C14
+#define ML7345_DATA_CR2 PC_CR2_C24
+
+
+
+
+
+
+
+
+
+
+
 
 #endif

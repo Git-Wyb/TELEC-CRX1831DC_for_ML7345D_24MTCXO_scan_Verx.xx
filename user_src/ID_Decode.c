@@ -13,7 +13,8 @@
 #include "ID_Decode.h"
 #include "eeprom.h" // eeprom
 #include "uart.h"   // uart
-#include "ADF7030_1.h"
+#include "ML7345.h"
+
 //void EXIT_init(void)
 //{
 //    EXTI_CR1 = 0x20;          //PORT B2  鐨勪腑鏂Е鍙戜綅
@@ -21,54 +22,6 @@
 //    //   EXTI_CR2=0X00;
 //    //   PIN_PD7_CR2=1;
 //}
-/**
- ****************************************************************************
- * @Function : void DataReceive(void)
- * @File     : ID_Decode.c
- * @Program  :
- * @Created  : 2017/5/5 by Xiaowine
- * @Brief    : TEST BER
- * @Version  : V1.0
-**/
-void DataReceive(void)
-{
-    static u8 StateCache = 0;
-    static u8 Cache = 0;
-    static u8 X_HISbyte = 0;
-    switch (StateCache)
-    {
-    case 0:
-    {
-        Cache <<= 1;
-        if (ADF7030DATA)
-            Cache++;
-        if (Cache == 0x55)
-        {
-            StateCache = 1;
-            X_HISbyte = 0;
-            Cache = 0;
-        }
-    }
-    break;
-    case 1:
-    {
-        if (ADF7030DATA != X_HISbyte)
-            X_ERR++;
-        X_COUNT++;
-        X_HISbyte ^= 1;
-        if (X_COUNT >= 1000)
-            StateCache = 2;
-    }
-    break;
-    case 2:
-        if (X_COUNT == 0)
-            StateCache = 0;
-        break;
-    default:
-        break;
-    }
-    EXTI_SR1_P4F = 1;
-}
 
 void ID_Decode_IDCheck(void)
 {
@@ -100,10 +53,9 @@ void ID_Decode_IDCheck(void)
 			    {
 		                if (DATA_Packet_ID == 0xFFFFFE)
 		                    DATA_Packet_Control = DATA_Packet_Contro_buf; //2015.3.24淇 Control缂撳瓨璧?ID鍒ゆ柇鏄惁瀛︿範杩囧悗鎵嶈兘浣跨敤
-		                                                                 
+
 		                if ((SPI_Receive_DataForC[1] & 0x0000FFFF) == 0x5556)
 		                {
-		                    PAYLOAD_SIZE = RX_PayLoadSizeLogin;
 							Flag_TX_ID_load=1;
 		                    Signal_DATA_Decode(1);
 		                    if (FLAG_Signal_DATA_OK == 1)
@@ -145,7 +97,6 @@ void ID_Decode_IDCheck(void)
 		                }
 		                else
 		                {
-		                    PAYLOAD_SIZE = RX_PayLoadSizeNOLogin;
 							Flag_TX_ID_load=0;
 		                    if ((DATA_Packet_Control == 0x40) && (Manual_override_TIMER == 0))
 		                    {
@@ -197,7 +148,7 @@ void ID_Decode_IDCheck(void)
 				}
             }
 
-			
+
         }
     }
 }
@@ -256,7 +207,7 @@ void Signal_DATA_Decode(UINT8 NUM_Type)
 				Struct_DATA_Packet_Contro_buf.data[i].ui=data_NRZ[i+2];
 	    }
 	    else
-	        FLAG_Signal_DATA_OK = 0;	
+	        FLAG_Signal_DATA_OK = 0;
 	}
 }
 
@@ -266,12 +217,12 @@ void eeprom_IDcheck(void)
 	if(FLAG_testNo91==1)
 		{
             FLAG_IDCheck_OK = 1;
-            DATA_Packet_Control = DATA_Packet_Contro_buf;		
+            DATA_Packet_Control = DATA_Packet_Contro_buf;
 		}
 #ifndef DEF_test_MAX_32pcs
 		if(Radio_Date_Type_bak==1)
 		{
-				i = 0; 
+				i = 0;
                 do
 				{
 					if (ID_Receiver_DATA[i] == DATA_Packet_ID)
@@ -320,8 +271,8 @@ void eeprom_IDcheck(void)
 					DATA_Packet_Control = DATA_Packet_Contro_buf;
 				} //è¿½åŠ å¤šæ¬¡IDç™»å½•
 			}
-	
-#endif	
+
+#endif
 
 
 }
@@ -399,7 +350,7 @@ void TEST_beep(void)
 
 void ID_Decode_OUT(void)
 {
-    u8 Control_i;	
+    u8 Control_i;
 
     Control_i = DATA_Packet_Control &  0xFF;
     if (TIMER1s)
@@ -416,32 +367,32 @@ void ID_Decode_OUT(void)
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA1;
 								Send_Data(ACKBack, 3);
-								FLAG_testNo91SendUart=1;	
+								FLAG_testNo91SendUart=1;
 //				            	}
-				            break;   
+				            break;
 				        case 0x04: //stop
 //				            if(FLAG_testNo91_step==2)
 //				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA2;
 								Send_Data(ACKBack, 3);
-								FLAG_testNo91SendUart=1;	
-//				            	}						
-				            break; 							
+								FLAG_testNo91SendUart=1;
+//				            	}
+				            break;
 				        case 0x02: //close
 //				            if(FLAG_testNo91_step==3)
 //				            	{
 					            Receiver_LED_OUT = 1;
 								ACKBack[2]=0xA4;
 								Send_Data(ACKBack, 3);
-								FLAG_testNo91SendUart=1;	
-//				            	}						
+								FLAG_testNo91SendUart=1;
+//				            	}
 				            break;
 						default:
-                            break;	
+                            break;
                        }
-				
-				}        	
+
+				}
       }
 	  else
 	  {
@@ -606,7 +557,7 @@ void ID_Decode_OUT(void)
 					  TIME_ERROR_Read_once_again=17;
 					  Time_error_read_timeout=100;
 					}
-         }	
+         }
 		if((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)){
 					 if((DATA_Packet_Control==0x02)||(DATA_Packet_Control==0x04)||(DATA_Packet_Control==0x08)||(DATA_Packet_Control==0x01)||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)
 					  ||(DATA_Packet_Control==0x9)||(DATA_Packet_Control==0x03)||(DATA_Packet_Control==0x0C)||(DATA_Packet_Control==0x06)||(DATA_Packet_Control==0x0A)){
@@ -618,14 +569,14 @@ void ID_Decode_OUT(void)
          if(((DATA_Packet_Control==0x00)||(DATA_Packet_Control==0x02)||(DATA_Packet_Control==0x04)||(DATA_Packet_Control==0x08)||(DATA_Packet_Control==0x01)
                ||(DATA_Packet_Control==0x20)||(DATA_Packet_Control==0x40)||((FLAG__Semi_open_T==1)||(FLAG__Semi_close_T==1)))&&(FLAG_APP_TX_fromOUT==0)&&(Radio_Date_Type_bak==2)&&(FLAG_APP_TX==0)&&(FLAG_APP_TX_once==1))
          {
-             FLAG_APP_TX_fromOUT=1;		
+             FLAG_APP_TX_fromOUT=1;
 			 if(DATA_Packet_Control==0x00)TIME_APP_TX_fromOUT=35;//15+DEF_APP_TX_freq*8;  //350ms
-			 else TIME_APP_TX_fromOUT=35;//15+DEF_APP_TX_freq*8;  //350ms		 
+			 else TIME_APP_TX_fromOUT=35;//15+DEF_APP_TX_freq*8;  //350ms
          }
 
-		
+
 	 }
-	  	  
+
     }
     else
     {
@@ -676,8 +627,8 @@ void ID_Decode_OUT(void)
                    if((TIMER250ms_STOP<1000)&&(TIMER250ms_STOP>0)){Receiver_OUT_STOP=FG_allow_out;Receiver_LED_OUT=1;}
                    else if(TIMER250ms_STOP==0){Receiver_OUT_STOP=FG_NOT_allow_out;FLAG__Semi_open_T=0;FLAG__Semi_close_T=0;}
                }
-               else if((TIMER250ms_STOP==0)&&(TIME_auto_close==0)){Receiver_OUT_STOP=FG_NOT_allow_out;FG_OUT_OPEN_CLOSE=0;}    //2015.3.23淇敼		
-        
+               else if((TIMER250ms_STOP==0)&&(TIME_auto_close==0)){Receiver_OUT_STOP=FG_NOT_allow_out;FG_OUT_OPEN_CLOSE=0;}    //2015.3.23淇敼
+
         if (FG_auto_open_time == 1)
         {
             FG_First_auto = 0;
@@ -695,40 +646,3 @@ void ID_Decode_OUT(void)
         FG_Receiver_LED_RX = 0; //Receiver_LED_RX=0;
 }
 
-void Freq_Scanning(void)
-{
-	if (TIMER18ms == 0)
-		{
-			if (Flag_FREQ_Scan == 0)
-/*
-			if ((Flag_FREQ_Scan == 0)&&((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login==1)||
-										  ((FLAG_ID_Erase_Login==0)&&(FLAG_ID_Login==0)&&(FLAG_ID_SCX1801_Login==0)&&(PROFILE_CH_FREQ_32bit_200002EC != 426075000)))
-			   )  //锟斤拷锟斤拷模式时锟斤拷锟斤拷锟斤拷426.075MHz锟斤拷锟脚号ｏ拷只锟斤拷锟节碉拷录模式时锟脚斤拷锟杰★拷
-*/
-			{
-				if (ADF7030_Read_RESIGER(0x4000380C, 1, 0) != 0)
-				{
-		             FG_Receiver_LED_RX = 1;
-					 
-					Flag_FREQ_Scan = 1;
-					if(Radio_Date_Type==1)
-					  {TIMER18ms = 82;TIMER300ms = 600; }
-					else if(Radio_Date_Type==2)
-					  {TIMER18ms = 130; TIMER300ms = 100;  }
-	
-					return;
-				}
-			}
-	
-			ADF7030_Change_Channel();
-			ADF7030Init();	   //锟斤拷频锟斤拷始锟斤拷 
-	
-			if(Radio_Date_Type==1)
-			  TIMER18ms = 18;
-			else if(Radio_Date_Type==2)
-			  TIMER18ms = 18;
-
-			Flag_FREQ_Scan = 0;
-		}
-
-}

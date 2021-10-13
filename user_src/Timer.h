@@ -12,6 +12,8 @@
 
 extern u16 ErrStateTimeer;
 extern u16 StateReadTimer;
+extern u16 Time_Tx_En;
+void system_delay(u32 n);
 //============================================ Timer 4
 void TIM4_Init(void);
 void TIM4_UPD_OVF(void);

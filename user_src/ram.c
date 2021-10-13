@@ -4,13 +4,12 @@
 #include <stdbool.h> /* For true/false definition                      */
 //#include "initial.h"		// ?????  ?????
 #include "type_def.h"
+#include "ram.h"
 
-
+Mark_Un mark0_stu = {0};
+Mark_Un mark1_stu = {0};
 
 u8 DEF_APP_TX_freq=3;
-
-
-
 
 uFLAG FLAG_test1;
 volatile uFLAG FLAG0;
@@ -38,7 +37,7 @@ u16 TIME_auto_out = 0;
 u16 TIME_auto_close = 0;
 u16 time_3sec = 0;
 u32 ID_Receiver_DATA[256] = {0}; //写入EEPROM ID缓存
-u32 ID_SCX1801_DATA = 0;
+u32 ID_SCX1801_DATA = 1;
 u16 ID_DATA_PCS = 0;
 u32 DATA_Packet_ID = 0;
 u8 DATA_Packet_Control = 0;
@@ -137,10 +136,7 @@ const ADF70XX_REG_T Default_adf7030_value[16] = {
 	0x00000000, 0x00000000, 0x00000000, 0x00000000,
 	0x00000000, 0x00000000, 0x00000000, 0x00000000,
 };
-	u32 PROFILE_CH_FREQ_32bit_200002EC = 426075000ul;
-	u32 PROFILE_RADIO_AFC_CFG1_32bit_2000031C = 0x0005005A;
-	u32 PROFILE_RADIO_DATA_RATE_32bit_200002FC = 0x6400000C;
-	u32 PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500 = 0x0000100C;
+u32 PROFILE_CH_FREQ_32bit_200002EC = 426075000ul;
 const u32 PROFILE_CH1_FREQ_32bit_429HighSpeed=429350000;//429350000;//429225000;
 const u32 PROFILE_CH2_FREQ_32bit_429HighSpeed=429550000;//429550000;//429237500;
 u8 Channels=1;

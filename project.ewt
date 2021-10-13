@@ -1941,6 +1941,24 @@
     </settings>
   </configuration>
   <group>
+    <name>Radio</name>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_defs.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_HAL.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\radio\ML7345_HAL.h</name>
+    </file>
+  </group>
+  <group>
     <name>STM8L15x Libraries</name>
     <file>
       <name>$PROJ_DIR$\Libraries\src\stm8l15x_adc.c</name>
@@ -2029,9 +2047,6 @@
   </group>
   <group>
     <name>user</name>
-    <file>
-      <name>$PROJ_DIR$\user_src\ADF7030_1.c</name>
-    </file>
     <file>
       <name>$PROJ_DIR$\user_src\eeprom.c</name>
     </file>

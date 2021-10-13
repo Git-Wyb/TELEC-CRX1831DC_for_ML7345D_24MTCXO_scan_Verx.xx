@@ -109,34 +109,34 @@
 #if defined (STM8L15X_MD) || defined (STM8L15X_MDP) || defined (STM8L15X_LD)  ||  defined (STM8L15X_HD)     //STM8L
 void OTA_bootloader_enable(void)
 {
-    FLASH_DUKR = 0xae;     
-    asm("nop");     
-    FLASH_DUKR = 0x56;                  // 解除写保护     
-    asm("nop");     
-    while(!(FLASH_IAPSR & 0x08));       // 等待解锁     
-    asm("nop");     
-    FLASH_CR2 = 0x80;                   // 对选项字节进行写操作     
-    asm("nop");     
-    *((unsigned char *)0x480b) = 0x55;     
-    asm("nop");     
-    *((unsigned char *)0x480c) = 0xaa;  // 写入选项字节       
+    FLASH_DUKR = 0xae;
+    asm("nop");
+    FLASH_DUKR = 0x56;                  // 解除写保护
+    asm("nop");
+    while(!(FLASH_IAPSR & 0x08));       // 等待解锁
+    asm("nop");
+    FLASH_CR2 = 0x80;                   // 对选项字节进行写操作
+    asm("nop");
+    *((unsigned char *)0x480b) = 0x55;
+    asm("nop");
+    *((unsigned char *)0x480c) = 0xaa;  // 写入选项字节
 }
 #else    //STM8S
 void OTA_bootloader_enable(void)
 {
-    FLASH_DUKR = 0xae;     
-    asm("nop");     
-    FLASH_DUKR = 0x56;     
-    asm("nop");     
-    while(!(FLASH_IAPSR & 0x08));     
-    asm("nop");     
-    FLASH_CR2 = 0x80;     
-    asm("nop");     
-    FLASH_NCR2 = 0x7f;     
-    asm("nop");     
-    *((unsigned char *)0x487e) = 0x55;     
-    asm("nop");     
-    *((unsigned char *)0x487f) = 0xaa;  
+    FLASH_DUKR = 0xae;
+    asm("nop");
+    FLASH_DUKR = 0x56;
+    asm("nop");
+    while(!(FLASH_IAPSR & 0x08));
+    asm("nop");
+    FLASH_CR2 = 0x80;
+    asm("nop");
+    FLASH_NCR2 = 0x7f;
+    asm("nop");
+    *((unsigned char *)0x487e) = 0x55;
+    asm("nop");
+    *((unsigned char *)0x487f) = 0xaa;
 }
 #endif
 
@@ -280,7 +280,7 @@ void ALL_ID_EEPROM_Erase(void)
     WriteByteToFLASH(addr_eeprom_sys + 0x3FE, xm[1]);
     WriteByteToFLASH(addr_eeprom_sys + 0x3FF, xm[0]);
     LockFlash(UNLOCK_EEPROM_TYPE);
-	
+
     for (i = 0; i < 256; i++)
     {
         ID_Receiver_DATA[i] = 0;
@@ -354,7 +354,7 @@ void ID_SCX1801_EEPROM_write(u32 id)
     UINT8 xm[3] = {0};
     uni_rom_id xn;
 
-	
+
     xn.IDL = id;//ID_Receiver_Login;
 	ID_SCX1801_DATA= id;//ID_Receiver_Login;
 	xm[0] = xn.IDB[1];
@@ -495,7 +495,7 @@ void ID_learn(void)
 			--TIME_TestNo91;
 		else FLAG_testNo91=0;
 		if(TIME_ERROR_Read_once_again)
-			--TIME_ERROR_Read_once_again;	
+			--TIME_ERROR_Read_once_again;
 		if(Time_error_read_timeout)
 			--Time_error_read_timeout;
 		if(Time_error_read_gap)
@@ -557,7 +557,7 @@ void ID_learn(void)
 	            {
 	                if (COUNT_Receiver_Login < 10)
 	                    COUNT_Receiver_Login++;
-	            }			
+	            }
 	            if (FLAG_ID_Login_EXIT == 1)
 	            {
 	                FLAG_ID_Login_EXIT = 0;
@@ -575,8 +575,8 @@ void ID_learn(void)
 				TIME_ID_SCX1801_Login=130;
 	            TIME_Login_EXIT_rest = 5380;
 				COUNT_Receiver_Login=0;
-	            TIME_Login_EXIT_Button = 500;			
-        }		
+	            TIME_Login_EXIT_Button = 500;
+        }
 	    else if ((TIME_Receiver_Login >= 250)&&(FLAG_ID_Erase_Login==0)&&(FLAG_ID_SCX1801_Login==0))
 	      {
 	            //TIME_Receiver_Login = 0;
@@ -588,20 +588,20 @@ void ID_learn(void)
 				COUNT_Receiver_Login++; //为什么要加这个？？因为加入了BEEP_Module后，beep时间较长，这时采不到按键的时间TIME_Receiver_Login
 	            TIME_Login_EXIT_rest = 5380;
 	            TIME_Login_EXIT_Button = 500;
-	       }		
+	       }
 		if((FLAG_ID_SCX1801_Login==1)&&(TIME_ID_SCX1801_Login==0))
 		{
 			if(FG_ID_SCX1801_Login_BEEP==0)
 			{
 			    FG_ID_SCX1801_Login_BEEP=1;
 				TIME_ID_SCX1801_Login=390;
-				BEEP_CSR2_BEEPEN = 0;		
+				BEEP_CSR2_BEEPEN = 0;
 			}
 			else if(FG_ID_SCX1801_Login_BEEP==1)
 			{
 			    FG_ID_SCX1801_Login_BEEP=0;
 				TIME_ID_SCX1801_Login=130;
-				BEEP_CSR2_BEEPEN = 1;		
+				BEEP_CSR2_BEEPEN = 1;
 			}
 		}
         if ((FLAG_ID_Erase_Login == 1) || (FLAG_ID_Login == 1) ||(FLAG_ID_SCX1801_Login==1))
@@ -627,14 +627,14 @@ void ID_learn(void)
 					FLAG_ID_Erase_Login=0;
                 	BEEP_and_LED();
 					ID_SCX1801_EEPROM_write(ID_Receiver_Login);
-					if(FLAG_IDCheck_OK==1) 
+					if(FLAG_IDCheck_OK==1)
                     {
                         FLAG_IDCheck_OK = 0;
                         Delete_GeneralID_EEPROM(ID_SCX1801_DATA);
                     }
 					ID_Login_EXIT_Initial();
                 }
-				else 
+				else
 				{
 		                if (FLAG_IDCheck_OK == 1)
 		                    FLAG_IDCheck_OK = 0;
@@ -665,12 +665,12 @@ void ID_learn(void)
 		                    }
 		                } //end else
 				}
-            }     
+            }
             if (TIME_Login_EXIT_rest)
                 --TIME_Login_EXIT_rest;
-            else 
+            else
                 ID_Login_EXIT_Initial();
-        } 
+        }
     }
     //#endif
 }
@@ -683,12 +683,12 @@ void ID_Login_EXIT_Initial(void)
 		BEEP_Module(300,900);
 		BEEP_Module(300,900);
 		BEEP_Module(1800,1);
-		}	
+		}
 	else if(FLAG_ID_Login==1)
 		{
 		BEEP_Module(300,900);
-		BEEP_Module(1800,1);		
-		}   
+		BEEP_Module(1800,1);
+		}
 	BEEP_CSR2_BEEPEN = 0;
     FLAG_ID_Login_EXIT = 1;
     FLAG_ID_Login_OK = 0;
