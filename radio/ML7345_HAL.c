@@ -33,12 +33,16 @@ u8 ML7345_SetAndGet_State(RF_StatusSet_ENUM sta)
     u8 status = 0;
 
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL);  //set bank0
-    if(sta == TX_ON || sta == RX_ON || sta == TRX_OFF || sta == Force_TRX_OFF)
-    {
-        ML7345_Write_Reg(ADDR_RF_STATUS,sta);
-        WaitStatus_Complete();
-    }
     status = ML7345_Read_Reg(ADDR_RF_STATUS) >> 4;
+    if(status != sta)
+    {
+        if(sta == TX_ON || sta == RX_ON || sta == TRX_OFF || sta == Force_TRX_OFF)
+        {
+            ML7345_Write_Reg(ADDR_RF_STATUS,sta);
+            WaitStatus_Complete();
+            status = ML7345_Read_Reg(ADDR_RF_STATUS) >> 4;
+        }
+    }
 
     return status;
 }

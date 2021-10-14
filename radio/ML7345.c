@@ -215,14 +215,14 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
             break;
         }
     }
-
+    /*
     ML7345_Write_Reg(0x00, 0x22); // BANK_SEL(BANK1)
     read_reg = ML7345_Read_Reg(0x51);
     read_reg = ML7345_Read_Reg(0x52);
     read_reg = ML7345_Read_Reg(0x53);
 
     ML7345_Write_Reg(0x00, 0x11);     // BANK_SEL(BANK0)
-    read_reg = ML7345_Read_Reg(0x6E);
+    read_reg = ML7345_Read_Reg(0x6E);*/
 
     ML7345_Write_Reg(0x60,0x05); /* Decimation gain setting 提高灵敏度 */
     ML7345_AllStateFlag_Clear(); //清除所有标志
@@ -511,7 +511,6 @@ void APP_TX_PACKET(void)
                     ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
 					Time_APP_blank_TX=2;
 					APP_TX_freq++;
-                    ClearWDT();
 				}
 				else if((APP_TX_freq == DEF_APP_TX_freq) && (Flag_TxDone == 1) && (Time_APP_blank_TX == 0))
 				{
@@ -678,11 +677,12 @@ void ML7345d_Change_Channel(void)
                     Radio_Date_Type = 2;
                     PROFILE_CH_FREQ_32bit_200002EC = PROFILE_CH2_FREQ_32bit_429HighSpeed;
                     ML7345_Frequency_Set(Fre_429_550,Radio_Date_Type); //Fre_429_550
-                    Channels = 1;
+                    Channels = 4;
                     break;
 
              case 4:
                     Radio_Date_Type = 1;
+                    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
                     ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);
                     Channels = 1;
                     break;
@@ -716,7 +716,6 @@ void ML7345_TRX_Del(void)
     if(reg & 0x20)
     {
         TIMER18ms = 550;
-        Time_Tx_En = 800;
         Flag_FREQ_Scan = 1;
         if(Flag_rx_pream == 0 && Flag_set_freq == 0)
         {
