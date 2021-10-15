@@ -16,9 +16,9 @@
 //u8 Fre_429_550[11] = {0x23,0x0C,0xBB,0xBC,0x23,0x0C,0x33,0x33,0x04,0x4B,0x56}; //429.550MHz频率设置 1#
 //24M
 //ROHM demo板 main fre=426.25;Vco Cal Range:425.85 - 431.85.MHz
-u8 Fre_426_075[11] = {0x23,0x08,0x19,0x99,0x23,0x07,0x91,0x11,0x04,0x38,0x42}; //426.075MHz频率设置 2#
-u8 Fre_429_350[11] = {0x23,0x0C,0x77,0x77,0x23,0x0B,0xEE,0xEF,0x04,0x43,0x4E}; //429.350MHz频率设置 2#
-u8 Fre_429_550[11] = {0x23,0x0C,0xBB,0xBC,0x23,0x0C,0x33,0x33,0x04,0x44,0x4E}; //429.550MHz频率设置 2#
+u8 Fre_426_075[11] = {0x23,0x08,0x19,0x99,0x23,0x07,0x91,0x11,0x04,0x18,0x24}; //426.075MHz频率设置 2#
+u8 Fre_429_350[11] = {0x23,0x0C,0x77,0x77,0x23,0x0B,0xEE,0xEF,0x04,0x24,0x30}; //429.350MHz频率设置 2#
+u8 Fre_429_550[11] = {0x23,0x0C,0xBB,0xBC,0x23,0x0C,0x33,0x33,0x04,0x26,0x30}; //429.550MHz频率设置 2#
 u8 Fre_426_750[11] = {0x23,0x09,0x00,0x00,0x23,0x08,0x77,0x77,0x04,0x40,0x4C}; //426.750MHz频率设置,24M TCXO
 u8 Fre_429_175[11] = {0x23,0x0c,0x3b,0xbc,0x23,0x0b,0xb3,0x33,0x04}; //429.175MHz频率设置,24M TCXO
 u8 Fre_429_200[11] = {0x23,0x0c,0x44,0x44}; //429.200MHz频率设置
@@ -204,8 +204,8 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
     ML7345_Write_Reg(0x24,0x03);
     ML7345_Write_Reg(0x7e,0x00);
 
-    //ML7345_DataRate_Set_4_8k();
-    ML7345_DataRate_Set_1_2k();
+    if(freq == Fre_426_075) ML7345_DataRate_Set_1_2k();
+    else    ML7345_DataRate_Set_4_8k();
     /*****************************************************/
 
     ML7345_Write_Reg(0x00, 0x11);     /* BANK_SEL(BANK0) */
@@ -501,15 +501,22 @@ void APP_TX_PACKET(void)
                     TIMER18ms = 300;
 				    Receiver_LED_TX = 1;
 					TX_DataLoad_HighSpeed(ID_SCX1801_DATA,Last_Uart_Struct_DATA_Packet_Contro, &CONST_TXPACKET_DATA_20000AF0[0]);
+                    ML7345_SetAndGet_State(TRX_OFF);
+                    ML7345_Write_Reg(0x00,0x22);    // Bank1 Set
+                    ML7345_Write_Reg(0x2a,0x15);    //sync
+                    ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL);
+                    ML7345_GPIO2TxDoneInt_Enable();
                     ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
-                    Time_APP_blank_TX=2;
+                    Time_APP_blank_TX=10;
+                    Time_Tx_Out = 100;
 					APP_TX_freq=1; //1
 				}
 				else if((APP_TX_freq < DEF_APP_TX_freq) && (Flag_TxDone == 1) && (Time_APP_blank_TX == 0))
 				{
                     Flag_TxDone = 0;
                     ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
-					Time_APP_blank_TX=2;
+					Time_APP_blank_TX=10;
+                    Time_Tx_Out = 100;
 					APP_TX_freq++;
 				}
 				else if((APP_TX_freq == DEF_APP_TX_freq) && (Flag_TxDone == 1) && (Time_APP_blank_TX == 0))
@@ -529,6 +536,14 @@ void APP_TX_PACKET(void)
         FLAG_APP_RXstart = 0;
         FLAG_APP_RX = 1;
         Flag_tx_en = 0;
+    }
+    else if(Flag_tx_en == 1 && Time_Tx_Out == 0 && Flag_TxDone == 0 && FLAG_APP_RXstart == 0)
+    {
+        if(PROFILE_CH_FREQ_32bit_200002EC == 429350000) RF_ML7345_Init(Fre_429_350,0x15,28);
+        else if(PROFILE_CH_FREQ_32bit_200002EC == 429550000) RF_ML7345_Init(Fre_429_550,0x15,28);
+        ML7345_GPIO2TxDoneInt_Enable();
+        ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
+        Time_Tx_Out = 100;
     }
 }
 
@@ -723,11 +738,11 @@ void ML7345_TRX_Del(void)
             if(PROFILE_CH_FREQ_32bit_200002EC == 426075000)
             {
                 TIMER300ms = 600;
-                if(Flag_TX_ID_load == 0)    {RF_ML7345_Init(Fre_426_075,0x15,12); ML7345_DataRate_Set_1_2k();}
-                else                        {RF_ML7345_Init(Fre_426_075,0x15,24); ML7345_DataRate_Set_1_2k();}
+                if(Flag_TX_ID_load == 0)    RF_ML7345_Init(Fre_426_075,0x15,12);
+                else                        RF_ML7345_Init(Fre_426_075,0x15,24);
             }
-            else if(PROFILE_CH_FREQ_32bit_200002EC == 429350000)   {RF_ML7345_Init(Fre_429_350,0x15,28); ML7345_DataRate_Set_4_8k();TIMER300ms = 100;}
-            else if(PROFILE_CH_FREQ_32bit_200002EC == 429550000)   {RF_ML7345_Init(Fre_429_550,0x15,28); ML7345_DataRate_Set_4_8k();TIMER300ms = 100;}
+            else if(PROFILE_CH_FREQ_32bit_200002EC == 429350000)   {RF_ML7345_Init(Fre_429_350,0x15,28); TIMER300ms = 100;}
+            else if(PROFILE_CH_FREQ_32bit_200002EC == 429550000)   {RF_ML7345_Init(Fre_429_550,0x15,28); TIMER300ms = 100;}
             ML7345_GPIO2RxDoneInt_Enable();
             ML7345_SetAndGet_State(RX_ON);
         }
@@ -790,6 +805,23 @@ void SCAN_RECEIVE_PACKET(void)
         TIMER300ms = 300;
     }
 }
+
+void ML7345D_Error_Detect(void)
+{
+    if(ML7345_Read_Reg(ADDR_INT_SOURCE_GRP1) & 0x04)    //PLL unlock interrupt
+    {
+        ML7345_Write_Reg(ADDR_INT_SOURCE_GRP1,0xFB);
+        while(ML7345_SetAndGet_State(Get_Sta) != TRX_OFF);
+        ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
+    }
+    else if(ML7345_Read_Reg(ADDR_INT_SOURCE_GRP3) & 0x10)    //TX FIFO access error interrupt
+    {
+        ML7345_SetAndGet_State(Force_TRX_OFF);
+        ML7345_StateFlag_Clear(TX_DONE_FLAG);
+        ML7345_AutoTx_Data(CONST_TXPACKET_DATA_20000AF0,28);
+    }
+}
+
 
 void TX_DataLoad(u32 IDCache, u8 CtrCmd, u8 *Packet)
 {

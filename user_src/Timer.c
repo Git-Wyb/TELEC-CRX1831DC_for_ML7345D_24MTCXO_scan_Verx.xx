@@ -13,7 +13,7 @@
 #include "uart.h"
 u16 ErrStateTimeer = 1;
 u16 StateReadTimer = 500;
-u16 Time_Tx_En = 0;
+u16 Time_Tx_Out = 0;
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Timer 4 start   1ms
 void TIM4_Init(void)
 {
@@ -57,6 +57,8 @@ void TIM4_UPD_OVF(void)
         X_ERRTimer--;
 	if (TIME_ID_SCX1801_Login)
 		--TIME_ID_SCX1801_Login;
+
+    if(Time_Tx_Out)  --Time_Tx_Out;
 
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

@@ -458,11 +458,6 @@ Return: Null
 void ML7345_AutoTx_Data(u8 *pbuf,u8 len)
 {
     if(len > 64)    len = 64;
-    ML7345_SetAndGet_State(TRX_OFF);
-    ML7345_Write_Reg(0x00,0x22);    // Bank1 Set
-    ML7345_Write_Reg(0x2a,0x15);    //sync
-    ML7345_GPIO2TxDoneInt_Enable();
-
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL);  //set bank0
     ML7345_Write_Reg(ADDR_TX_PKT_LEN_L,len);    //发送包长度低八位
     ML7345_AutoStateTransition_Set(AUTO_TX_EN);  //设置为自动发送模式
