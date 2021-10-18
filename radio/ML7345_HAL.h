@@ -6,6 +6,7 @@
 #include "spi.h"
 #include "timer.h"
 #include "ram.h"
+#include "ML7345.h"
 
 
 typedef enum{
@@ -70,7 +71,7 @@ void ML7345_GPIO1RxDoneInt_Enable(void);
 void ML7345_GPIO1TxDoneInt_Enable(void);
 void ML7345_GPIO2RxDoneInt_Enable(void);
 void ML7345_GPIO2TxDoneInt_Enable(void);
-void WaitStatus_Complete(void);
+u8 WaitStatus_Complete(void);
 void ML7345_ReadRx_Pack(u8 *pbuf,u8 len);
 void ML7345_AutoTx_Data(u8 *pbuf,u8 len);
 u8 RF_SyncWord_DONE(void);

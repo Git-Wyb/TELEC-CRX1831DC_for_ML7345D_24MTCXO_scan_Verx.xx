@@ -39,7 +39,15 @@ u8 ML7345_SetAndGet_State(RF_StatusSet_ENUM sta)
         if(sta == TX_ON || sta == RX_ON || sta == TRX_OFF || sta == Force_TRX_OFF)
         {
             ML7345_Write_Reg(ADDR_RF_STATUS,sta);
-            WaitStatus_Complete();
+            status = WaitStatus_Complete();
+            if(status != 0)
+            {
+                if(PROFILE_CH_FREQ_32bit_200002EC == 426075000) RF_ML7345_Init(Fre_426_075,0x55,12);
+                else if (PROFILE_CH_FREQ_32bit_200002EC == 429350000) RF_ML7345_Init(Fre_429_350,0x55,28);
+                else if (PROFILE_CH_FREQ_32bit_200002EC == 429550000) RF_ML7345_Init(Fre_429_550,0x55,28);
+                ML7345_Write_Reg(ADDR_RF_STATUS,sta);
+                WaitStatus_Complete();
+            }
             status = ML7345_Read_Reg(ADDR_RF_STATUS) >> 4;
         }
     }
@@ -48,18 +56,19 @@ u8 ML7345_SetAndGet_State(RF_StatusSet_ENUM sta)
 }
 
 /* 等待RF状态转换完成 */
-void WaitStatus_Complete(void)
+u8 WaitStatus_Complete(void)
 {
     u16 count = 0;
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL);  //set bank0
     while(1)
     {
         if(ML7345_Read_Reg(ADDR_INT_SOURCE_GRP1) & 0x08)
-            break;
-        if(count++ > 5000)    break;
-        ClearWDT();
+        {
+            ML7345_Write_Reg(ADDR_INT_SOURCE_GRP1,0x00); //clear
+            return 0;
+        }
+        if(count++ > 5000)    return 1;
     }
-    ML7345_Write_Reg(ADDR_INT_SOURCE_GRP1,0x00);
 }
 
 /*
@@ -269,15 +278,22 @@ void ML7345_Frequency_Set(u8 *freq,u8 radio_type)
     ML7345_Write_Reg(ADDR_VCO_CAL_MIN_FL,freq[7]);
 
     //ML7345_Write_Reg(ADDR_VCO_CAL_MAX_N,freq[8]);
-    ML7345_Write_Reg(ADDR_VCAL_MIN,freq[9]);
-    ML7345_Write_Reg(ADDR_VCAL_MAX,freq[10]);
+    //ML7345_Write_Reg(ADDR_VCAL_MIN,freq[9]);
+    //ML7345_Write_Reg(ADDR_VCAL_MAX,freq[10]);
 
     ML7345_Write_Reg(0x00,0x22);    /* Bank1 Set */
     ML7345_Write_Reg(0x25,0x08);    /* SyncWord length setting */
     ML7345_Write_Reg(0x2a,0x55);
 
     if(radio_type == 1) ML7345_DataRate_Set_1_2k();
-    else if(radio_type > 1)  ML7345_DataRate_Set_4_8k();
+    else if(radio_type == 2)  ML7345_DataRate_Set_4_8k();
+
+    ML7345_Write_Reg(0x6f, 0x01);     /* VCO_CAL_START(CAL start) */
+    while(1){
+        if(ML7345_Read_Reg(0x0Du)&0x02u){   /* Wait VCO calibration completion */
+            break;
+        }
+    }
 
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL); /* Bank0 Set */
     ML7345_SetAndGet_State(RX_ON);

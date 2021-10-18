@@ -676,7 +676,7 @@ void ML7345d_Change_Channel(void)
             case 1:
                     Radio_Date_Type = 1;
                     PROFILE_CH_FREQ_32bit_200002EC = 426075000;
-                    ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);       //1.2ms
+                    ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);       //加上VCO校准后用时5ms，不加1.2ms
                     if(ID_SCX1801_DATA == 0) Channels = 1;
                     else Channels = 2;
                     break;
@@ -792,12 +792,12 @@ void SCAN_RECEIVE_PACKET(void)
             else                        ML7345_ReadRx_Pack(SPI_RECEIVE_BUFF,12);
         }
         else    ML7345_ReadRx_Pack(SPI_RECEIVE_BUFF,28);
-        RX_ANALYSIS();
         ML7345_StateFlag_Clear(RX_DONE_FLAG);
+        RX_ANALYSIS();
         Flag_FREQ_Scan = 0;
         ML7345_SetAndGet_State(TRX_OFF);
         ML7345_Write_Reg(0x00,0x22);    // Bank1 Set
-        ML7345_Write_Reg(0x2a,0x55);
+        ML7345_Write_Reg(0x2a,0x55);    //sync
         ML7345_Write_Reg(0x00,0x11);    // Bank0 Set
         ML7345_SetAndGet_State(RX_ON);
         Flag_rx_pream = 0;
