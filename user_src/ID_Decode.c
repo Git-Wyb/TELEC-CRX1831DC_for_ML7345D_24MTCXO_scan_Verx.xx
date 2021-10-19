@@ -116,7 +116,7 @@ void ID_Decode_IDCheck(void)
 		                        TIME_auto_close = 0;
 		                        FG_auto_open_time = 0;
 		                        if (FG_auto_manual_mode == 1)      //Manual_override_TIMER=13500;   //2�?0秒自动无�?
-		                            Manual_override_TIMER = 24480; //4�?0秒自动无�?
+		                            Manual_override_TIMER = 27200;//5 Minutes.  24480; //4�?0秒自动无�?
 		                        if ((DATA_Packet_Control & 0x14) == 0x14)
 		                        {
 		                            if (TIMER1s == 0)
