@@ -224,7 +224,7 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
     ML7345_Write_Reg(0x00, 0x11);     // BANK_SEL(BANK0)
     read_reg = ML7345_Read_Reg(0x6E);*/
 
-    ML7345_Write_Reg(0x60,0x05); /* Decimation gain setting 提高灵敏度 */
+    ML7345_Write_Reg(0x60,0x06); /* Decimation gain setting 提高灵敏度 */
     ML7345_AllStateFlag_Clear(); //清除所有标志
 }
 
