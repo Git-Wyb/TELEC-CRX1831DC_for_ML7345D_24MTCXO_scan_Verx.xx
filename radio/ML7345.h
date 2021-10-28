@@ -10,6 +10,9 @@
 
 #define TX_PACKET_COUNT 3
 
+#define FREQ_PLL     12000000 //Extern TCXO / 2 = 24MHz / 2
+#define CONST_COEFF  1048576  //常数2^20
+
 void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len);
 void Tx_Data_Test(u8 mode);
 void ML7345_MeasurBER_Init(void);
@@ -26,6 +29,7 @@ void ML7345D_Freq_Scanning(void);
 void ML7345D_RF_test_mode(void);
 void TX_DataLoad_HighSpeed(u32 IDCache, Wireless_Body CtrCmd, u8 *Packet);
 void ML7345D_Error_Detect(void);
+void ML7345_Frequency_Calcul(u32 Freq,u8 *pbuf);
 
 extern u8 Tx_Done;
 extern u8 Rx_Done;
