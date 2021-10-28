@@ -88,7 +88,7 @@ void main(void)
 		if(ID_SCX1801_DATA!=0)APP_TX_PACKET();
         if(FLAG_APP_RX==1)
         {
-    		  ML7345D_Freq_Scanning();
+    		  //ML7345D_Freq_Scanning();
 			  SCAN_RECEIVE_PACKET(); //É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
         }
         TranmissionACK();

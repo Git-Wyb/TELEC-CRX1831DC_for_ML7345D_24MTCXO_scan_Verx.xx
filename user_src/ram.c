@@ -62,6 +62,15 @@ u16 Manual_override_TIMER = 0;
 u16 time_Login_exit_256 = 0;
 u16 TIME_Fine_Calibration = 0; //窄带下中频滤波器100KHz精校
 
+u8 FLAG_TELEC_mode=0;
+u8 FLAG_TELEC_CH=0;
+u8 TIME_TELEC_mode=0;
+u8 TIME_TELEC_CH=0;
+u8 FLAG_TELEC_CH_dec=0;
+u8 TIME_TELEC_CH_dec=0;
+u8 TELEC_Frequency_CH=2;
+u8 FLAG_TELEC_10ms=0;
+
 u8 Count_key_SW3 = 0;
 u8 Display_key_SW3 = 0xff;
 
@@ -165,6 +174,6 @@ u8 ERROR_Read_sendTX_packet=0;
 u8 Flag_ERROR_Read_once_again=0;
 
 
-
+u32 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 426075000ul;
 
 

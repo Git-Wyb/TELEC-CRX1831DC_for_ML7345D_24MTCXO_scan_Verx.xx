@@ -65,6 +65,7 @@ void VHF_GPIO_INIT(void) // CPU端口设置
     PIN_BEEP = 0;
 
     LED_GPIO_Init();
+    CG2214M6_GPIO_Init();
     Receiver_OUT_GPIO_Init(); // Output   受信机继电器
 
     ML7345_INT_GPIO2_DDR = 0;   //输入

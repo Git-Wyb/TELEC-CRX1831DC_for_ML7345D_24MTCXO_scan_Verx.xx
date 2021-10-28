@@ -257,9 +257,9 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\Libraries\inc</state>
-          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\radio</state>
-          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\CRX1831DC_for_ML7345D_24M_scan_Verx.xx\user_src</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\TELEC-CRX1831DC_for_ML7345D_24M_scan_Verx.xx\Libraries\inc</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\TELEC-CRX1831DC_for_ML7345D_24M_scan_Verx.xx\radio</state>
+          <state>D:\My Project\CRX1831DC Chang Chip ADF7030 to ML7345D\bank\24MHz Pro\TELEC-CRX1831DC_for_ML7345D_24M_scan_Verx.xx\user_src</state>
         </option>
         <option>
           <name>CCStdIncCheck</name>

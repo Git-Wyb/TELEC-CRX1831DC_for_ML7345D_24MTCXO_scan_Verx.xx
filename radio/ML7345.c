@@ -22,6 +22,7 @@ u8 Fre_429_550[11] = {0x23,0x0C,0xBB,0xBC,0x23,0x0C,0x33,0x33,0x04,0x26,0x30}; /
 u8 Fre_426_750[11] = {0x23,0x09,0x00,0x00,0x23,0x08,0x77,0x77,0x04,0x40,0x4C}; //426.750MHz频率设置,24M TCXO
 u8 Fre_429_175[11] = {0x23,0x0c,0x3b,0xbc,0x23,0x0b,0xb3,0x33,0x04}; //429.175MHz频率设置,24M TCXO
 u8 Fre_429_200[11] = {0x23,0x0c,0x44,0x44,0x23,0x0b,0xbb,0xbc,0x04}; //429.200MHz频率设置
+u8 Freq_SetBuff[8] = {0};
 
 //26M
 //u8 Fre_426_750[11] = {0x20,0x0D,0x3B,0x13,0x20,0x0C,0xBD,0x0C,0x04}; //426.750MHz频率设置,26M TCXO
@@ -259,13 +260,6 @@ void Ber_PinExit_Init(void)
     EXTI_CR2 &= (~MASK_EXTI_CR2_P6IS);
     //EXTI_CR2 |= 0x08 << 2;   // 下降沿触发
     EXTI_CR2 |= 0x04 << 2;  //上升沿
-    /*
-    ADF7030_GPIO3_DDR = Input; //输入
-    ADF7030_GPIO3_CR1 = 0;     //1: Input with pull-up 0: Floating input
-    ADF7030_GPIO3_CR2 = 1;     //使能中断
-    EXTI_CR2 &= (~MASK_EXTI_CR2_P4IS);
-   // EXTI_CR2 |= 0x02;
-    EXTI_CR2 |= 0x01;  */
 }
 
 void Ber_Exit_UnInit(void)
@@ -330,7 +324,7 @@ void DataReceive(void)
                 X_ERR++;
             X_COUNT++;
             X_HISbyte ^= 1;
-            if (X_COUNT >= 500)
+            if (X_COUNT >= 1000)
                 StateCache = 2;
         }
         break;
@@ -346,9 +340,9 @@ void DataReceive(void)
 
 void RF_Ber_Test(void)
 {
-    if (X_COUNT >= 500)
+    if (X_COUNT >= 1000)
     {
-        if (X_ERR >= 5) RX_LED = 0;
+        if (X_ERR >= 50) RX_LED = 0;
         else            RX_LED = 1;
         X_ERR = 0;
         X_COUNT = 0;
@@ -411,12 +405,6 @@ void RF_ML7345_TEST(void)
     ML7345_GPIO1RxDoneInt_Enable(); /* 开启接收完成中断,ML7345D GPIO1中断输出 */
     ML7345_GPIO1TxDoneInt_Enable(); /* 开启发送完成中断,ML7345D GPIO1中断输出 */
 }
-
-
-
-
-
-
 
 void APP_TX_PACKET(void)
 {
@@ -550,30 +538,98 @@ void APP_TX_PACKET(void)
 //--------------------------------------------------------------------------------------------------
 void ML7345D_RF_test_mode(void)
 {
-	 Receiver_LED_OUT = 1;
     u8 test_flag = 0;
+
+    //UINT8 Boot_i;
+    u8 i;
+    Receiver_LED_OUT = 1;
 
     while (Receiver_test == 0)
     {
         test_flag = 1;
         Receiver_LED_OUT = 0;
-        ClearWDT();   // Service the WDT
-        if (TP4 == 0) //test ADF7030 TX
+        ClearWDT();
+
+        if(FLAG_TELEC_10ms)
         {
-            if (TP3 == 0)
-                Tx_Rx_mode = 0;
-            else
-                Tx_Rx_mode = 1;
+            FLAG_TELEC_10ms = 0;
+            if(TIME_TELEC_CH)--TIME_TELEC_CH;
+            if(TIME_TELEC_mode)--TIME_TELEC_mode;
+            if(TIME_TELEC_CH_dec)--TIME_TELEC_CH_dec;
         }
-        else //test ADF7030 RX
+        if((Receiver_Login==0)&&(FLAG_TELEC_mode==0)&&(TIME_TELEC_mode==0))
         {
-            if (TP3 == 0)
-                Tx_Rx_mode = 2;
-            else
-                Tx_Rx_mode = 3;
+            FLAG_TELEC_mode=1;
+            Tx_Rx_mode++;
+            if(Tx_Rx_mode>3)    Tx_Rx_mode=0;
         }
+        if(Receiver_Login==1){FLAG_TELEC_mode=0;TIME_TELEC_mode=5;}
+        if((TP3==0)&&(FLAG_TELEC_CH==0)&&(TIME_TELEC_CH==0))
+        {
+            FLAG_TELEC_CH=1;
+            TELEC_Frequency_CH++;
+            if(FG_test_rx==0)
+            {
+                if(TELEC_Frequency_CH==1)   TELEC_Frequency_CH=2;
+                if(TELEC_Frequency_CH>47)   TELEC_Frequency_CH=2;
+            }
+            else
+            {
+                if(TELEC_Frequency_CH>47)   TELEC_Frequency_CH=1;
+            }
+            if(FG_test_rx==0)
+            {
+                PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+                for(i=0;i<TELEC_Frequency_CH-2;i++)
+                PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+
+                ML7345_CLK_CR2 = 0;//关闭中断
+                ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
+                ML7345_Frequency_Set(Freq_SetBuff,1);
+                ML7345_SetAndGet_State(Force_TRX_OFF);
+                if (Tx_Rx_mode == 0) //发载波，无调制信叿
+                    Tx_Data_Test(0);
+                else if(Tx_Rx_mode == 1) //发载波，有调制信叿
+                    Tx_Data_Test(1);
+            }
+            else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+        }
+        if(TP3==1)  {FLAG_TELEC_CH=0;TIME_TELEC_CH=5;}
+
+        if((TP4==0)&&(FLAG_TELEC_CH_dec==0)&&(TIME_TELEC_CH_dec==0))
+        {
+            FLAG_TELEC_CH_dec=1;
+            TELEC_Frequency_CH--;
+            if(FG_test_rx==0)
+            {
+                if(TELEC_Frequency_CH<=1)   TELEC_Frequency_CH=47;
+            }
+            else
+            {
+                if(TELEC_Frequency_CH<1)    TELEC_Frequency_CH=47;
+            }
+            if(FG_test_rx==0)
+            {
+                PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+                for(i=0;i<TELEC_Frequency_CH-2;i++)
+                PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+
+                ML7345_CLK_CR2 = 0;
+                ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
+                ML7345_Frequency_Set(Freq_SetBuff,1);
+                ML7345_SetAndGet_State(Force_TRX_OFF);
+                if (Tx_Rx_mode == 0) //发载波，无调制信叿
+                    Tx_Data_Test(0);
+                else if(Tx_Rx_mode == 1) //发载波，有调制信叿
+                    Tx_Data_Test(1);
+            }
+            else PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+        }
+        if(TP4==1){FLAG_TELEC_CH_dec=0;TIME_TELEC_CH_dec=5;}
+
         if ((Tx_Rx_mode == 0) || (Tx_Rx_mode == 1))
         {
+            CG2214M6_USE_T;
             FG_test_rx = 0;
             Receiver_LED_RX = 0;
             FG_test_tx_off = 0;
@@ -585,7 +641,13 @@ void ML7345D_RF_test_mode(void)
                 if (FG_test_tx_on == 0)
                 {
                     FG_test_tx_on = 1;
-                    ML7345_CLK_CR2 = 0; //关闭中断
+                    PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+                    for(i=0;i<TELEC_Frequency_CH-2;i++)
+                    PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+
+                    ML7345_CLK_CR2 = 0;
+                    ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
+                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     ML7345_SetAndGet_State(Force_TRX_OFF);
                     Tx_Data_Test(0);
                 }
@@ -601,16 +663,22 @@ void ML7345D_RF_test_mode(void)
                 FG_test_tx_on = 0;
                 if (FG_test_tx_1010 == 0)
                 {
-                    FG_test_tx_1010 = 1;
+                    PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
+                    for(i=0;i<TELEC_Frequency_CH-2;i++)
+                    PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
+
+                    ML7345_CLK_CR2 = 0;
+                    ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
+                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     ML7345_SetAndGet_State(Force_TRX_OFF);
-                    ML7345_CLK_CR2 = 0; //关闭中断
                     Tx_Data_Test(1);
+                    FG_test_tx_1010 = 1;
                 }
             }
         }
-        //else  {           //test ADF7021 RX
         if ((Tx_Rx_mode == 2) || (Tx_Rx_mode == 3))
         {
+            CG2214M6_USE_R;
             FG_test_rx = 1;
             Receiver_LED_TX = 0;
             FG_test_mode = 0;
@@ -632,7 +700,7 @@ void ML7345D_RF_test_mode(void)
                     TIMER1s = 500;
                     Receiver_LED_RX = !Receiver_LED_RX;
                 }
-                //SCAN_RECEIVE_PACKET(); //扫描接收数据
+            //SCAN_RECEIVE_PACKET(); //扫描接收数据
             }
             if (Tx_Rx_mode == 3) //packet usart out put BER
             {
@@ -834,6 +902,15 @@ void ML7345_Frequency_Calcul(u32 Freq,u8 *pbuf)
     pbuf[1] = (cal_val >> 16) & 0xff;
     pbuf[2] = (cal_val >> 8) & 0xff;
     pbuf[3] = cal_val & 0xff;
+
+    Freq = Freq - VCO_LowerLimit_FREQ;
+    integer = (u8)(Freq / FREQ_PLL);
+    f_dec = ((float)(Freq / (float)FREQ_PLL) - integer);
+    cal_val = (u32)(f_dec *  CONST_COEFF);
+    pbuf[4] = integer;
+    pbuf[5] = (cal_val >> 16) & 0xff;
+    pbuf[6] = (cal_val >> 8) & 0xff;
+    pbuf[7] = cal_val & 0xff;
 }
 
 void TX_DataLoad(u32 IDCache, u8 CtrCmd, u8 *Packet)

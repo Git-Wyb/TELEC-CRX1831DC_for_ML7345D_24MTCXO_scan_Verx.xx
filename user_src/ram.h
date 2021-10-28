@@ -138,6 +138,15 @@ extern u8 Display_key_SW3;
 extern u16 TIME_TestNo91;
 extern u16 TIME_power_led;
 
+extern u8 FLAG_TELEC_mode;
+extern u8 FLAG_TELEC_CH;
+extern u8 TIME_TELEC_mode;
+extern u8 TIME_TELEC_CH;
+extern u8 FLAG_TELEC_CH_dec;
+extern u8 TIME_TELEC_CH_dec;
+extern u8 TELEC_Frequency_CH;
+extern u8 FLAG_TELEC_10ms;
+
 
 extern ADF70XX_REG_T ROM_adf7030_value[16];
 extern const ADF70XX_REG_T Default_adf7030_value[16];
@@ -175,6 +184,7 @@ extern u32 RADIO_DIG_TX_CFG0_32bit_20000304;
 extern const u8 CONST_AFC_Configuration_400041F8[4];
 extern u16 PA_POWER_OUT[2][18];
 extern u32 PROFILE_CH_FREQ_32bit_200002EC;
+extern u32 PROFILE_CH_FREQ_32bit_200002EC_TELEC ;
 extern u32 PROFILE_RADIO_AFC_CFG1_32bit_2000031C;
 extern u32 PROFILE_RADIO_DATA_RATE_32bit_200002FC;
 extern u32 PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500;
@@ -188,7 +198,6 @@ void SPI_INIT(void);
 u32 ADF7030_GET_MISC_FW(void); //??MISC_FW?????
 void ADF7030_WRITING_PROFILE_FROM_POWERON(void);
 void ADF7030_TRANSMITTING_FROM_POWEROFF(void);
-void ADF7030_RECEIVING_FROM_POWEROFF(void);
 void SCAN_RECEIVE_PACKET(void);
 u32 ConfigurationLen(void);
 
