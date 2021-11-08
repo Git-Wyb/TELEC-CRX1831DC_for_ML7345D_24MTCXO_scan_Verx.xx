@@ -68,14 +68,15 @@ void main(void)
     PROFILE_CH_FREQ_32bit_200002EC = 426075000;
     TIME_power_led=500;
     ClearWDT();        // Service the WDT
+    _EI();
     ML7345D_RF_test_mode();
     FLAG_APP_RX = 1;
     FG_Receiver_LED_RX = 0;
     TIME_EMC = 10;
     FLAG_testNo91=0;
 	FLAG_testBEEP=0;
-    _EI();
     ML7345_SetAndGet_State(RX_ON);
+    CG2214M6_USE_R;
 
     while (1)
     {
@@ -88,7 +89,7 @@ void main(void)
 		if(ID_SCX1801_DATA!=0)APP_TX_PACKET();
         if(FLAG_APP_RX==1)
         {
-    		  //ML7345D_Freq_Scanning();
+    		  ML7345D_Freq_Scanning();
 			  SCAN_RECEIVE_PACKET(); //É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
         }
         TranmissionACK();

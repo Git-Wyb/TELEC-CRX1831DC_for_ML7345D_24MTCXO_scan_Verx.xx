@@ -1,2 +1,2 @@
 git@github.com:Git-Wyb/TELEC-CRX1831DC_for_ML7345D_24MTCXO_scan_Verx.xx.git
-提交代码：git push wyb_origin_TELEC
+提交代码：git push wyb_origin_TELEC --all

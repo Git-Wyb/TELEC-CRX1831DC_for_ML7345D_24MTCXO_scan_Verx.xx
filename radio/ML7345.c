@@ -170,7 +170,7 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
 
     ML7345_Write_Reg(0x2f,0x08);    /* GFSK clock setting x8 clock,GFSK/FSK modulation timing resolution setting */
     ML7345_Write_Reg(0x30,0x00);    /* GFSK frequency deviation setting (high 6bits) */
-    ML7345_Write_Reg(0x31,0xd1);    /* P71  GFSK frequency deviation:2.4KHz,GFSK frequency deviation setting (low byte) */
+    ML7345_Write_Reg(0x31,0xAE);    /* P71  GFSK frequency deviation:2.0KHz,GFSK frequency deviation setting (low byte)；设定值(取整) ={ 频偏(hz) /(tcxo(hz) / 2) }* (2^20) */
 
     /*(Channel#0 frequency-400khz)426.075:0x23 0x07 0x91 0x11;
     426.25:0x23 0x07 0xcc 0xcc */
@@ -411,7 +411,13 @@ void APP_TX_PACKET(void)
     char rssi;
 	 u8 i=2,j=0;
 
-	 if((TP3==0)&&(FLAG_Key_TP3==0))FLAG_Key_TP3=1;
+	 if((TP3==0)&&(FLAG_Key_TP3==0))
+     {
+         FLAG_Key_TP3 = 1;
+         if(Channels != 2)  Channels = 2;
+         else Channels = 3;
+     }
+     else if(TP3 == 1)  FLAG_Key_TP3 = 0;
 
       if((Time_error_read_timeout==0)&&(Flag_ERROR_Read==1))
       {
@@ -459,10 +465,10 @@ void APP_TX_PACKET(void)
 	  	)
 	  {
 					  FLAG_APP_TX_fromUART=0;
-					  FLAG_Key_TP3=0;
+					  //FLAG_Key_TP3=0;
 					  Last_Uart_Struct_DATA_Packet_Contro=Uart_Struct_DATA_Packet_Contro;
 					  Last_Uart_Struct_DATA_Packet_Contro.Fno_Type.UN.type=1;
-					  rssi=RAM_RSSI_AVG/128;
+					  rssi=RAM_RSSI_AVG;///128;
 					  rssi=-rssi;
 					  if(rssi>=127)rssi=127;
 					  if(Radio_Date_Type_bak==2)rssi= rssi | 0x80;
@@ -483,7 +489,7 @@ void APP_TX_PACKET(void)
         if(TX_Scan_step==1)TX_Scan_step=2;
 		   if(TX_Scan_step==2)
 		   {
-				if(APP_TX_freq==0)
+				if(APP_TX_freq==0 && Flag_tx_en == 0)
 				{
                     Flag_tx_en = 1;
                     TIMER18ms = 300;
@@ -516,6 +522,7 @@ void APP_TX_PACKET(void)
 				   Time_APP_RXstart=1;
 				   Receiver_LED_TX = 0;
 				   FLAG_APP_TX_once=0;
+                   Flag_tx_en = 0;
 				}
 		   }
     }
@@ -523,7 +530,6 @@ void APP_TX_PACKET(void)
     {
         FLAG_APP_RXstart = 0;
         FLAG_APP_RX = 1;
-        Flag_tx_en = 0;
     }
     else if(Flag_tx_en == 1 && Time_Tx_Out == 0 && Flag_TxDone == 0 && FLAG_APP_RXstart == 0)
     {
@@ -538,15 +544,12 @@ void APP_TX_PACKET(void)
 //--------------------------------------------------------------------------------------------------
 void ML7345D_RF_test_mode(void)
 {
-    u8 test_flag = 0;
-
-    //UINT8 Boot_i;
-    u8 i;
+    u8 i = 0;
     Receiver_LED_OUT = 1;
-
+    Flag_test_mode = 0;
     while (Receiver_test == 0)
     {
-        test_flag = 1;
+        Flag_test_mode = 1;
         Receiver_LED_OUT = 0;
         ClearWDT();
 
@@ -579,14 +582,15 @@ void ML7345D_RF_test_mode(void)
             }
             if(FG_test_rx==0)
             {
+                CG2214M6_USE_T;
                 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
                 for(i=0;i<TELEC_Frequency_CH-2;i++)
                 PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
 
                 ML7345_CLK_CR2 = 0;//关闭中断
                 ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
-                ML7345_Frequency_Set(Freq_SetBuff,1);
                 ML7345_SetAndGet_State(Force_TRX_OFF);
+                ML7345_Frequency_Set(Freq_SetBuff,1);
                 if (Tx_Rx_mode == 0) //发载波，无调制信叿
                     Tx_Data_Test(0);
                 else if(Tx_Rx_mode == 1) //发载波，有调制信叿
@@ -610,14 +614,15 @@ void ML7345D_RF_test_mode(void)
             }
             if(FG_test_rx==0)
             {
+                CG2214M6_USE_T;
                 PROFILE_CH_FREQ_32bit_200002EC_TELEC = 429175000;
                 for(i=0;i<TELEC_Frequency_CH-2;i++)
                 PROFILE_CH_FREQ_32bit_200002EC_TELEC += 12500;
 
                 ML7345_CLK_CR2 = 0;
                 ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
-                ML7345_Frequency_Set(Freq_SetBuff,1);
                 ML7345_SetAndGet_State(Force_TRX_OFF);
+                ML7345_Frequency_Set(Freq_SetBuff,1);
                 if (Tx_Rx_mode == 0) //发载波，无调制信叿
                     Tx_Data_Test(0);
                 else if(Tx_Rx_mode == 1) //发载波，有调制信叿
@@ -647,8 +652,8 @@ void ML7345D_RF_test_mode(void)
 
                     ML7345_CLK_CR2 = 0;
                     ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
-                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     ML7345_SetAndGet_State(Force_TRX_OFF);
+                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     Tx_Data_Test(0);
                 }
             }
@@ -669,8 +674,8 @@ void ML7345D_RF_test_mode(void)
 
                     ML7345_CLK_CR2 = 0;
                     ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
-                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     ML7345_SetAndGet_State(Force_TRX_OFF);
+                    ML7345_Frequency_Set(Freq_SetBuff,1);
                     Tx_Data_Test(1);
                     FG_test_tx_1010 = 1;
                 }
@@ -688,10 +693,9 @@ void ML7345D_RF_test_mode(void)
             {
                 FG_test_tx_off = 1;
                 ML7345_SetAndGet_State(Force_TRX_OFF);
+                ML7345_Frequency_Set(Fre_426_750,1);
                 ML7345_MeasurBER_Init();
                 ML7345_SetAndGet_State(RX_ON);
-                Ber_PinExit_Init();
-                _EI();
             }
             if (Tx_Rx_mode == 2) //packet usart out put RSSI
             {
@@ -708,12 +712,13 @@ void ML7345D_RF_test_mode(void)
             }
         }
     }
-    if(test_flag == 1)
+    if(Flag_test_mode == 1)
     {
         ML7345_SetAndGet_State(TRX_OFF);
-        Ber_Exit_UnInit();
         RF_ML7345_Init(Fre_426_075,0x55,12);
     }
+    PROFILE_CH_FREQ_32bit_200002EC = 426075000;
+    Ber_Exit_UnInit();
     ML7345_GPIO2RxDoneInt_Enable(); /* 开启接收完成中断,ML7345D GPIO2中断输出 */
     ML7345_GPIO2TxDoneInt_Enable(); /* 开启发送完成中断,ML7345D GPIO2中断输出 */
     FG_test_rx = 0;
@@ -736,6 +741,8 @@ void ML7345d_Change_Channel(void)
         Radio_Date_Type=1;
         Channels=1;
         ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);
+        ML7345_SetAndGet_State(RX_ON);
+        CG2214M6_USE_R;
     }
     else
     {
@@ -745,6 +752,8 @@ void ML7345d_Change_Channel(void)
                     Radio_Date_Type = 1;
                     PROFILE_CH_FREQ_32bit_200002EC = 426075000;
                     ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);       //加上VCO校准后用时5ms，不加1.2ms
+                    ML7345_SetAndGet_State(RX_ON);
+                    CG2214M6_USE_R;
                     if(ID_SCX1801_DATA == 0) Channels = 1;
                     else Channels = 2;
                     break;
@@ -753,20 +762,26 @@ void ML7345d_Change_Channel(void)
                     Radio_Date_Type = 2;
                     PROFILE_CH_FREQ_32bit_200002EC = PROFILE_CH1_FREQ_32bit_429HighSpeed;
                     ML7345_Frequency_Set(Fre_429_350,Radio_Date_Type);
-                    Channels = 3;
+                    ML7345_SetAndGet_State(RX_ON);
+                    CG2214M6_USE_R;
+                    Channels = 2;
                     break;
 
             case 3:
                     Radio_Date_Type = 2;
                     PROFILE_CH_FREQ_32bit_200002EC = PROFILE_CH2_FREQ_32bit_429HighSpeed;
                     ML7345_Frequency_Set(Fre_429_550,Radio_Date_Type); //Fre_429_550
-                    Channels = 4;
+                    ML7345_SetAndGet_State(RX_ON);
+                    CG2214M6_USE_R;
+                    Channels = 3;
                     break;
 
              case 4:
                     Radio_Date_Type = 1;
                     PROFILE_CH_FREQ_32bit_200002EC = 426075000;
                     ML7345_Frequency_Set(Fre_426_075,Radio_Date_Type);
+                    ML7345_SetAndGet_State(RX_ON);
+                    CG2214M6_USE_R;
                     Channels = 1;
                     break;
 
@@ -782,6 +797,15 @@ void ML7345D_Freq_Scanning(void)
     {
         if(Flag_FREQ_Scan)  return;
         ML7345d_Change_Channel();
+        if(Time_rf_init == 0)
+        {
+            Time_rf_init = 1000;
+            if(PROFILE_CH_FREQ_32bit_200002EC == 426075000) RF_ML7345_Init(Fre_426_075,0x55,12);
+            else if(PROFILE_CH_FREQ_32bit_200002EC == 429350000) RF_ML7345_Init(Fre_429_350,0x55,28);
+            else if(PROFILE_CH_FREQ_32bit_200002EC == 429550000) RF_ML7345_Init(Fre_429_550,0x55,28);
+            ML7345_GPIO2RxDoneInt_Enable();
+            ML7345_SetAndGet_State(RX_ON);
+        }
 
         if(Radio_Date_Type==1)
             TIMER18ms = 18;
@@ -813,6 +837,7 @@ void ML7345_TRX_Del(void)
             else if(PROFILE_CH_FREQ_32bit_200002EC == 429550000)   {RF_ML7345_Init(Fre_429_550,0x15,28); TIMER300ms = 100;}
             ML7345_GPIO2RxDoneInt_Enable();
             ML7345_SetAndGet_State(RX_ON);
+            CG2214M6_USE_R;
         }
         Flag_rx_pream = 1;
         ML7345_Write_Reg(ADDR_INT_SOURCE_GRP2,0x00); //清接收完成标志
@@ -851,6 +876,7 @@ void RX_ANALYSIS(void)
 
 void SCAN_RECEIVE_PACKET(void)
 {
+    short Cache;
     if(Flag_RxDone)
     {
         Flag_RxDone = 0;
@@ -863,11 +889,18 @@ void SCAN_RECEIVE_PACKET(void)
         ML7345_StateFlag_Clear(RX_DONE_FLAG);
         RX_ANALYSIS();
         Flag_FREQ_Scan = 0;
+
         ML7345_SetAndGet_State(TRX_OFF);
+        Cache = ML7345_Read_Reg(ADDR_ED_RSLT);
+        RAM_RSSI_SUM += Cache;
+        RSSI_Read_Counter++;
+        RAM_RSSI_AVG = RAM_RSSI_SUM / RSSI_Read_Counter;
+
         ML7345_Write_Reg(0x00,0x22);    // Bank1 Set
         ML7345_Write_Reg(0x2a,0x55);    //sync
         ML7345_Write_Reg(0x00,0x11);    // Bank0 Set
         ML7345_SetAndGet_State(RX_ON);
+        CG2214M6_USE_R;
         Flag_rx_pream = 0;
         Receiver_LED_RX = 1;
         TIMER300ms = 300;

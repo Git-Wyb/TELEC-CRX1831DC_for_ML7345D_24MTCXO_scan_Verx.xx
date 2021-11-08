@@ -40,11 +40,8 @@ u8 ML7345_SetAndGet_State(RF_StatusSet_ENUM sta)
         {
             ML7345_Write_Reg(ADDR_RF_STATUS,sta);
             status = WaitStatus_Complete();
-            if(status != 0)
+            if(status != 0 && sta != Force_TRX_OFF)
             {
-                if(PROFILE_CH_FREQ_32bit_200002EC == 426075000) RF_ML7345_Init(Fre_426_075,0x55,12);
-                else if (PROFILE_CH_FREQ_32bit_200002EC == 429350000) RF_ML7345_Init(Fre_429_350,0x55,28);
-                else if (PROFILE_CH_FREQ_32bit_200002EC == 429550000) RF_ML7345_Init(Fre_429_550,0x55,28);
                 ML7345_Write_Reg(ADDR_RF_STATUS,sta);
                 WaitStatus_Complete();
             }
@@ -277,10 +274,6 @@ void ML7345_Frequency_Set(u8 *freq,u8 radio_type)
     ML7345_Write_Reg(ADDR_VCO_CAL_MIN_FM,freq[6]);
     ML7345_Write_Reg(ADDR_VCO_CAL_MIN_FL,freq[7]);
 
-    //ML7345_Write_Reg(ADDR_VCO_CAL_MAX_N,freq[8]);
-    //ML7345_Write_Reg(ADDR_VCAL_MIN,freq[9]);
-    //ML7345_Write_Reg(ADDR_VCAL_MAX,freq[10]);
-
     ML7345_Write_Reg(0x00,0x22);    /* Bank1 Set */
     ML7345_Write_Reg(0x25,0x08);    /* SyncWord length setting */
     ML7345_Write_Reg(0x2a,0x55);
@@ -296,7 +289,6 @@ void ML7345_Frequency_Set(u8 *freq,u8 radio_type)
     }
 
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL); /* Bank0 Set */
-    ML7345_SetAndGet_State(RX_ON);
     Flag_set_freq = 0;
 }
 
@@ -474,6 +466,7 @@ Return: Null
 void ML7345_AutoTx_Data(u8 *pbuf,u8 len)
 {
     if(len > 64)    len = 64;
+    CG2214M6_USE_T;
     ML7345_Write_Reg(ADDR_BANK_SEL,BANK0_SEL);  //set bank0
     ML7345_Write_Reg(ADDR_TX_PKT_LEN_L,len);    //发送包长度低八位
     ML7345_AutoStateTransition_Set(AUTO_TX_EN);  //设置为自动发送模式

@@ -191,7 +191,8 @@ extern u32 PROFILE_GENERIC_PKT_FRAME_CFG1_32bit_20000500;
 extern const u32 PROFILE_CH1_FREQ_32bit_429HighSpeed;
 extern const u32 PROFILE_CH2_FREQ_32bit_429HighSpeed;
 extern u8 Channels;
-
+extern u16 Time_rf_init;
+extern u8 select_channel;
 
 
 void SPI_INIT(void);
@@ -256,7 +257,8 @@ extern Mark_Un mark0_stu;
 #define Flag_RxDone      mark0_stu.un_var_bit7
 
 extern Mark_Un mark1_stu;
-#define Flag_tx_once     mark1_stu.un_var_bit0
+#define Flag_test_mode     mark1_stu.un_var_bit0
+#define Flag_rx_rssi       mark1_stu.un_var_bit1
 
 
 #endif

@@ -31,9 +31,8 @@ void ML7345D_RF_test_mode(void);
 void TX_DataLoad_HighSpeed(u32 IDCache, Wireless_Body CtrCmd, u8 *Packet);
 void ML7345D_Error_Detect(void);
 void ML7345_Frequency_Calcul(u32 Freq,u8 *pbuf);
+void Ber_PinExit_Init(void);
 
-extern u8 Tx_Done;
-extern u8 Rx_Done;
 extern u8 reg1_val[128];
 extern u8 reg2_val[128];
 

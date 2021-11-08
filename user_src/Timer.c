@@ -60,6 +60,7 @@ void TIM4_UPD_OVF(void)
 		--TIME_ID_SCX1801_Login;
 
     if(Time_Tx_Out)  --Time_Tx_Out;
+    if(Time_rf_init) --Time_rf_init;
 
     TIM4_SR1_bit.UIF = 0; // 清除中断标记
 }

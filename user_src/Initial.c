@@ -78,6 +78,8 @@ void VHF_GPIO_INIT(void) // CPU端口设置
     ML7345_RESETN_DDR = 1;
     ML7345_RESETN_CR1 = 1;
     ML7345_RESETN_CR2 = 1;
+
+    Ber_PinExit_Init();
 }
 //============================================================================================
 void SysClock_Init(void)
