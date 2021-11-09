@@ -112,7 +112,7 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
     ML7345_Write_Reg(0x42,0x00);    //TX前导码长度高八位
     ML7345_Write_Reg(0x43,0x50);    //TX前导码长度低八位,不等少于16个位,TX preamble length = (specified value x2) bits
     //-----------------------------------------------------------------------------------------------------
-    ML7345_Write_Reg(0x45,0x00);    //0x10接收前导码长度(bit) RX preamble setting and ED threshold check setting
+    ML7345_Write_Reg(0x45,0x08);    //0x10接收前导码长度(bit) RX preamble setting and ED threshold check setting
     //-----------------------------------------------------------------------------------------------------
     ML7345_Write_Reg(0x4e,0x00);    /* GPIO0 [output] “L” level */
     ML7345_Write_Reg(0x4f,0x00);    /* GPIO1 [output] “L” level,Upon reset,disable GPIO1 pin is CLK_OUT function */
@@ -346,7 +346,10 @@ void RF_Ber_Test(void)
         else            RX_LED = 1;
         X_ERR = 0;
         X_COUNT = 0;
+        X_ERRTimer = 1250;
     }
+    if (X_ERRTimer == 0)
+        Receiver_LED_RX = 0;
 }
 
 void RF_ML7345_TEST(void)
