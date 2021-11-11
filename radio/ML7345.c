@@ -123,9 +123,9 @@ void RF_ML7345_Init(u8* freq,u8 sync,u8 rx_len)
 
     ML7345_Write_Reg(0x63,0x88);    /* Fine adjustment of load capacitance for oscillation circuits */
 
-    ML7345_Write_Reg(0x67,0x02);    /* 02功率设置0dbm */
+    ML7345_Write_Reg(0x67,0x15);    /* 02功率设置0dbm */
     ML7345_Write_Reg(0x68,0x10);    /* PA regulator fine adjustment */
-    ML7345_Write_Reg(0x69,0x00);    /* PA gain adjustment */
+    ML7345_Write_Reg(0x69,0x01);    /* PA gain adjustment */
 
     ML7345_Write_Reg(0x6e,0x5b);    /*5b VCO calibration setting or status indication */
 
@@ -695,8 +695,9 @@ void ML7345D_RF_test_mode(void)
             if (FG_test_tx_off == 0)
             {
                 FG_test_tx_off = 1;
+                ML7345_Frequency_Calcul(PROFILE_CH_FREQ_32bit_200002EC_TELEC,Freq_SetBuff);
                 ML7345_SetAndGet_State(Force_TRX_OFF);
-                ML7345_Frequency_Set(Fre_426_750,1);
+                ML7345_Frequency_Set(Freq_SetBuff,1);
                 ML7345_MeasurBER_Init();
                 ML7345_SetAndGet_State(RX_ON);
             }
