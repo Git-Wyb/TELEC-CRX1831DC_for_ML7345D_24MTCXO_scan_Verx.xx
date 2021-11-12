@@ -700,6 +700,7 @@ void ML7345D_RF_test_mode(void)
                 ML7345_Frequency_Set(Freq_SetBuff,1);
                 ML7345_MeasurBER_Init();
                 ML7345_SetAndGet_State(RX_ON);
+                ML7345_CLK_CR2 = 1; //开中断
             }
             if (Tx_Rx_mode == 2) //packet usart out put RSSI
             {
